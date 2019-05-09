@@ -1,6 +1,6 @@
 {
-    "name": "@harmony/core",
-    "version": "0.0.2",
+    "name": "@mobilejazz/harmony-core",
+    "version": "0.0.0",
     "description": "Building blocks for a typescript application based on Harmony concept",
     "author": "Mobile Jazz",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/core#readme",
@@ -18,5 +18,8 @@
     },
     "bugs": {
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
+    },
+    "dependencies": {
+        "class-transformer": "~0.2.0"
     }
 }

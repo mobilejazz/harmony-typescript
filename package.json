@@ -1,5 +1,5 @@
 {
-    "name": "harmony-typescript",
+    "name": "mobilejazz-harmony-typescript",
     "version": "0.0.0",
     "description": "Building blocks for a typescript application based on Harmony concept",
     "author": "Mobile Jazz",
@@ -24,8 +24,7 @@
         "publish": "npm run build && lerna publish"
     },
     "dependencies": {
-        "@harmony/core": "~0.0.1",
-        "class-transformer": "~0.2.0"
+        "@mobilejazz/harmony-core": "~0.0.0"
     },
     "devDependencies": {
         "@types/node": "~11.12.0",
