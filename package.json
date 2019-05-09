@@ -21,10 +21,10 @@
         "prebuild": "npm run validate",
         "build": "lerna run build",
         "validate": "lerna run lint",
-        "publish": "npm run build && lerna publish"
+        "publish": "npm run build && lerna publish --contents dist"
     },
     "dependencies": {
-        "@mobilejazz/harmony-core": "~0.0.0"
+        "@mobilejazz/harmony-core": "^0.0.3"
     },
     "devDependencies": {
         "@types/node": "~11.12.0",

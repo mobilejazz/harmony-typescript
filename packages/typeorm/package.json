@@ -15,7 +15,8 @@
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
-        "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*'  '**/*.ts'"
+        "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*'  '**/*.ts'",
+        "prepublishOnly": "cp ./package.json ./dist"
     },
     "bugs": {
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
@@ -29,9 +30,5 @@
         "ts-node": "^5.0.0",
         "tsconfig-paths": "^3.8.0",
         "tslint": "~5.14.0"
-    },
-    "main": "dist/index.js",
-    "files": [
-        "dist"
-    ]
+    }
 }
