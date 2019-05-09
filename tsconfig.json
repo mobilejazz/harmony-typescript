@@ -5,19 +5,19 @@
         "declaration": true,
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "lib": [
-            "es2018"
-        ],
-        "module": "es2015",
-        "moduleResolution": "node",
+        "skipLibCheck": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "noUnusedLocals": false,
+        "removeComments": true,
         "noImplicitAny": true,
         "noLib": false,
-        "removeComments": true,
-        "sourceMap": true,
+        "module": "commonjs",
+        "experimentalDecorators": true,
+        "sourceMap": false,
+        "allowJs": false,
+        "strict": true,
         "strictNullChecks": true,
-        "target": "es2015",
+        "target": "es2017",
         "typeRoots": [
             "node_modules/@types"
         ]
