@@ -13,14 +13,25 @@
     },
     "license": "Apache-2.0",
     "scripts": {
+        "prebuild": "rimraf ./dist",
         "build": "tsc",
-        "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*'  '**/*.ts'"
+        "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*'  '**/*.ts'"
     },
     "bugs": {
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
-        "@mobilejazz/harmony-core": "^0.0.1",
+        "@mobilejazz/harmony-core": "~0.0.1",
         "typeorm": "~0.2.16"
-    }
+    },
+    "devDependencies": {
+        "rimraf": "^2.6.3",
+        "ts-node": "^5.0.0",
+        "tsconfig-paths": "^3.8.0",
+        "tslint": "~5.14.0"
+    },
+    "main": "dist/index.js",
+    "files": [
+        "dist"
+    ]
 }

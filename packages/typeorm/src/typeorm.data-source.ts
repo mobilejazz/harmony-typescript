@@ -9,7 +9,7 @@ import {
     Query,
     QueryNotSupportedError,
     VoidQuery,
-} from '@harmony/core/src';
+} from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {

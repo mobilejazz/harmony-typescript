@@ -19,7 +19,7 @@
     },
     "scripts": {
         "prebuild": "npm run validate",
-        "build": "rimraf ./dist && lerna run build",
+        "build": "lerna run build",
         "validate": "lerna run lint",
         "publish": "npm run build && lerna publish"
     },
@@ -30,11 +30,6 @@
         "@types/node": "~11.12.0",
         "husky": "~1.3.1",
         "lerna": "^3.13.4",
-        "npm-run-all": "~4.1.5",
-        "rimraf": "^2.6.3",
-        "ts-node": "^5.0.0",
-        "tsconfig-paths": "^3.8.0",
-        "tslint": "~5.14.0",
         "typescript": "~3.1.6"
     },
     "husky": {
