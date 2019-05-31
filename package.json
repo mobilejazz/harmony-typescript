@@ -23,9 +23,7 @@
         "validate": "lerna run lint",
         "publish": "npm run build && lerna publish --contents dist"
     },
-    "dependencies": {
-        "@mobilejazz/harmony-core": "^0.0.6"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@types/node": "~11.12.0",
         "husky": "~1.3.1",
