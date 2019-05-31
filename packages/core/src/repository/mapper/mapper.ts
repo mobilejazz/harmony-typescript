@@ -88,3 +88,56 @@ export class ClassTransformerMapper<From, To> implements Mapper <From, To> {
         }
     }
 }
+
+/**
+ * JsonSerializerMapper map objects to a serialized json string
+ */
+export class JsonSerializerMapper<From> implements Mapper<From, string> {
+
+    public map(from: From): string;
+    public map(list: From[]): string[];
+    public map(fromOrList: From | From[]): string | string[] {
+        if (fromOrList instanceof Array) {
+            return fromOrList.map(from => JSON.stringify(from));
+        }
+        return JSON.stringify(fromOrList);
+    }
+}
+
+/**
+ * JsonDeserializerMapper
+ */
+export class JsonDeserializerMapper<From, To> implements Mapper <From, To> {
+
+    constructor(private toType: new() => To) {}
+
+    public map(from: From): To;
+    public map(list: From[]): To[];
+    public map(fromOrList: From | From[]): To | To[] {
+        if (!fromOrList) {
+            throw new Error('JsonDeserializerMapper cannot map an empty input)');
+        }
+        try {
+            if (fromOrList instanceof Array) {
+                return fromOrList.map((from: From) => this.deserialize(from));
+            }
+            if (typeof fromOrList === 'string') {
+                fromOrList = JSON.parse(fromOrList);
+            }
+            return this.deserialize(fromOrList as From);
+        } catch (e) {
+            throw new Error('JsonDeserializerMapper failed to map an object)');
+        }
+    }
+
+    private deserialize(from: From): To {
+        const output = new this.toType();
+
+        let properties: string[] = Object.keys(from);
+        properties.forEach((property: string) => {
+            output[property] = from[property];
+        });
+
+        return output;
+    }
+}

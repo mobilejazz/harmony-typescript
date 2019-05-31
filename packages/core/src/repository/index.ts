@@ -1,5 +1,7 @@
 export * from './data-source/data-source';
 export * from './data-source/data-source-mapper';
+export * from './data-source/local-storage.data-source';
+export * from './errors';
 export * from './mapper/mapper';
 export * from './operation/operation';
 export * from './query/query';

@@ -1,7 +1,7 @@
 import {
     DeleteDataSource,
-    DictionaryQuery,
-    DictionaryRelationsQuery,
+    ObjectQuery,
+    ObjectRelationsQuery,
     GetDataSource,
     IdQuery,
     IdsQuery,
@@ -24,15 +24,15 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         if (queryOrId instanceof Query) {
             if (queryOrId instanceof IdQuery) {
                 return this.repository.findOne(queryOrId.id);
-            } else if (queryOrId instanceof DictionaryRelationsQuery) {
+            } else if (queryOrId instanceof ObjectRelationsQuery) {
                 return this.repository.findOne({
-                    where: queryOrId.dictionary,
+                    where: queryOrId.value,
                     relations: queryOrId.relations,
                 });
-            } else if (queryOrId instanceof DictionaryQuery) {
-                return this.repository.findOne({where: queryOrId.dictionary});
+            } else if (queryOrId instanceof ObjectQuery) {
+                return this.repository.findOne({where: queryOrId.value});
             } else {
-                throw QueryNotSupportedError;
+                throw new QueryNotSupportedError();
             }
         } else {
             return this.repository.findOne(queryOrId);
@@ -47,15 +47,15 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 return this.repository.find();
             } else if (queryOrIds instanceof IdsQuery) {
                 return this.findAllEntitiesByIds(queryOrIds.ids);
-            } else if (queryOrIds instanceof DictionaryRelationsQuery) {
+            } else if (queryOrIds instanceof ObjectRelationsQuery) {
                 return this.repository.find({
-                    where: queryOrIds.dictionary,
+                    where: queryOrIds.value,
                     relations: queryOrIds.relations,
                 });
-            } else if (queryOrIds instanceof DictionaryQuery) {
-                return this.repository.find({where: queryOrIds.dictionary});
+            } else if (queryOrIds instanceof ObjectQuery) {
+                return this.repository.find({where: queryOrIds.value});
             } else {
-                throw QueryNotSupportedError;
+                throw new QueryNotSupportedError();
             }
         } else {
             return this.findAllEntitiesByIds(queryOrIds);
@@ -69,10 +69,10 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
             if (queryOrId instanceof VoidQuery) {
                 return this.repository.save(value);
             } else {
-                throw QueryNotSupportedError;
+                throw new QueryNotSupportedError();
             }
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
@@ -83,10 +83,10 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
             if (queryOrIds instanceof VoidQuery) {
                 return await Promise.all(values.map(value  => this.repository.save(value)));
             } else {
-                throw QueryNotSupportedError;
+                throw new QueryNotSupportedError();
             }
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
@@ -98,7 +98,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 const entity = await this.repository.findOne(queryOrId.id);
                 return this.remove(entity);
             } else {
-                throw QueryNotSupportedError;
+                throw new QueryNotSupportedError();
             }
         } else {
             const entity = await this.repository.findOne(queryOrId);
@@ -114,7 +114,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 const entities = await this.findAllEntitiesByIds(queryOrIds.ids);
                 return this.remove(entities);
             } else {
-                throw QueryNotSupportedError;
+                throw new QueryNotSupportedError();
             }
         } else {
             const entities = await this.findAllEntitiesByIds(queryOrIds);

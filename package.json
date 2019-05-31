@@ -24,7 +24,7 @@
         "publish": "npm run build && lerna publish --contents dist"
     },
     "dependencies": {
-        "@mobilejazz/harmony-core": "^0.0.3"
+        "@mobilejazz/harmony-core": "^0.0.6"
     },
     "devDependencies": {
         "@types/node": "~11.12.0",

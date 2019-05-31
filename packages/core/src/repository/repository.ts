@@ -26,6 +26,3 @@ export interface DeleteRepository extends Repository {
     deleteAll(query: Query, operation: Operation): Promise<boolean>;
     deleteAll<K>(ids: K[], operation: Operation): Promise<boolean>;
 }
-
-export const OperationNotSupportedError = new Error('Operation Not Supported');
-export const QueryNotSupportedError = new Error('Query Not Supported');

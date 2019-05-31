@@ -1,4 +1,4 @@
-import { Dictionary } from '../../shared';
+import { Dictionary } from '../../data';
 
 export class Query  {
 
@@ -42,6 +42,12 @@ export class ObjectsQuery<T> extends Query {
     }
 }
 
+export class ObjectRelationsQuery<T> extends ObjectQuery<T> {
+    constructor(public readonly value: T, public relations: string[] = []) {
+        super(value);
+    }
+}
+
 export abstract class PaginationQuery extends Query { }
 
 export class PaginationOffsetLimitQuery extends PaginationQuery {
@@ -53,14 +59,14 @@ export class PaginationOffsetLimitQuery extends PaginationQuery {
     }
 }
 
-export class DictionaryQuery extends Query {
-    constructor(public dictionary: Dictionary) {
+export class DictionaryQuery<T> extends Query {
+    constructor(public dictionary: Dictionary<T>) {
         super();
     }
 }
 
-export class DictionaryRelationsQuery extends DictionaryQuery {
-    constructor(public dictionary: Dictionary, public relations: string[] = []) {
+export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
+    constructor(public dictionary: Dictionary<T>, public relations: string[] = []) {
         super(dictionary);
     }
 }

@@ -29,5 +29,6 @@
         "ts-node": "^5.0.0",
         "tsconfig-paths": "^3.8.0",
         "tslint": "~5.14.0"
-    }
+    },
+    "main": "dist/index.js"
 }
