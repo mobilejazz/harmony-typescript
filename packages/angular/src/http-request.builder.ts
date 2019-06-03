@@ -19,7 +19,7 @@ export class HttpRequestBuilder<T> {
     }
 
     public setUrlParameters(urlParameters: Dictionary<string|number|boolean>): HttpRequestBuilder<T> {
-        this.urlBuilder.setQueryParameters(urlParameters);
+        this.urlBuilder.setUrlParameters(urlParameters);
         return this;
     }
 
