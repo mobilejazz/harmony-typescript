@@ -55,15 +55,15 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 
-    public delete(query: Query, operation: Operation): Promise<boolean>;
-    public delete<K>(id: K, operation: Operation): Promise<boolean>;
-    public async delete<K>(queryOrId: Query | K, operation: Operation): Promise<boolean> {
+    public delete(query: Query, operation: Operation): Promise<void>;
+    public delete<K>(id: K, operation: Operation): Promise<void>;
+    public async delete<K>(queryOrId: Query | K, operation: Operation): Promise<void> {
         return this.deleteRepository.delete(queryOrId, operation);
     }
 
-    public deleteAll(query: Query, operation: Operation): Promise<boolean>;
-    public deleteAll<K>(ids: K[], operation: Operation): Promise<boolean>;
-    public async deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<boolean> {
+    public deleteAll(query: Query, operation: Operation): Promise<void>;
+    public deleteAll<K>(ids: K[], operation: Operation): Promise<void>;
+    public async deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<void> {
         return this.deleteRepository.deleteAll(queryOrIds, operation);
     }
 

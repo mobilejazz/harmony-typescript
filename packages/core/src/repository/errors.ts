@@ -18,3 +18,10 @@ export class QueryNotSupportedError extends Error {
         this.name = "Query Not Supported";
     }
 }
+
+export class DeleteError extends Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = "Delete Error";
+    }
+}

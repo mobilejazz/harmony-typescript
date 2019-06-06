@@ -61,15 +61,15 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 
-    public delete(query: Query): Promise<boolean>;
-    public delete<K>(id: K): Promise<boolean>;
-    public async delete<K>(queryOrId: Query | K): Promise<boolean> {
+    public delete(query: Query): Promise<void>;
+    public delete<K>(id: K): Promise<void>;
+    public delete<K>(queryOrId: Query | K): Promise<void> {
         return this.deleteDataSource.delete(queryOrId);
     }
 
-    public deleteAll(query: Query): Promise<boolean>;
-    public deleteAll<K>(ids: K[]): Promise<boolean>;
-    public async deleteAll<K>(queryOrIds: Query | K[]): Promise<boolean> {
+    public deleteAll(query: Query): Promise<void>;
+    public deleteAll<K>(ids: K[]): Promise<void>;
+    public deleteAll<K>(queryOrIds: Query | K[]): Promise<void> {
         return this.deleteDataSource.deleteAll(queryOrIds);
     }
 }

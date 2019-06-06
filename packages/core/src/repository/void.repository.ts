@@ -24,14 +24,14 @@ export class VoidRepository<T> implements GetRepository<T>, PutRepository<T>, De
     public putAll<K>(values: T[], queryOrIds: Query | K[] = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<T[]> {
         throw new OperationNotSupportedError();
     }
-    public delete(query: Query, operation: Operation): Promise<boolean>;
-    public delete<K>(id: K, operation: Operation): Promise<boolean>;
-    public delete<K>(queryOrId: Query | K, operation: Operation): Promise<boolean> {
+    public delete(query: Query, operation: Operation): Promise<void>;
+    public delete<K>(id: K, operation: Operation): Promise<void>;
+    public delete<K>(queryOrId: Query | K, operation: Operation): Promise<void> {
         throw new OperationNotSupportedError();
     }
-    public deleteAll(query: Query, operation: Operation): Promise<boolean>;
-    public deleteAll<K>(ids: K[], operation: Operation): Promise<boolean>;
-    public deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<boolean> {
+    public deleteAll(query: Query, operation: Operation): Promise<void>;
+    public deleteAll<K>(ids: K[], operation: Operation): Promise<void>;
+    public deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<void> {
         throw new OperationNotSupportedError();
     }
 }
@@ -63,14 +63,14 @@ export class VoidPutRepository<T> implements PutRepository<T> {
 }
 
 export class VoidDeleteRepository implements DeleteRepository {
-    public delete(query: Query, operation: Operation): Promise<boolean>;
-    public delete<K>(id: K, operation: Operation): Promise<boolean>;
-    public delete<K>(queryOrId: Query | K, operation: Operation): Promise<boolean> {
+    public delete(query: Query, operation: Operation): Promise<void>;
+    public delete<K>(id: K, operation: Operation): Promise<void>;
+    public delete<K>(queryOrId: Query | K, operation: Operation): Promise<void> {
         throw new OperationNotSupportedError();
     }
-    public deleteAll(query: Query, operation: Operation): Promise<boolean>;
-    public deleteAll<K>(ids: K[], operation: Operation): Promise<boolean>;
-    public deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<boolean> {
+    public deleteAll(query: Query, operation: Operation): Promise<void>;
+    public deleteAll<K>(ids: K[], operation: Operation): Promise<void>;
+    public deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<void> {
         throw new OperationNotSupportedError();
     }
 }

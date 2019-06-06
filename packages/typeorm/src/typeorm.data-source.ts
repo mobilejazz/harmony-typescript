@@ -10,6 +10,7 @@ import {
     QueryNotSupportedError,
     VoidQuery,
 } from '@mobilejazz/harmony-core';
+import { DeleteError } from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
@@ -90,9 +91,9 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
-    delete(query: Query): Promise<boolean>;
-    delete<K>(id: K): Promise<boolean>;
-    public async delete<K>(queryOrId: Query | K): Promise<boolean> {
+    delete(query: Query): Promise<void>;
+    delete<K>(id: K): Promise<void>;
+    public async delete<K>(queryOrId: Query | K): Promise<void> {
         if (queryOrId instanceof Query) {
             if (queryOrId instanceof IdQuery) {
                 const entity = await this.repository.findOne(queryOrId.id);
@@ -106,9 +107,9 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
-    deleteAll(query: Query): Promise<boolean>;
-    deleteAll<K>(ids: K[]): Promise<boolean>;
-    public async deleteAll<K>(queryOrIds: Query | K[]): Promise<boolean> {
+    deleteAll(query: Query): Promise<void>;
+    deleteAll<K>(ids: K[]): Promise<void>;
+    public async deleteAll<K>(queryOrIds: Query | K[]): Promise<void> {
         if (queryOrIds instanceof Query) {
             if (queryOrIds instanceof IdsQuery) {
                 const entities = await this.findAllEntitiesByIds(queryOrIds.ids);
@@ -133,12 +134,12 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         return await this.repository.find({where: conditions });
     }
 
-    private async remove(entityOrEntities: any): Promise<boolean> {
+    private async remove(entityOrEntities: any): Promise<void> {
         if (!entityOrEntities) {
-            return false;
+            throw new DeleteError('No entity found');
         }
         await this.repository.remove(entityOrEntities);
-        return true;
+        return;
     }
 
 }

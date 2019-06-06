@@ -36,15 +36,15 @@ export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepos
         return this.putDataSource.putAll(values, queryOrIds);
     }
 
-    public delete(query?: Query, operation?: Operation): Promise<boolean>;
-    public delete<K>(id?: K, operation?: Operation): Promise<boolean>;
-    public delete<K>(queryOrId: Query | K = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<boolean> {
+    public delete(query?: Query, operation?: Operation): Promise<void>;
+    public delete<K>(id?: K, operation?: Operation): Promise<void>;
+    public delete<K>(queryOrId: Query | K = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<void> {
         return this.deleteDataSource.delete(queryOrId);
     }
 
-    public deleteAll(query?: Query, operation?: Operation): Promise<boolean>;
-    public deleteAll<K>(ids?: K[], operation?: Operation): Promise<boolean>;
-    public deleteAll<K>(queryOrIds: Query | K[] = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<boolean> {
+    public deleteAll(query?: Query, operation?: Operation): Promise<void>;
+    public deleteAll<K>(ids?: K[], operation?: Operation): Promise<void>;
+    public deleteAll<K>(queryOrIds: Query | K[] = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<void> {
         return this.deleteDataSource.deleteAll(queryOrIds);
     }
 
@@ -97,15 +97,15 @@ export class SingleDeleteDataSourceRepository implements DeleteRepository {
         private readonly deleteDataSource: DeleteDataSource,
     ) {}
 
-    public delete(query?: Query, operation?: Operation): Promise<boolean>;
-    public delete<K>(id?: K, operation?: Operation): Promise<boolean>;
-    public delete<K>(queryOrId: Query | K = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<boolean> {
+    public delete(query?: Query, operation?: Operation): Promise<void>;
+    public delete<K>(id?: K, operation?: Operation): Promise<void>;
+    public delete<K>(queryOrId: Query | K = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<void> {
         return this.deleteDataSource.delete(queryOrId);
     }
 
-    public deleteAll(query?: Query, operation?: Operation): Promise<boolean>;
-    public deleteAll<K>(ids?: K[], operation?: Operation): Promise<boolean>;
-    public deleteAll<K>(queryOrIds: Query | K[] = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<boolean> {
+    public deleteAll(query?: Query, operation?: Operation): Promise<void>;
+    public deleteAll<K>(ids?: K[], operation?: Operation): Promise<void>;
+    public deleteAll<K>(queryOrIds: Query | K[] = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<void> {
         return this.deleteDataSource.deleteAll(queryOrIds);
     }
 }

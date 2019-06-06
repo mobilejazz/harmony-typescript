@@ -19,9 +19,9 @@ export interface PutDataSource<T> extends DataSource {
 }
 
 export interface DeleteDataSource extends DataSource {
-    delete(query: Query): Promise<boolean>;
-    delete<K>(id: K): Promise<boolean>;
+    delete(query: Query): Promise<void>;
+    delete<K>(id: K): Promise<void>;
 
-    deleteAll(query: Query): Promise<boolean>;
-    deleteAll<K>(ids: K[]): Promise<boolean>;
+    deleteAll(query: Query): Promise<void>;
+    deleteAll<K>(ids: K[]): Promise<void>;
 }

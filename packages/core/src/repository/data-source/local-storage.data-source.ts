@@ -1,4 +1,4 @@
-import { KeyQuery, Query, QueryNotSupportedError } from '..';
+import { DeleteError, KeyQuery, Query, QueryNotSupportedError } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
 
 export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
@@ -70,25 +70,32 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
         }
     }
 
-    delete(query: Query): Promise<boolean>;
-    delete<K>(id: K): Promise<boolean>;
-    public async delete<K extends string>(queryOrId: Query | K): Promise<boolean> {
+    delete(query: Query): Promise<void>;
+    delete<K>(id: K): Promise<void>;
+    public async delete<K extends string>(queryOrId: Query | K): Promise<void> {
         if (queryOrId instanceof Query) {
             if (queryOrId instanceof KeyQuery) {
                 localStorage.removeItem(queryOrId.key);
-                return localStorage.getItem(queryOrId.key) === null;
+                if (localStorage.getItem(queryOrId.key) !== null) {
+                    throw new DeleteError();
+                }
+                return;
             } else {
                 throw QueryNotSupportedError;
             }
         } else {
             localStorage.removeItem(queryOrId);
-            return localStorage.getItem(queryOrId) === null;
+
+            if (localStorage.getItem(queryOrId) !== null) {
+                throw new DeleteError();
+            }
+            return;
         }
     }
 
-    deleteAll(query: Query): Promise<boolean>;
-    deleteAll<K>(ids: K[]): Promise<boolean>;
-    public async deleteAll<K extends string>(queryOrIds: Query | K[]): Promise<boolean> {
+    deleteAll(query: Query): Promise<void>;
+    deleteAll<K>(ids: K[]): Promise<void>;
+    public async deleteAll<K extends string>(queryOrIds: Query | K[]): Promise<void> {
         if (queryOrIds instanceof Query) {
             if (queryOrIds instanceof KeyQuery) {
                 let keys = queryOrIds.key.split(',');
@@ -96,7 +103,10 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
                     localStorage.removeItem(key);
                     return localStorage.getItem(key) === null;
                 });
-                return result.indexOf(false) === -1;
+                if (result.indexOf(false) !== -1) {
+                    throw new DeleteError();
+                }
+                return;
             } else {
                 throw QueryNotSupportedError;
             }
@@ -105,7 +115,10 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
                 localStorage.removeItem(key);
                 return localStorage.getItem(key) === null;
             });
-            return result.indexOf(false) === -1;
+            if (result.indexOf(false) !== -1) {
+                throw new DeleteError();
+            }
+            return;
         }
     }
 }
