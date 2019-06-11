@@ -11,13 +11,10 @@ import {
     VoidQuery,
 } from '@mobilejazz/harmony-core';
 import { DeleteError } from '@mobilejazz/harmony-core';
-import { Repository as TypeORMRepository } from 'typeorm';
+import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
-
-    constructor(private readonly repository: TypeORMRepository<T>) {
-
-    }
+    constructor(private readonly repository: TypeORMRepository<T>) {}
 
     get(query: Query): Promise<T>;
     get<K>(id: K): Promise<T>;
@@ -27,11 +24,11 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 return this.repository.findOne(queryOrId.id);
             } else if (queryOrId instanceof ObjectRelationsQuery) {
                 return this.repository.findOne({
-                    where: queryOrId.value,
+                    where: this.buildArrayQuery(queryOrId.value),
                     relations: queryOrId.relations,
                 });
             } else if (queryOrId instanceof ObjectQuery) {
-                return this.repository.findOne({where: queryOrId.value});
+                return this.repository.findOne({ where: this.buildArrayQuery(queryOrId.value) });
             } else {
                 throw new QueryNotSupportedError();
             }
@@ -50,11 +47,11 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 return this.findAllEntitiesByIds(queryOrIds.ids);
             } else if (queryOrIds instanceof ObjectRelationsQuery) {
                 return this.repository.find({
-                    where: queryOrIds.value,
+                    where: this.buildArrayQuery(queryOrIds.value),
                     relations: queryOrIds.relations,
                 });
             } else if (queryOrIds instanceof ObjectQuery) {
-                return this.repository.find({where: queryOrIds.value});
+                return this.repository.find({ where: this.buildArrayQuery(queryOrIds.value) });
             } else {
                 throw new QueryNotSupportedError();
             }
@@ -82,7 +79,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
     public async putAll<K>(values: T[], queryOrIds: Query | K[]): Promise<T[] | undefined> {
         if (queryOrIds instanceof Query) {
             if (queryOrIds instanceof VoidQuery) {
-                return await Promise.all(values.map(value  => this.repository.save(value)));
+                return await Promise.all(values.map(value => this.repository.save(value)));
             } else {
                 throw new QueryNotSupportedError();
             }
@@ -123,6 +120,19 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
+    private buildArrayQuery(conditions: any): any {
+        const obj = Object.assign(conditions);
+        for (const key in conditions) {
+            if (conditions.hasOwnProperty(key)) {
+                // If one of the condition is an array put the In() prefix operator
+                if (Array.isArray(conditions[key])) {
+                    obj[key] = In(conditions[key]);
+                }
+            }
+        }
+        return obj;
+    }
+
     private async findAllEntitiesByIds<K>(ids: K[]): Promise<T[]> {
         const primaryColumns = this.repository.metadata.primaryColumns;
         if (!primaryColumns || primaryColumns.length !== 1) {
@@ -130,8 +140,8 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
         const primaryColumnName = primaryColumns[0].propertyName;
         const conditions: any = {};
-        conditions[primaryColumnName] = ids;
-        return await this.repository.find({where: conditions });
+        conditions[primaryColumnName] = In(ids);
+        return await this.repository.find({ where: conditions });
     }
 
     private async remove(entityOrEntities: any): Promise<void> {
@@ -141,5 +151,4 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         await this.repository.remove(entityOrEntities);
         return;
     }
-
 }
