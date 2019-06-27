@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Dictionary, JsonDeserializerMapper, UrlBuilder } from '@mobilejazz/harmony-core';
+import { Dictionary, JsonDeserializerMapper, ParameterType, UrlBuilder } from '@mobilejazz/harmony-core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,12 +18,12 @@ export class HttpRequestBuilder<T> {
         this.setDefaultHeaders();
     }
 
-    public setUrlParameters(urlParameters: Dictionary<string|number|boolean>): HttpRequestBuilder<T> {
+    public setUrlParameters(urlParameters: Dictionary<ParameterType>): HttpRequestBuilder<T> {
         this.urlBuilder.setUrlParameters(urlParameters);
         return this;
     }
 
-    public setQueryParameters(queryParameters: Dictionary<string|number|boolean>): HttpRequestBuilder<T> {
+    public setQueryParameters(queryParameters: Dictionary<ParameterType>): HttpRequestBuilder<T> {
         this.urlBuilder.setQueryParameters(queryParameters);
         return this;
     }
