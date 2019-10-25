@@ -18,15 +18,15 @@ export class IdQuery<T> extends KeyQuery {
     }
 }
 
-export class IdsQuery<T> extends KeyQuery {
+export class IdsQuery<T> extends Query {
     constructor(public readonly ids: T[]) {
-        super(ids.toString());
+        super();
     }
 }
 
-export class AllObjectsQuery extends KeyQuery {
+export class AllObjectsQuery extends Query {
     constructor() {
-        super('allObjects');
+        super();
     }
 }
 

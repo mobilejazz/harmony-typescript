@@ -25,3 +25,17 @@ export class DeleteError extends Error {
         this.name = "Delete Error";
     }
 }
+
+export class NotValidError extends  Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = "Not Valid Error";
+    }
+}
+
+export class NotFoundError extends  Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = "Not Found Error";
+    }
+}
