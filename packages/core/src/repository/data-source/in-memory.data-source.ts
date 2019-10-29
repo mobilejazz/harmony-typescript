@@ -1,13 +1,4 @@
-
-import {
-    AllObjectsQuery,
-    GetDataSource,
-    PutDataSource,
-    DeleteDataSource,
-    Query, IdsQuery,
-    KeyQuery,
-    QueryNotSupportedError,
-} from '..';
+import {AllObjectsQuery, DeleteDataSource, GetDataSource, IdsQuery, KeyQuery, PutDataSource, Query, QueryNotSupportedError} from '..';
 
 export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     private objects: any = {};
@@ -35,10 +26,10 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
                 return Promise.resolve(this.arrays[queryOrIds.key]);
             } else if (queryOrIds instanceof AllObjectsQuery) {
                 let array: T[] = [];
-                Object.entries(this.objects).forEach(([key, value]) => {
+                Object.entries(this.objects).forEach(([, value]) => {
                     array.push(value as T);
                 });
-                Object.entries(this.arrays).forEach(([key, values]) => {
+                Object.entries(this.arrays).forEach(([, values]) => {
                     for (let value of values as T[]) {
                         array.push(value as T);
                     }
@@ -88,8 +79,7 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
             } else if (queryOrIds instanceof IdsQuery) {
                 for (let i = 0; i < queryOrIds.ids.length; ++i) {
                     let key = queryOrIds.ids[i];
-                    let value = values[i];
-                    this.objects[key] = value;
+                    this.objects[key] = values[i];
                 }
                 return Promise.resolve(values);
             } else {
@@ -98,8 +88,7 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
         } else {
             for (let i = 0; i < (queryOrIds as K[]).length; ++i) {
                 let key = queryOrIds[i];
-                let value = values[i];
-                this.objects[key] = value;
+                this.objects[key] = values[i];
             }
             return Promise.resolve(values);
         }
