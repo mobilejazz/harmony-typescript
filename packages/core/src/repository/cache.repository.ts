@@ -172,7 +172,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.putMain.put(val, query);
                 });
             default:
-                return Promise.reject(new MethodNotImplementedError());
+                return Promise.reject(new OperationNotSupportedError());
         }
     }
 
@@ -201,7 +201,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.putMain.putAll(array, query);
                 });
             default:
-                return Promise.reject(new MethodNotImplementedError());
+                return Promise.reject(new OperationNotSupportedError());
         }
     }
 
@@ -230,7 +230,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.deleteMain.delete(query);
                 });
             default:
-                return Promise.reject(new MethodNotImplementedError());
+                return Promise.reject(new OperationNotSupportedError());
         }
     }
 
@@ -259,7 +259,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.deleteMain.deleteAll(query);
                 });
             default:
-                return Promise.reject(new MethodNotImplementedError());
+                return Promise.reject(new OperationNotSupportedError());
         }
     }
 }
