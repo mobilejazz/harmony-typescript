@@ -15,11 +15,11 @@ import { DeleteRepository, GetRepository, PutRepository } from './repository';
 export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutRepository<Out>, DeleteRepository {
 
     constructor(
-        private getRepository: GetRepository<In>,
-        private putRepository: PutRepository<In>,
-        private deleteRepository: DeleteRepository,
-        private toOutMapper: Mapper<In, Out>,
-        private toInMapper: Mapper<Out, In>,
+        private readonly getRepository: GetRepository<In>,
+        private readonly putRepository: PutRepository<In>,
+        private readonly deleteRepository: DeleteRepository,
+        private readonly toOutMapper: Mapper<In, Out>,
+        private readonly toInMapper: Mapper<Out, In>,
     ) {}
 
     public get(query: Query, operation: Operation): Promise<Out>;

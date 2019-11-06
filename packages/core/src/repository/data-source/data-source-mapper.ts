@@ -11,25 +11,14 @@ import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
  * @param toInMapper Mapper to map repository objects to data source objects
  */
 export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSource<Out>, DeleteDataSource {
-    private getDataSource: GetDataSource<In>;
-    private putDataSource: PutDataSource<In>;
-    private deleteDataSource: DeleteDataSource;
-    private toOutMapper: Mapper<In, Out>;
-    private toInMapper: Mapper<Out, In>;
 
     constructor(
-        getDataSource: GetDataSource<In>,
-        putDataSource: PutDataSource<In>,
-        deleteDataSource: DeleteDataSource,
-        toOutMapper: Mapper<In, Out>,
-        toInMapper: Mapper<Out, In>,
-    ) {
-        this.getDataSource = getDataSource;
-        this.putDataSource = putDataSource;
-        this.deleteDataSource = deleteDataSource;
-        this.toOutMapper = toOutMapper;
-        this.toInMapper = toInMapper;
-    }
+        private readonly getDataSource: GetDataSource<In>,
+        private readonly putDataSource: PutDataSource<In>,
+        private readonly deleteDataSource: DeleteDataSource,
+        private readonly toOutMapper: Mapper<In, Out>,
+        private readonly toInMapper: Mapper<Out, In>,
+    ) { }
 
     public get(query: Query): Promise<Out>;
     public get<K>(id: K): Promise<Out>;

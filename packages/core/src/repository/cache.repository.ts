@@ -10,9 +10,7 @@ export class CacheOperation implements Operation {}
 export class CacheSyncOperation implements Operation {
     constructor(
         readonly fallback: ((error: Error) => boolean) = (() => false),
-    ) {
-        this.fallback = fallback;
-    }
+    ) {}
 }
 
 export interface ObjectValidator {
