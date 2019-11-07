@@ -125,7 +125,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     if (!this.validator.isArrayValid(values)) {
                         return Promise.reject(new NotValidError());
                     }
-                    return this.putMain.putAll(values, query);
+                    return Promise.resolve(values);
                 }).catch((err: Error) => {
                     if (err instanceof NotValidError || err instanceof NotFoundError) {
                         return this.getAll(query, new MainSyncOperation()).catch((finalError: Error) => {
