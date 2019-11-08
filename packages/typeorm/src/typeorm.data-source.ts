@@ -12,111 +12,96 @@ import {
 } from '@mobilejazz/harmony-core';
 import { DeleteError } from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
+import { NotFoundError } from "../../core/src/repository";
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(private readonly repository: TypeORMRepository<T>) {}
 
-    get(query: Query): Promise<T>;
-    get<K>(id: K): Promise<T>;
-    public async get<K>(queryOrId: Query | K): Promise<T | undefined> {
-        if (queryOrId instanceof Query) {
-            if (queryOrId instanceof IdQuery) {
-                return this.repository.findOne(queryOrId.id);
-            } else if (queryOrId instanceof ObjectRelationsQuery) {
-                return this.repository.findOne({
-                    where: this.buildArrayQuery(queryOrId.value),
-                    relations: queryOrId.relations,
+    async get(query: Query): Promise<T> {
+        if (query instanceof IdQuery) {
+            return this.repository
+                .findOne(query.id).then(value => {
+                    if (value === undefined) {
+                        throw new NotFoundError();
+                    } else {
+                        return value;
+                    }
                 });
-            } else if (queryOrId instanceof ObjectQuery) {
-                return this.repository.findOne({ where: this.buildArrayQuery(queryOrId.value) });
-            } else {
-                throw new QueryNotSupportedError();
-            }
+        } else if (query instanceof ObjectRelationsQuery) {
+            return this.repository
+                .findOne({
+                    where: this.buildArrayQuery(query.value),
+                    relations: query.relations,
+                }).then(value => {
+                    if (value === undefined) {
+                        throw new NotFoundError();
+                    } else {
+                        return value;
+                    }
+                });
+        } else if (query instanceof ObjectQuery) {
+            return this.repository
+                .findOne({ where: this.buildArrayQuery(query.value) })
+                .then(value => {
+                    if (value === undefined) {
+                        throw new NotFoundError();
+                    } else {
+                        return value;
+                    }
+                });
         } else {
-            return this.repository.findOne(queryOrId);
+            throw new QueryNotSupportedError();
         }
     }
 
-    getAll(query: Query): Promise<T[]>;
-    getAll<K>(ids: K[]): Promise<T[]>;
-    public async getAll<K>(queryOrIds: Query | K[]): Promise<T[]> {
-        if (queryOrIds instanceof Query) {
-            if (queryOrIds instanceof VoidQuery) {
+    async getAll(query: Query): Promise<T[]> {
+            if (query instanceof VoidQuery) {
                 return this.repository.find();
-            } else if (queryOrIds instanceof IdsQuery) {
-                return this.findAllEntitiesByIds(queryOrIds.ids);
-            } else if (queryOrIds instanceof ObjectRelationsQuery) {
+            } else if (query instanceof IdsQuery) {
+                return this.findAllEntitiesByIds(query.ids);
+            } else if (query instanceof ObjectRelationsQuery) {
                 return this.repository.find({
-                    where: this.buildArrayQuery(queryOrIds.value),
-                    relations: queryOrIds.relations,
+                    where: this.buildArrayQuery(query.value),
+                    relations: query.relations,
                 });
-            } else if (queryOrIds instanceof ObjectQuery) {
-                return this.repository.find({ where: this.buildArrayQuery(queryOrIds.value) });
+            } else if (query instanceof ObjectQuery) {
+                return this.repository.find({ where: this.buildArrayQuery(query.value) });
             } else {
                 throw new QueryNotSupportedError();
             }
-        } else {
-            return this.findAllEntitiesByIds(queryOrIds);
-        }
     }
 
-    put(value: T, query: Query): Promise<T>;
-    put<K>(value: T, id: K): Promise<T>;
-    public async put<K>(value: T, queryOrId: Query | K): Promise<T | undefined> {
-        if (queryOrId instanceof Query) {
-            if (queryOrId instanceof VoidQuery) {
-                return this.repository.save(value);
-            } else {
-                throw new QueryNotSupportedError();
-            }
+    async put(value: T, query: Query): Promise<T> {
+        if (query instanceof VoidQuery) {
+            return this.repository.save(value);
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
-    putAll(values: T[], query: Query): Promise<T[]>;
-    putAll<K>(values: T[], ids: K[]): Promise<T[]>;
-    public async putAll<K>(values: T[], queryOrIds: Query | K[]): Promise<T[] | undefined> {
-        if (queryOrIds instanceof Query) {
-            if (queryOrIds instanceof VoidQuery) {
-                return await Promise.all(values.map(value => this.repository.save(value)));
-            } else {
-                throw new QueryNotSupportedError();
-            }
+    async putAll(values: T[], query: Query): Promise<T[]> {
+        if (query instanceof VoidQuery) {
+            return await Promise.all(values.map(value => this.repository.save(value)));
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
-    delete(query: Query): Promise<void>;
-    delete<K>(id: K): Promise<void>;
-    public async delete<K>(queryOrId: Query | K): Promise<void> {
-        if (queryOrId instanceof Query) {
-            if (queryOrId instanceof IdQuery) {
-                const entity = await this.repository.findOne(queryOrId.id);
-                return this.remove(entity);
-            } else {
-                throw new QueryNotSupportedError();
-            }
-        } else {
-            const entity = await this.repository.findOne(queryOrId);
+    async delete(query: Query): Promise<void> {
+        if (query instanceof IdQuery) {
+            const entity = await this.repository.findOne(query.id);
             return this.remove(entity);
+        } else {
+            throw new QueryNotSupportedError();
         }
     }
 
-    deleteAll(query: Query): Promise<void>;
-    deleteAll<K>(ids: K[]): Promise<void>;
-    public async deleteAll<K>(queryOrIds: Query | K[]): Promise<void> {
-        if (queryOrIds instanceof Query) {
-            if (queryOrIds instanceof IdsQuery) {
-                const entities = await this.findAllEntitiesByIds(queryOrIds.ids);
-                return this.remove(entities);
-            } else {
-                throw new QueryNotSupportedError();
-            }
-        } else {
-            const entities = await this.findAllEntitiesByIds(queryOrIds);
+    async deleteAll(query: Query): Promise<void> {
+        if (query instanceof IdsQuery) {
+            const entities = await this.findAllEntitiesByIds(query.ids);
             return this.remove(entities);
+        } else {
+            throw new QueryNotSupportedError();
         }
     }
 
