@@ -46,3 +46,10 @@ export class InvalidArgumentError extends Error {
         this.name = "Invalid Argument";
     }
 }
+
+export class FailedError extends Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = 'Failed Error';
+    }
+}

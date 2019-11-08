@@ -1,6 +1,6 @@
 import { Mapper } from './mapper/mapper';
 import { DefaultOperation, Operation } from './operation/operation';
-import { Query, VoidQuery } from './query/query';
+import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
 
 /**
@@ -22,49 +22,34 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         private readonly toInMapper: Mapper<Out, In>,
     ) {}
 
-    public get(query: Query, operation: Operation): Promise<Out>;
-    public get<K>(id: K, operation: Operation): Promise<Out>;
-    public async get<K>(queryOrId: Query | K, operation: Operation): Promise<Out> {
-        const result: In = await this.getRepository.get(queryOrId, operation);
+    public async get(query: Query, operation: Operation): Promise<Out> {
+        const result: In = await this.getRepository.get(query, operation);
         return this.toOutMapper.map(result);
     }
 
-    public getAll(query: Query, operation: Operation): Promise<Out[]>;
-    public getAll<K>(ids: K[], operation: Operation): Promise<Out[]>;
-    public async getAll<K>(queryOrId: Query | K[], operation: Operation): Promise<Out[]> {
-        const results: In[] = await this.getRepository.getAll(queryOrId, operation);
+    public async getAll(query: Query, operation: Operation): Promise<Out[]> {
+        const results: In[] = await this.getRepository.getAll(query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 
-    public put(value: Out, query?: Query, operation?: Operation): Promise<Out>;
-    public put<K>(value: Out, id?: K, operation?: Operation): Promise<Out>;
-    public async put<K>(value: Out, queryOrId: Query | K = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<Out> {
+    public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
         let mapped: In  = this.toInMapper.map(value);
-        let result: In = await this.putRepository.put(mapped, queryOrId, operation);
+        let result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
-    public putAll(values: Out[], query?: Query, operation?: Operation): Promise<Out[]>;
-    public putAll<K>(values: Out[], ids?: K[], operation?: Operation): Promise<Out[]>;
-    public async putAll<K>(
-        values: Out[], queryOrIds: Query | K[] = new VoidQuery(),
-        operation: Operation = new DefaultOperation()): Promise<Out[]> {
-
-        let mapped: In[]  = this.toInMapper.map(values);
-        let results: In[] = await this.putRepository.putAll(mapped, queryOrIds, operation);
+    public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
+        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 
-    public delete(query: Query, operation: Operation): Promise<void>;
-    public delete<K>(id: K, operation: Operation): Promise<void>;
-    public async delete<K>(queryOrId: Query | K, operation: Operation): Promise<void> {
-        return this.deleteRepository.delete(queryOrId, operation);
+    public async delete(query: Query, operation: Operation): Promise<void> {
+        return this.deleteRepository.delete(query, operation);
     }
 
-    public deleteAll(query: Query, operation: Operation): Promise<void>;
-    public deleteAll<K>(ids: K[], operation: Operation): Promise<void>;
-    public async deleteAll<K>(queryOrIds: Query | K[], operation: Operation): Promise<void> {
-        return this.deleteRepository.deleteAll(queryOrIds, operation);
+    public async deleteAll(query: Query, operation: Operation): Promise<void> {
+        return this.deleteRepository.deleteAll(query, operation);
     }
 
 }
@@ -82,17 +67,13 @@ export class GetRepositoryMapper<In, Out> implements GetRepository<Out> {
         private toOutMapper: Mapper<In, Out>,
     ) {}
 
-    public get(query: Query, operation: Operation): Promise<Out>;
-    public get<K>(id: K, operation: Operation): Promise<Out>;
-    public async get<K>(queryOrId: Query | K, operation: Operation): Promise<Out> {
-        const result: In = await this.getRepository.get(queryOrId, operation);
+    public async get(query: Query, operation: Operation): Promise<Out> {
+        const result: In = await this.getRepository.get(query, operation);
         return this.toOutMapper.map(result);
     }
 
-    public getAll(query: Query, operation: Operation): Promise<Out[]>;
-    public getAll<K>(ids: K[], operation: Operation): Promise<Out[]>;
-    public async getAll<K>(queryOrId: Query | K[], operation: Operation): Promise<Out[]> {
-        const results: In[] = await this.getRepository.getAll(queryOrId, operation);
+    public async getAll(query: Query, operation: Operation): Promise<Out[]> {
+        const results: In[] = await this.getRepository.getAll(query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 }
@@ -112,22 +93,16 @@ export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
         private toInMapper: Mapper<Out, In>,
     ) {}
 
-    public put(value: Out, query?: Query, operation?: Operation): Promise<Out>;
-    public put<K>(value: Out, id?: K, operation?: Operation): Promise<Out>;
-    public async put<K>(value: Out, queryOrId: Query | K = new VoidQuery(), operation: Operation = new DefaultOperation()): Promise<Out> {
+    public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
         let mapped: In  = this.toInMapper.map(value);
-        let result: In = await this.putRepository.put(mapped, queryOrId, operation);
+        let result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
-    public putAll(values: Out[], query?: Query, operation?: Operation): Promise<Out[]>;
-    public putAll<K>(values: Out[], ids?: K[], operation?: Operation): Promise<Out[]>;
-    public async putAll<K>(
-        values: Out[], queryOrIds: Query | K[] = new VoidQuery(),
-        operation: Operation = new DefaultOperation()): Promise<Out[]> {
+    public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
 
-        let mapped: In[]  = this.toInMapper.map(values);
-        let results: In[] = await this.putRepository.putAll(mapped, queryOrIds, operation);
+        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 }

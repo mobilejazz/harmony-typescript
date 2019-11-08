@@ -1,8 +1,6 @@
 import { Dictionary } from '../../data';
 
-export class Query  {
-
-}
+export class Query { }
 
 export class KeyQuery extends Query {
     constructor(public readonly key: string) {

@@ -2,81 +2,57 @@ import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source';
 import {MethodNotImplementedError, Query} from '..';
 
 export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
-    get(query: Query): Promise<T>;
-    get<K>(id: K): Promise<T>;
-    get<K>(queryOrId: Query | K): Promise<T> {
-        throw new MethodNotImplementedError();
+    public async get(query: Query): Promise<T> {
+        throw new MethodNotImplementedError('Called get on VoidDataSource');
     }
 
-    getAll(query: Query): Promise<T[]>;
-    getAll<K>(ids: K[]): Promise<T[]>;
-    getAll<K>(queryOrId: Query | K): Promise<T[]> {
-        throw new MethodNotImplementedError();
+    public async getAll(query: Query): Promise<T[]> {
+        throw new MethodNotImplementedError('Called getAll on VoidDataSource');
     }
 
-    put(value: T, query: Query): Promise<T>;
-    put<K>(value: T, id: K): Promise<T>;
-    put<K>(value: T, queryOrId: Query | K): Promise<T> {
-        throw new MethodNotImplementedError();
+    public async put(value: T, query: Query): Promise<T> {
+        throw new MethodNotImplementedError('Called put on VoidDataSource');
     }
 
-    putAll(values: T[], query: Query): Promise<T[]>;
-    putAll<K>(values: T[], ids: K[]): Promise<T[]>;
-    putAll<K>(values: T[], queryOrIds: Query | K[]): Promise<T[]> {
-        throw new MethodNotImplementedError();
+    public async putAll(values: T[], query: Query): Promise<T[]> {
+        throw new MethodNotImplementedError('Called putAll on VoidDataSource');
     }
 
-    delete(query: Query): Promise<void>;
-    delete<K>(id: K): Promise<void>;
-    delete<K>(queryOrId: Query | K): Promise<void> {
-        throw new MethodNotImplementedError();
+    public async delete(query: Query): Promise<void> {
+        throw new MethodNotImplementedError('Called delete on VoidDataSource');
     }
 
-    deleteAll(query: Query): Promise<void>;
-    deleteAll<K>(ids: K[]): Promise<void>;
-    deleteAll<K>(queryOrIds: Query | K[]): Promise<void> {
-        throw new MethodNotImplementedError();
+    public async deleteAll(query: Query): Promise<void> {
+        throw new MethodNotImplementedError('Called deleteAll on VoidDataSource');
     }
 }
 
 export class VoidGetDataSource<T> implements GetDataSource<T> {
-    get(query: Query): Promise<T>;
-    get<K>(id: K): Promise<T>;
-    get<K>(queryOrId: Query | K): Promise<T> {
-        throw new MethodNotImplementedError();
+    public async get(query: Query): Promise<T> {
+        throw new MethodNotImplementedError('Called get on VoidGetDataSource');
     }
 
-    getAll(query: Query): Promise<T[]>;
-    getAll<K>(ids: K[]): Promise<T[]>;
-    getAll<K>(queryOrId: Query | K): Promise<T[]> {
-        throw new MethodNotImplementedError();
+    public async getAll(query: Query): Promise<T[]> {
+        throw new MethodNotImplementedError('Called getAll on VoidGetDataSource');
     }
 }
 
 export class VoidPutDataSource<T> implements PutDataSource<T> {
-    put(value: T, query: Query): Promise<T>;
-    put<K>(value: T, id: K): Promise<T>;
-    put<K>(value: T, queryOrId: Query | K): Promise<T> {
-        throw new MethodNotImplementedError();
+    public async put(value: T, query: Query): Promise<T> {
+        throw new MethodNotImplementedError('Called put on VoidPutDataSource');
     }
 
-    putAll(values: T[], query: Query): Promise<T[]>;
-    putAll<K>(values: T[], ids: K[]): Promise<T[]>;
-    putAll<K>(values: T[], queryOrIds: Query | K[]): Promise<T[]> {
-        throw new MethodNotImplementedError();
+    public async putAll(values: T[], query: Query): Promise<T[]> {
+        throw new MethodNotImplementedError('Called putAll on VoidPutDataSource');
     }
 }
 
 export class VoidDeleteDataSource implements DeleteDataSource {
-    delete(query: Query): Promise<void>;
-    delete<K>(id: K): Promise<void>;
-    delete<K>(queryOrId: Query | K): Promise<void> {
-        throw new MethodNotImplementedError();
+    public async delete(query: Query): Promise<void> {
+        throw new MethodNotImplementedError('Called delete on VoidDeleteDataSource');
     }
 
-    deleteAll(query: Query): Promise<void>;
-    deleteAll<K>(ids: K[]): Promise<void>;
-    deleteAll<K>(queryOrIds: Query | K[]): Promise<void> {
-        throw new MethodNotImplementedError();
+    public async deleteAll(query: Query): Promise<void> {
+        throw new MethodNotImplementedError('Called deleteAll on VoidDeleteDataSource');
     }
 }
