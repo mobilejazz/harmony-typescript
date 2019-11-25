@@ -1,8 +1,18 @@
 import { plainToClass } from 'class-transformer';
-import {FailedError} from "../errors";
+import {FailedError, MethodNotImplementedError} from "../errors";
+import {PaginationOffsetLimit, PaginationPage} from "../../data";
 
 export interface Mapper<From, To> {
     map(from: From, toType?: new () => To): To;
+}
+
+/**
+ * VoidMapper default implementation.
+ */
+export class VoidMapper<From, To> implements Mapper<From, To> {
+    public map(from: From): To {
+        throw new MethodNotImplementedError('VoidMapper is not implemented');
+    }
 }
 
 /**
@@ -94,5 +104,34 @@ export class JsonDeserializerMapper<From, To> implements Mapper <From, To> {
             output[property] = from[property];
         });
         return output;
+    }
+}
+
+/**
+ * Maps a pagination by offset limit object.
+ */
+export class PaginationOffsetLimitMapper<From, To> implements Mapper<PaginationOffsetLimit<From>, PaginationOffsetLimit<To>> {
+    constructor(private readonly mapper: Mapper<From, To>) { }
+    map(from: PaginationOffsetLimit<From>): PaginationOffsetLimit<To> {
+        return new PaginationOffsetLimit(
+            from.values.map(el => this.mapper.map(el)),
+            from.offset,
+            from.limit,
+            from.size,
+        );
+    }
+}
+
+/**
+ * Maps a pagination by page object.
+ */
+export class PaginationPageMapper<From, To> implements Mapper<PaginationPage<From>, PaginationPage<To>> {
+    constructor(private readonly mapper: Mapper<From, To>) { }
+    map(from: PaginationPage<From>): PaginationPage<To> {
+        return new PaginationPage(
+            from.values.map(el => this.mapper.map(el)),
+            from.page,
+            from.size,
+        );
     }
 }

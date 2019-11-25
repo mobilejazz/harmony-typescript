@@ -52,9 +52,13 @@ export class PaginationOffsetLimitQuery extends PaginationQuery {
     constructor(
         public readonly offset: number,
         public readonly limit: number,
-    ) {
-        super();
-    }
+    ) { super(); }
+}
+
+export class PaginationPageQuery extends PaginationQuery {
+    constructor(
+        public readonly page: number,
+    ) { super(); }
 }
 
 export class DictionaryQuery<T> extends Query {

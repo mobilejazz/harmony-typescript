@@ -22,7 +22,9 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
-        "class-transformer": "~0.2.0"
+        "class-transformer": "~0.2.0",
+        "@types/bcryptjs": "~2.4.2",
+        "bcryptjs": "~2.4.3"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",
