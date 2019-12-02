@@ -53,3 +53,10 @@ export class FailedError extends Error {
         this.name = 'Failed Error';
     }
 }
+
+export class ForbiddenError extends Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = 'Forbidden Error';
+    }
+}
