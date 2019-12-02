@@ -91,6 +91,13 @@ export abstract class AbstractLogger implements Logger {
 }
 
 export class DeviceConsoleLogger extends AbstractLogger {
+    protected logger: Console;
+
+    constructor(logger: Console) {
+        super();
+        this.logger = logger || console;
+    }
+
     keyValue(key: string, value: any): void {
         this.info(`${key}=${value}`);
     }
@@ -107,19 +114,19 @@ export class DeviceConsoleLogger extends AbstractLogger {
         switch (level) {
             case LogLevel.Fatal:
             case LogLevel.Error:
-                return console.error(message);
+                return this.logger.error(message);
 
             case LogLevel.Warning:
-                return console.warn(message);
+                return this.logger.warn(message);
 
             case LogLevel.Info:
-                return console.log(message);
+                return this.logger.log(message);
 
             case LogLevel.Debug:
-                return console.debug(message);
+                return this.logger.debug(message);
 
             case LogLevel.Trace:
-                return console.trace(message);
+                return this.logger.trace(message);
 
             default:
                 throw new UnknownLogLevelError();
