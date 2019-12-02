@@ -1,59 +1,100 @@
 export enum LogLevel {
+    Trace,
+    Debug,
     Info,
     Warning,
     Error,
+    Fatal,
+}
+
+export class UnknownLogLevelError extends Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = "Unknown Log Level";
+    }
 }
 
 export interface Logger {
+    keyValue(key: string, value: any): void;
+
     log(level: LogLevel, message: string): void;
     log(level: LogLevel, tag: string, message: string): void;
 
-    print(message: string): void;
-    print(tag: string, message: string): void;
+    trace(message: string): void;
+    trace(tag: string, message: string): void;
+
+    debug(message: string): void;
+    debug(tag: string, message: string): void;
+
+    info(message: string): void;
+    info(tag: string, message: string): void;
 
     warning(message: string): void;
     warning(tag: string, message: string): void;
 
     error(message: string): void;
     error(tag: string, message: string): void;
+
+    fatal(message: string): void;
+    fatal(tag: string, message: string): void;
 }
 
 export abstract class AbstractLogger implements Logger {
+    abstract keyValue(key: string, value: any): void;
+
     abstract log(level: LogLevel, message: string): void;
     abstract log(level: LogLevel, tag: string, message: string): void;
 
-    print(message: string): void;
-    print(tag: string, message: string): void;
-    print(tagOrMessage: string, message?: string): void {
+    protected _log(level: LogLevel, tagOrMessage: string, message?: string): void {
         if (message) {
-            this.log(LogLevel.Info, tagOrMessage, message);
+            this.log(level, tagOrMessage, message);
         } else {
-            this.log(LogLevel.Info, tagOrMessage);
+            this.log(level, tagOrMessage);
         }
+    }
+
+    trace(message: string): void;
+    trace(tag: string, message: string): void;
+    trace(tagOrMessage: string, message?: string): void {
+        this._log(LogLevel.Trace, tagOrMessage, message);
+    }
+
+    debug(message: string): void;
+    debug(tag: string, message: string): void;
+    debug(tagOrMessage: string, message?: string): void {
+        this._log(LogLevel.Debug, tagOrMessage, message);
+    }
+
+    info(message: string): void;
+    info(tag: string, message: string): void;
+    info(tagOrMessage: string, message?: string): void {
+        this._log(LogLevel.Info, tagOrMessage, message);
     }
 
     warning(message: string): void;
     warning(tag: string, message: string): void;
     warning(tagOrMessage: string, message?: string): void {
-        if (message) {
-            this.log(LogLevel.Warning, tagOrMessage, message);
-        } else {
-            this.log(LogLevel.Warning, tagOrMessage);
-        }
+        this._log(LogLevel.Warning, tagOrMessage, message);
     }
 
     error(message: string): void;
     error(tag: string, message: string): void;
     error(tagOrMessage: string, message?: string): void {
-        if (message) {
-            this.log(LogLevel.Error, tagOrMessage, message);
-        } else {
-            this.log(LogLevel.Error, tagOrMessage);
-        }
+        this._log(LogLevel.Error, tagOrMessage, message);
+    }
+
+    fatal(message: string): void;
+    fatal(tag: string, message: string): void;
+    fatal(tagOrMessage: string, message?: string): void {
+        this._log(LogLevel.Fatal, tagOrMessage, message);
     }
 }
 
 export class DeviceConsoleLogger extends AbstractLogger {
+    keyValue(key: string, value: any): void {
+        this.info(`${key}=${value}`);
+    }
+
     log(level: LogLevel, message: string): void;
     log(level: LogLevel, tag: string, message: string): void;
     log(level: LogLevel, tagOrMessage: string, message?: string): void {
@@ -64,14 +105,24 @@ export class DeviceConsoleLogger extends AbstractLogger {
         }
 
         switch (level) {
+            case LogLevel.Fatal:
             case LogLevel.Error:
                 return console.error(message);
 
             case LogLevel.Warning:
                 return console.warn(message);
 
-            default:
+            case LogLevel.Info:
                 return console.log(message);
+
+            case LogLevel.Debug:
+                return console.debug(message);
+
+            case LogLevel.Trace:
+                return console.trace(message);
+
+            default:
+                throw new UnknownLogLevelError();
         }
     }
 }
