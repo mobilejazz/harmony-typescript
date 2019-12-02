@@ -93,7 +93,7 @@ export abstract class AbstractLogger implements Logger {
 export class DeviceConsoleLogger extends AbstractLogger {
     protected logger: Console;
 
-    constructor(logger: Console) {
+    constructor(logger?: Console) {
         super();
         this.logger = logger || console;
     }
