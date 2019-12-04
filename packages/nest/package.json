@@ -1,9 +1,9 @@
 {
-    "name": "@mobilejazz/harmony-core",
+    "name": "@mobilejazz/harmony-nest",
     "version": "0.2.0-alpha.4",
-    "description": "Building blocks for a typescript application based on Harmony concept",
+    "description": "NestJS resources",
     "author": "Mobile Jazz",
-    "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/core#readme",
+    "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/nest#readme",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/mobilejazz/harmony-typescript.git"
@@ -22,7 +22,8 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
-        "class-transformer": "~0.2.0"
+        "@types/bcryptjs": "~2.4.2",
+        "bcryptjs": "~2.4.3"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",
@@ -30,6 +31,5 @@
         "tsconfig-paths": "^3.8.0",
         "tslint": "~5.14.0"
     },
-    "main": "dist/index.js",
-    "gitHead": "f4ea81086d967e967739c8082512b13ccebdffe3"
+    "main": "dist/index.js"
 }
