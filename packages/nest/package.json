@@ -31,5 +31,6 @@
         "tsconfig-paths": "^3.8.0",
         "tslint": "~5.14.0"
     },
-    "main": "dist/index.js"
+    "main": "dist/index.js",
+    "gitHead": "77d519b1d5dfa652ae5b7289833e10ed05aef26d"
 }
