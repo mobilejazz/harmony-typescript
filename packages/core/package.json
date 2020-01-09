@@ -22,7 +22,8 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
-        "class-transformer": "~0.2.0"
+        "class-transformer": "~0.2.0",
+        "@types/mysql": "^2.15.7"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",
