@@ -8,9 +8,7 @@ export class MainOperation implements  Operation {}
 export class MainSyncOperation implements  Operation {}
 export class CacheOperation implements Operation {}
 export class CacheSyncOperation implements Operation {
-    constructor(
-        readonly fallback: ((error: Error) => boolean) = (() => false),
-    ) {}
+    constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
 }
 
 export interface ObjectValidator {
@@ -47,16 +45,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         private readonly validator: ObjectValidator,
     ) {}
 
-    get(query: Query, operation: Operation): Promise<T>;
-    get<K>(id: K, operation: Operation): Promise<T>;
-    get<K>(queryOrId: Query | K, operation: Operation = new DefaultOperation()): Promise<T> {
-        let query: Query;
-        if (queryOrId instanceof Query) {
-            query = queryOrId;
-        } else {
-            query = new IdQuery(queryOrId);
-        }
-
+    public async get(query: Query, operation: Operation): Promise<T> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.get(query, new CacheSyncOperation());
@@ -71,12 +60,12 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
             case CacheSyncOperation:
                 return this.getCache.get(query).then((value: T) => {
                     if (value == null) {
-                        return Promise.reject(new NotFoundError());
+                        throw new NotFoundError();
                     }
                     if (!this.validator.isObjectValid(value)) {
-                        return Promise.reject(new NotValidError());
+                        throw new NotValidError();
                     }
-                    return Promise.resolve(value);
+                    return value;
                 }).catch((err: Error) => {
                    if (err instanceof NotValidError || err instanceof NotFoundError) {
                         return this.get(query, new MainSyncOperation()).catch((finalError: Error) => {
@@ -84,28 +73,19 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                             if (op.fallback(finalError)) {
                                 return this.getCache.get(query);
                             } else {
-                                return Promise.reject(finalError);
+                                throw finalError;
                             }
                         });
                    } else {
-                       return Promise.reject(err);
+                       throw err;
                    }
                 });
             default:
-                return Promise.reject(new OperationNotSupportedError());
+                throw new OperationNotSupportedError();
         }
     }
 
-    getAll(query: Query, operation: Operation): Promise<T[]>;
-    getAll<K>(ids: K[], operation: Operation): Promise<T[]>;
-    getAll<K>(queryOrIds: Query | K[], operation: Operation = new DefaultOperation()): Promise<T[]> {
-        let query: Query;
-        if (queryOrIds instanceof Query) {
-            query = queryOrIds;
-        } else {
-            query = new IdsQuery(queryOrIds);
-        }
-
+    public async getAll(query: Query, operation: Operation): Promise<T[]> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.getAll(query, new CacheSyncOperation());
@@ -120,12 +100,12 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
             case CacheSyncOperation:
                 return this.getCache.getAll(query).then((values: T[]) => {
                     if (values == null) {
-                        return Promise.reject(new NotFoundError());
+                        throw new NotFoundError();
                     }
                     if (!this.validator.isArrayValid(values)) {
-                        return Promise.reject(new NotValidError());
+                        throw new NotValidError();
                     }
-                    return Promise.resolve(values);
+                    return values;
                 }).catch((err: Error) => {
                     if (err instanceof NotValidError || err instanceof NotFoundError) {
                         return this.getAll(query, new MainSyncOperation()).catch((finalError: Error) => {
@@ -133,27 +113,19 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                             if (op.fallback(finalError)) {
                                 return this.getCache.getAll(query);
                             } else {
-                                return Promise.reject(finalError);
+                                throw finalError;
                             }
                         });
                     } else {
-                        return Promise.reject(err);
+                        throw err;
                     }
                 });
             default:
-                return Promise.reject(new OperationNotSupportedError());
+                throw new OperationNotSupportedError();
         }
     }
 
-    put(value: T, query: Query, operation: Operation): Promise<T>;
-    put<K>(value: T, id: K, operation: Operation): Promise<T>;
-    put<K>(value: T, queryOrId: Query | K, operation: Operation = new DefaultOperation()): Promise<T> {
-        let query: Query;
-        if (queryOrId instanceof Query) {
-            query = queryOrId;
-        } else {
-            query = new IdQuery(queryOrId);
-        }
+    public async put(value: T, query: Query, operation: Operation): Promise<T> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.put(value, query, new MainSyncOperation());
@@ -170,19 +142,11 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.putMain.put(val, query);
                 });
             default:
-                return Promise.reject(new OperationNotSupportedError());
+                throw new OperationNotSupportedError();
         }
     }
 
-    putAll(values: T[], query: Query, operation: Operation): Promise<T[]>;
-    putAll<K>(values: T[], ids: K[], operation: Operation): Promise<T[]>;
-    putAll<K>(values: T[], queryOrIds: Query | K[], operation: Operation = new DefaultOperation()): Promise<T[]> {
-        let query: Query;
-        if (queryOrIds instanceof Query) {
-            query = queryOrIds;
-        } else {
-            query = new IdsQuery(queryOrIds);
-        }
+    public async putAll(values: T[], query: Query, operation: Operation): Promise<T[]> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.putAll(values, query, new MainSyncOperation());
@@ -199,19 +163,11 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.putMain.putAll(array, query);
                 });
             default:
-                return Promise.reject(new OperationNotSupportedError());
+                throw new OperationNotSupportedError();
         }
     }
 
-    delete(query: Query, operation: Operation): Promise<void>;
-    delete<K>(id: K, operation: Operation): Promise<void>;
-    delete<K>(queryOrId: Query | K, operation: Operation = new DefaultOperation()): Promise<void> {
-        let query: Query;
-        if (queryOrId instanceof Query) {
-            query = queryOrId;
-        } else {
-            query = new IdQuery(queryOrId);
-        }
+    public async delete(query: Query, operation: Operation): Promise<void> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.delete(query, new MainSyncOperation());
@@ -228,19 +184,11 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.deleteMain.delete(query);
                 });
             default:
-                return Promise.reject(new OperationNotSupportedError());
+                throw new OperationNotSupportedError();
         }
     }
 
-    deleteAll(query: Query, operation: Operation): Promise<void>;
-    deleteAll<K>(ids: K[], operation: Operation): Promise<void>;
-    deleteAll<K>(queryOrIds: Query | K[], operation: Operation = new DefaultOperation()): Promise<void> {
-        let query: Query;
-        if (queryOrIds instanceof Query) {
-            query = queryOrIds;
-        } else {
-            query = new IdsQuery(queryOrIds);
-        }
+    public async deleteAll(query: Query, operation: Operation): Promise<void> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.deleteAll(query, new MainSyncOperation());
@@ -257,7 +205,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     return this.deleteMain.deleteAll(query);
                 });
             default:
-                return Promise.reject(new OperationNotSupportedError());
+                throw new OperationNotSupportedError();
         }
     }
 }

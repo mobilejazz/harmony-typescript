@@ -3,6 +3,7 @@ import { Dictionary, JsonDeserializerMapper, ParameterType, UrlBuilder } from '@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+// Request builder
 export class HttpRequestBuilder<T> {
     private urlBuilder: UrlBuilder;
 

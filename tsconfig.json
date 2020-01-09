@@ -16,7 +16,7 @@
         "sourceMap": false,
         "allowJs": false,
         "strict": true,
-        "strictNullChecks": true,
+        "strictNullChecks": false,
         "target": "es2015",
         "typeRoots": [
             "node_modules/@types"

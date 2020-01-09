@@ -1,8 +1,6 @@
 import { Dictionary } from '../../data';
 
-export class Query  {
-
-}
+export class Query { }
 
 export class KeyQuery extends Query {
     constructor(public readonly key: string) {
@@ -12,7 +10,7 @@ export class KeyQuery extends Query {
 
 export class VoidQuery extends Query {}
 
-export class IdQuery<T> extends KeyQuery {
+export class IdQuery<T extends number | string> extends KeyQuery {
     constructor(public readonly id: T) {
         super(id.toString());
     }
@@ -54,9 +52,13 @@ export class PaginationOffsetLimitQuery extends PaginationQuery {
     constructor(
         public readonly offset: number,
         public readonly limit: number,
-    ) {
-        super();
-    }
+    ) { super(); }
+}
+
+export class PaginationPageQuery extends PaginationQuery {
+    constructor(
+        public readonly page: number,
+    ) { super(); }
 }
 
 export class DictionaryQuery<T> extends Query {
