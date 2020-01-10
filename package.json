@@ -21,7 +21,7 @@
         "prebuild": "npm run validate",
         "build": "lerna run build",
         "validate": "lerna run lint",
-        "publish": "npm run build && lerna publish --contents dist"
+        "publish": "npm run build && lerna publish --contents dist --force-publish"
     },
     "dependencies": {},
     "devDependencies": {
