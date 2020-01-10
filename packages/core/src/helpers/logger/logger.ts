@@ -15,7 +15,7 @@ export class UnknownLogLevelError extends Error {
 }
 
 export interface Logger {
-    keyValue(key: string, value: any): void;
+    logKeyValue(key: string, value: any): void;
 
     log(level: LogLevel, message: string): void;
     log(level: LogLevel, tag: string, message: string): void;
@@ -40,7 +40,7 @@ export interface Logger {
 }
 
 export abstract class AbstractLogger implements Logger {
-    abstract keyValue(key: string, value: any): void;
+    abstract logKeyValue(key: string, value: any): void;
 
     abstract log(level: LogLevel, message: string): void;
     abstract log(level: LogLevel, tag: string, message: string): void;
@@ -87,49 +87,5 @@ export abstract class AbstractLogger implements Logger {
     fatal(tag: string, message: string): void;
     fatal(tagOrMessage: string, message?: string): void {
         this._log(LogLevel.Fatal, tagOrMessage, message);
-    }
-}
-
-export class DeviceConsoleLogger extends AbstractLogger {
-    protected logger: Console;
-
-    constructor(logger?: Console) {
-        super();
-        this.logger = logger || console;
-    }
-
-    keyValue(key: string, value: any): void {
-        this.info(`${key}=${value}`);
-    }
-
-    log(level: LogLevel, message: string): void;
-    log(level: LogLevel, tag: string, message: string): void;
-    log(level: LogLevel, tagOrMessage: string, message?: string): void {
-        if (message) {
-            message = `[${tagOrMessage}] ${message}`;
-        } else {
-            message = tagOrMessage;
-        }
-
-        switch (level) {
-            case LogLevel.Fatal:
-            case LogLevel.Error:
-                return this.logger.error(message);
-
-            case LogLevel.Warning:
-                return this.logger.warn(message);
-
-            case LogLevel.Info:
-                return this.logger.log(message);
-
-            case LogLevel.Debug:
-                return this.logger.debug(message);
-
-            case LogLevel.Trace:
-                return this.logger.trace(message);
-
-            default:
-                throw new UnknownLogLevelError();
-        }
     }
 }
