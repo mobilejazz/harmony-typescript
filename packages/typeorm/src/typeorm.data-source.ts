@@ -9,10 +9,9 @@ import {
     Query,
     QueryNotSupportedError,
     VoidQuery,
+    DeleteError, NotFoundError,
 } from '@mobilejazz/harmony-core';
-import { DeleteError } from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
-import { NotFoundError } from "../../core/src/repository";
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(private readonly repository: TypeORMRepository<T>) {}

@@ -10,7 +10,7 @@ export class KeyQuery extends Query {
 
 export class VoidQuery extends Query {}
 
-export class IdQuery<T> extends KeyQuery {
+export class IdQuery<T extends number | string> extends KeyQuery {
     constructor(public readonly id: T) {
         super(id.toString());
     }

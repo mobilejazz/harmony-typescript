@@ -19,3 +19,7 @@ export * from './interactor/get-all.interactor';
 export * from './interactor/put.interactor';
 export * from './interactor/put-all.interactor';
 export * from './interactor/put-all.interactor';
+export * from './data-source/sql/sql.query';
+export * from './data-source/sql/sql.constants';
+export * from './data-source/sql/mysql-row-counter.data-source';
+export * from './data-source/sql/raw-mysql.data-source';

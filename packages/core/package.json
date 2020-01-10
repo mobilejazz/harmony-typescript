@@ -1,6 +1,6 @@
 {
     "name": "@mobilejazz/harmony-core",
-    "version": "0.2.0-alpha.5",
+    "version": "0.2.0",
     "description": "Building blocks for a typescript application based on Harmony concept",
     "author": "Mobile Jazz",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/core#readme",
@@ -22,6 +22,7 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
+        "@types/mysql": "^2.15.7",
         "class-transformer": "~0.2.0"
     },
     "devDependencies": {

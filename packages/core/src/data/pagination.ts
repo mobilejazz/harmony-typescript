@@ -1,6 +1,6 @@
 
 export abstract class Pagination<T> {
-    constructor(readonly values: T[]) {}
+    constructor(readonly values: T[]) { }
 }
 
 export class PaginationOffsetLimit<T> extends Pagination<T> {
