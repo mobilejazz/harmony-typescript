@@ -17,12 +17,14 @@
         "allowJs": false,
         "strict": true,
         "strictNullChecks": false,
-        "target": "es2015",
+        "target": "es5",
         "lib": ["es2017", "dom"],
         "typeRoots": [
             "node_modules/@types"
         ]
     },
     "exclude": [
-        "./node_modules", "**/*.spec.ts"]
+        "./node_modules",
+        "**/*.spec.ts"
+    ]
 }
