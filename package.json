@@ -1,7 +1,7 @@
 {
     "name": "mobilejazz-harmony-typescript",
     "version": "0.0.0",
-    "description": "Building blocks for a typescript application based on Harmony concept",
+    "description": "Building blocks for TypeScript applications based on Harmony concept",
     "author": "Mobile Jazz",
     "homepage": "https://github.com/mobilejazz/harmony-typescript",
     "repository": {
