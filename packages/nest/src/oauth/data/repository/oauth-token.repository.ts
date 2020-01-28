@@ -64,7 +64,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
         );
         const token = await this.putTokenDataSource.put(entity, new VoidQuery());
         let scope: string[];
-        if (value.scope !== undefined) {
+        if (value.scope !== undefined && value.scope !== null && value.scope.length > 0) {
             // Deleting all grants
             await this.deleteTokenScopeDataSource.deleteAll(new OAuthTokenIdQuery(token.id));
             // Adding new grants
