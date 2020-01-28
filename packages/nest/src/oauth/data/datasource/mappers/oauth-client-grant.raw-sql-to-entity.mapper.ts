@@ -1,5 +1,5 @@
 import {OAuthClientGrantEntity} from '../../entity/oauth-client-grant.entity';
-import {Mapper, RawMysqlData} from '@mobilejazz/harmony-core';
+import {Mapper, RawSQLData} from '@mobilejazz/harmony-core';
 import {
     OAuthClientGrantColumnClientId,
     OAuthClientGrantColumnGrantName,
@@ -8,8 +8,8 @@ import {
     OAuthColumnUpdatedAt,
 } from '../oauth.database-columns.constants';
 
-export class OAuthClientGrantRawSqlToEntityMapper implements Mapper<RawMysqlData, OAuthClientGrantEntity> {
-    map(from: RawMysqlData): OAuthClientGrantEntity {
+export class OAuthClientGrantRawSqlToEntityMapper implements Mapper<RawSQLData, OAuthClientGrantEntity> {
+    map(from: RawSQLData): OAuthClientGrantEntity {
         return new OAuthClientGrantEntity(
             from[OAuthColumnId],
             from[OAuthColumnCreatedAt],

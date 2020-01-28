@@ -1,4 +1,4 @@
-import {Mapper, RawMysqlData} from '@mobilejazz/harmony-core';
+import {Mapper, RawSQLData} from '@mobilejazz/harmony-core';
 import {OAuthClientEntity} from '../../entity/oauth-client.entity';
 import {
     OAuthColumnCreatedAt,
@@ -10,8 +10,8 @@ import {
     OAuthClientColumnRefreshTokenLifetime,
 } from '../oauth.database-columns.constants';
 
-export class OAuthClientRawSqlToEntityMapper implements Mapper<RawMysqlData, OAuthClientEntity> {
-    public map(from: RawMysqlData): OAuthClientEntity {
+export class OAuthClientRawSqlToEntityMapper implements Mapper<RawSQLData, OAuthClientEntity> {
+    public map(from: RawSQLData): OAuthClientEntity {
         return new OAuthClientEntity(
             from[OAuthColumnId],
             from[OAuthColumnCreatedAt],
