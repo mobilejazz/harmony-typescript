@@ -156,14 +156,9 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             // tslint:disable-next-line:max-line-length
             return this.sqlInterface.query(`select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids);
         } else {
-            console.log("Query: ", query);
             const composition = this.getComposition(query);
             return this.sqlInterface
                 .query(composition.query, composition.params)
-                .then(result => {
-                    console.log("result: ", result);
-                    return result;
-                })
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         }
     }
