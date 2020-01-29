@@ -12,9 +12,8 @@ export class PostgresSQLDialect implements SQLDialect {
     getInsertionId(result: any): number {
         if (result instanceof Array && result.length > 0) {
             return result[0].id;
-        } else {
-            return undefined;
         }
+        return undefined;
     }
     getInsertionIdQueryStatement(idColumn: string): string {
         return `returning ${idColumn}`;
@@ -26,7 +25,7 @@ export class PostgresSQLDialect implements SQLDialect {
         return 'count';
     }
     mapError(error: Error): Error {
-        const message = error['message'];
+        const message = error.message;
         if (error['code'] === '23505') {
             return new ForbiddenError(message);
         }

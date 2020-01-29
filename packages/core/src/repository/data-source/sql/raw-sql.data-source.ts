@@ -1,19 +1,26 @@
-import {GetDataSource, PutDataSource, DeleteDataSource} from "../data-source";
 import {
-    FailedError,
-    ForbiddenError,
+    GetDataSource,
+    PutDataSource,
+    DeleteDataSource,
+} from "../data-source";
+import {
     InvalidArgumentError,
     NotFoundError,
     QueryNotSupportedError,
 } from "../../errors";
 import {
+    BaseColumnCreatedAt,
+    BaseColumnUpdatedAt,
+    BaseColumnId,
     IdQuery,
     IdsQuery,
     PaginationOffsetLimitQuery,
     Query,
 } from "../..";
-import {SQLDialect, SQLInterface} from "../../../data";
-import {BaseColumnId} from "./sql.constants";
+import {
+    SQLDialect,
+    SQLInterface,
+} from "../../../data";
 import {
     SQLOrderByPaginationQuery,
     SQLOrderByQuery,
@@ -48,9 +55,9 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly sqlInterface: SQLInterface,
         protected readonly tableName: string,
         protected readonly columns: string[],
-        protected readonly idColumn = 'id',
-        protected readonly createdAtColumn = 'created_at',
-        protected readonly updatedAtColumn = 'updated_at',
+        protected readonly idColumn = BaseColumnId,
+        protected readonly createdAtColumn = BaseColumnCreatedAt,
+        protected readonly updatedAtColumn = BaseColumnUpdatedAt,
     ) {
         let tableColumns = [];
         if (createdAtColumn) {
@@ -63,11 +70,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     private getColumnsQuery(): string {
-        let columnsStr = this.idColumn;
-        this.tableColumns.forEach(column => {
-            columnsStr += `, ${column}`;
-        });
-        return columnsStr;
+        return [this.idColumn, ...this.tableColumns].join(', ');
     }
 
     protected orderLimitSQL(limitIdx: number, offsetIdx: number, column: string, ascending: boolean): string {
@@ -106,14 +109,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         return new SQLQueryComposition(queryStr, params);
     }
     async get(query: Query): Promise<RawSQLData> {
-        let columnsStr = this.idColumn;
-        this.tableColumns.forEach(column => {
-            columnsStr += `, ${column}`;
-        });
         if (query instanceof IdQuery) {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
-                .query(`select ${columnsStr} from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
+                .query(`select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
                 .then(rows => {
                     if (rows.length === 0) {
                         throw new NotFoundError();
@@ -141,14 +140,9 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     // Returns the content of the 'in (...)' statement for the number of given arguments.
     private inStatement(count: number): string {
-        let string = '';
-        for (let i = 0; i < count; i++) {
-            string = string + `${this.sqlDialect.getParameterSymbol(i + 1)}`;
-            if (i < count - 1) {
-                string = string + ', ';
-            }
-        }
-        return string;
+        return Array(count).fill(0)
+            .map((_value, idx) => this.sqlDialect.getParameterSymbol(idx + 1))
+            .join(', ');
     }
 
     async getAll(query: Query): Promise<RawSQLData[]> {
@@ -174,56 +168,39 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     private updateSQLQuery(value: RawSQLData): string {
-        let paramList: any[] = [];
-        let counter = 0;
-        this.tableColumns.forEach(column => {
-            if (value[column] !== undefined) {
-                counter += 1;
-                paramList.push(`${column} = ${this.sqlDialect.getParameterSymbol(counter)}`);
-            }
-        });
-        let params = paramList.join(',');
-        counter += 1;
+        const paramList = this.tableColumns
+            .filter(column => value[column] !== undefined)
+            .map((column, idx) => `${column} = ${this.sqlDialect.getParameterSymbol(idx + 1)}`);
+        const params = paramList.join(',');
         // tslint:disable-next-line:max-line-length
-        return `update ${this.sqlDialect.getTableName(this.tableName)} set ${params} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(counter)}`;
+        return `update ${this.sqlDialect.getTableName(this.tableName)} set ${params} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(paramList.length + 1)}`;
     }
 
     private updateSQLParams(id: any, value: RawSQLData): any[] {
-        let params: any[] = [];
-        this.tableColumns.forEach(column => {
-            if (value[column] !== undefined) {
-                params.push(value[column]);
-            }
-        });
+        let params = this.tableColumns
+            .filter(column => value[column] !== undefined)
+            .map(column => value[column]);
         params.push(id);
         return params;
     }
 
     private insertSQLQuery(value: RawSQLData): string {
-        let paramList: any[] = [];
-        let valueList: any[] = [];
-        let counter = 0;
-        this.tableColumns.forEach((column, idx) => {
-            if (value[column] !== undefined) {
-                paramList.push(`${column}`);
-                counter += 1;
-                valueList.push(this.sqlDialect.getParameterSymbol(counter));
-            }
-        });
-        let params = `(${paramList.join(',')})`;
-        let values = `(${valueList.join(',')})`;
+        let params: string[] = [];
+        let values: any[] = [];
+        this.tableColumns
+            .filter(column => value[column] !== undefined)
+            .forEach((column, idx) => {
+                params.push(`${column}`);
+                values.push(this.sqlDialect.getParameterSymbol(idx + 1));
+            });
         // tslint:disable-next-line:max-line-length
-        return `insert into ${this.sqlDialect.getTableName(this.tableName)} ${params} values ${values} ${this.sqlDialect.getInsertionIdQueryStatement(this.idColumn)}`;
+        return `insert into ${this.sqlDialect.getTableName(this.tableName)} (${params.join(',')}) values (${values.join(',')}) ${this.sqlDialect.getInsertionIdQueryStatement(this.idColumn)}`;
     }
 
     private insertSQLQueryParams(value: RawSQLData): any[] {
-        let params: any[] = [];
-        this.tableColumns.forEach(column => {
-            if (value[column] !== undefined) {
-                params.push(value[column]);
-            }
-        });
-        return params;
+        return this.tableColumns
+            .filter(column => value[column] !== undefined)
+            .map(column => value[column]);
     }
 
     // Subclasses can override
@@ -239,27 +216,23 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     // This method executes the put query.
     // If desired, call it inside a transaction.
     private executePutQuery(value: RawSQLData, id: number, sqlInterface: SQLInterface): Promise<number> {
-        const isInsertion = !(id !== undefined && id !== null);
+        const isInsertion = id === undefined || id === null;
         return sqlInterface.query(
             isInsertion ? this.insertSQLQuery(value) : this.updateSQLQuery(value),
             isInsertion ? this.insertSQLQueryParams(value) : this.updateSQLParams(id, value),
         ).then(result => {
-            // TODO: Fix this
-            // When the insertion/update fails (for example, because of a unique constraint),
-            // no error is generated and the result contains insertId = 0
-            let rowId = id ? id : this.sqlDialect.getInsertionId(result);
             if (isInsertion) {
+                const rowId = this.sqlDialect.getInsertionId(result);
                 // After a succesfull insertion, checking if subclasses
                 // might want to perform any further action within the same
                 // transaction scope.
-                return this.postInsert(sqlInterface, rowId)
-                    .then(() => rowId);
+                return this.postInsert(sqlInterface, rowId).then(() => rowId);
             } else {
+                const rowId = id;
                 // After a succesfull udpate, checking if subclasses
                 // might want to perform any further action within the same
                 // transaction scope.
-                return this.postUpdate(sqlInterface, rowId)
-                    .then(() => rowId);
+                return this.postUpdate(sqlInterface, rowId).then(() => rowId);
             }
         });
     }
@@ -308,7 +281,6 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     async deleteAll(query: Query): Promise<void> {
         if (query instanceof IdsQuery) {
-            // TODO: Double check this works
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
                 .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)

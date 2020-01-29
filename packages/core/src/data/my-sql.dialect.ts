@@ -4,13 +4,13 @@ import {FailedError, ForbiddenError} from "../repository";
 
 export class MySQLDialect implements SQLDialect {
     getParameterSymbol(idx?: number): string {
-        return "?";
+        return '?';
     }
     getInsertionId(result: any): number {
-        return result['insertId'];
+        return result.insertId;
     }
     getInsertionIdQueryStatement(idColumn: string): string {
-        return "";
+        return '';
     }
     getTableName(tableName: string): string {
         return `\`${tableName}\``;
@@ -27,8 +27,7 @@ export class MySQLDialect implements SQLDialect {
             } else {
                 return new FailedError(message);
             }
-        } else {
-            return error;
         }
+        return new FailedError(error.message);
     }
 }
