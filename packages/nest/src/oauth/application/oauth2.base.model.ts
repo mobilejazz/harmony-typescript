@@ -17,7 +17,6 @@ export class OAuthClient implements Client {
     ) {}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class OAuthToken implements Token {
     constructor(
         readonly accessToken: string,
@@ -30,7 +29,6 @@ export class OAuthToken implements Token {
     ) {}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, ClientCredentialsModel {
     constructor(
         protected readonly getClientInteractor: GetOAuthClientInteractor,
@@ -149,7 +147,7 @@ export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, C
         scope: string | string[],
         callback?: (err?: any, result?: boolean) => void,
     ): Promise<boolean> {
-        console.log('WARNING: Scope Verification not implemented! Always returning true!');
+        // console.log('WARNING: Scope Verification not implemented! Always returning true!');
         if (callback) {
             callback(null, true);
         }

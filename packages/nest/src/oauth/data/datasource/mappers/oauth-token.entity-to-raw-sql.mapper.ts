@@ -1,4 +1,4 @@
-import {Mapper, RawMysqlData} from '@mobilejazz/harmony-core';
+import {Mapper, RawSQLData} from '@mobilejazz/harmony-core';
 import {OAuthTokenEntity} from '../../entity/oauth-token.entity';
 import {
     OAuthColumnCreatedAt,
@@ -9,8 +9,8 @@ import {
     OAuthTokenColumnRefreshTokenExpiresAt,
 } from '../oauth.database-columns.constants';
 
-export class OAuthTokenEntityToRawSqlMapper implements Mapper<OAuthTokenEntity, RawMysqlData> {
-    public map(from: OAuthTokenEntity): RawMysqlData {
+export class OAuthTokenEntityToRawSqlMapper implements Mapper<OAuthTokenEntity, RawSQLData> {
+    public map(from: OAuthTokenEntity): RawSQLData {
         let raw = {};
         raw[OAuthTokenColumnAccessToken] = from.accessToken;
         raw[OAuthTokenColumnAccessTokenExpiresAt] = from.accessTokenExpiresAt;

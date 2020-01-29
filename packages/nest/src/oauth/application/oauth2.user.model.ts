@@ -8,8 +8,8 @@ import {LoginOAuthUserInteractor} from '../domain/interactors/login-oauth-user.i
 import {GetOAuthUserInteractor} from '../domain/interactors/get-oauth-user.interactor';
 import {GetOAuthRefreshTokenInteractor} from '../domain/interactors/get-oauth-refresh-token.interactor';
 import {DeleteOAuthTokenInteractor} from '../domain/interactors/delete-oauth-token.interactor';
-import {ForbiddenException} from '@nestjs/common';
 import {AlwaysValidScopeInteractor, ValidateScopeInteractor} from '../domain/interactors/validate-scope.interactor';
+import {ForbiddenException} from '@nestjs/common';
 
 class OAuthRefreshToken implements RefreshToken {
     constructor(
@@ -21,7 +21,6 @@ class OAuthRefreshToken implements RefreshToken {
     ) {}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, RefreshTokenModel {
     constructor(
         getClientInteractor: GetOAuthClientInteractor,
