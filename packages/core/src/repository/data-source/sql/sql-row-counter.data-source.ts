@@ -16,12 +16,12 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
                 .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
-                .then(result => Number(result[0]['count(*)']))
+                .then(result => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         } else {
             return this.sqlInterface
                 .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)}`)
-                .then(result => Number(result[0]['count(*)']))
+                .then(result => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         }
     }
