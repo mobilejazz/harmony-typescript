@@ -14,12 +14,13 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
     get(query: Query): Promise<number> {
         if (query instanceof SQLWhereQuery) {
             return this.sqlInterface
-                .query(`select count(*) from ${this.tableName} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
+                // tslint:disable-next-line:max-line-length
+                .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
                 .then(result => Number(result[0]['count(*)']))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         } else {
             return this.sqlInterface
-                .query(`select count(*) from ${this.tableName}`)
+                .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)}`)
                 .then(result => Number(result[0]['count(*)']))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         }
