@@ -1,4 +1,12 @@
-import {BaseModel, RequestAuthenticationModel, Client, Falsey, Token, User, ClientCredentialsModel} from 'oauth2-server';
+import {
+    BaseModel,
+    RequestAuthenticationModel,
+    Client,
+    Falsey,
+    Token,
+    User,
+    ClientCredentialsModel,
+} from 'oauth2-server';
 import {GetOAuthClientInteractor} from '../domain/interactors/get-oauth-client.interactor';
 import {PutOAuthTokenInteractor} from '../domain/interactors/put-oauth-token.interactor';
 import {GetOAuthTokenInteractor} from '../domain/interactors/get-oauth-token.interactor';
@@ -77,13 +85,19 @@ export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, C
         } else if (token.scope instanceof Array) {
             scope = token.scope;
         }
+        let userId: string;
+        if (typeof user.oauthId === 'function') {
+            // Can't enforce to implement OAuthUser,
+            // Also, user can be undefined if doing a client_credentials grant type
+            userId = user.oauthId();
+        }
         await this.putTokenInteractor.execute(
             token.accessToken,
             token.accessTokenExpiresAt,
             token.refreshToken,
             token.refreshTokenExpiresAt,
             client.id,
-            user.oauthId(), // <- can't enforce to implement OAuthUser
+            userId,
             scope,
         );
         token.client = client;
