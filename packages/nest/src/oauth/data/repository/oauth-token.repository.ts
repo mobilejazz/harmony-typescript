@@ -69,7 +69,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
             await this.deleteTokenScopeDataSource.deleteAll(new OAuthTokenIdQuery(token.id));
             // Adding new grants
             scope = await this.putTokenScopeDataSource
-                .putAll(value.scope.map(s => new OAuthTokenScopeEntity(null, null, null, s, token.id)), new VoidQuery())
+                .putAll(value.scope.map(s => new OAuthTokenScopeEntity(undefined, undefined, undefined, s, token.id)), new VoidQuery())
                 .then(array => array.map(s => s.scope));
         }
         return new OAuthTokenModel(
