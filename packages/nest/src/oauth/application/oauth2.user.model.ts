@@ -8,7 +8,7 @@ import {LoginOAuthUserInteractor} from '../domain/interactors/login-oauth-user.i
 import {GetOAuthUserInteractor} from '../domain/interactors/get-oauth-user.interactor';
 import {GetOAuthRefreshTokenInteractor} from '../domain/interactors/get-oauth-refresh-token.interactor';
 import {DeleteOAuthTokenInteractor} from '../domain/interactors/delete-oauth-token.interactor';
-import {AlwaysValidScopeInteractor, ValidateScopeInteractor} from '../domain/interactors/validate-scope.interactor';
+import {ValidateScopeInteractor} from '../domain/interactors/validate-scope.interactor';
 import {ForbiddenException} from '@nestjs/common';
 
 class OAuthRefreshToken implements RefreshToken {
@@ -31,7 +31,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         protected readonly loginUserInteractor: LoginOAuthUserInteractor,
         protected readonly getRefreshTokenInteractor: GetOAuthRefreshTokenInteractor,
         protected readonly deleteTokenInteractor: DeleteOAuthTokenInteractor,
-        protected readonly validateScopeInteractor: ValidateScopeInteractor = new AlwaysValidScopeInteractor(),
+        protected readonly validateScopeInteractor: ValidateScopeInteractor,
     ) {
         super(
             getClientInteractor,

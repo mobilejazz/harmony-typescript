@@ -58,8 +58,9 @@ import {GetOAuthUserInteractor} from "./domain/interactors/get-oauth-user.intera
 import {OAuth2UserModel} from "./application/oauth2.user.model";
 import {LoginOAuthUserInteractor} from "./domain/interactors/login-oauth-user.interactor";
 import {OAuth2BaseModel} from "./application/oauth2.base.model";
+import {ValidateScopeInteractor} from "./domain/interactors/validate-scope.interactor";
 
-export class OAuthSqlProvider implements OAuthProvider {
+export class OAuthSQLProvider implements OAuthProvider {
     constructor(
         private readonly sqlDialect: SQLDialect,
         private readonly sqlInterface: SQLInterface,
@@ -74,7 +75,11 @@ export class OAuthSqlProvider implements OAuthProvider {
             null,
         );
     }
-    public userModel(getUser: GetOAuthUserInteractor, loginUser: LoginOAuthUserInteractor): OAuth2UserModel {
+    public userModel(
+        getUser: GetOAuthUserInteractor,
+        loginUser: LoginOAuthUserInteractor,
+        scopeValidation: ValidateScopeInteractor,
+        ): OAuth2UserModel {
         return new OAuth2UserModel(
             this.getClient(),
             this.putToken(),
@@ -84,6 +89,7 @@ export class OAuthSqlProvider implements OAuthProvider {
             loginUser,
             this.getRefreshToken(),
             this.deleteToken(),
+            scopeValidation,
         );
     }
 
