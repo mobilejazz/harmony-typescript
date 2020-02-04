@@ -3,11 +3,11 @@ import {
     DeleteRepository,
     GetDataSource,
     GetRepository,
-    IdQuery, MethodNotImplementedError,
+    MethodNotImplementedError,
     Operation,
     PutDataSource,
     PutRepository,
-    Query, QueryNotSupportedError, VoidQuery,
+    Query, VoidQuery,
 } from '@mobilejazz/harmony-core';
 import {OAuthClientModel} from '../../domain/oauth-client.model';
 import {OAuthClientEntity} from '../entity/oauth-client.entity';
