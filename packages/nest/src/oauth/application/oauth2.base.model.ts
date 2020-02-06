@@ -37,7 +37,7 @@ export class OAuthToken implements Token {
     ) {}
 }
 
-export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, ClientCredentialsModel {
+export class OAuth2BaseModel implements ClientCredentialsModel {
     constructor(
         protected readonly getClientInteractor: GetOAuthClientInteractor,
         protected readonly putTokenInteractor: PutOAuthTokenInteractor,
@@ -116,7 +116,7 @@ export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, C
             const token = await this.getTokenInteractor.execute(accessToken);
 
             let userInfo: OAuthUserInfoModel;
-            let user: OAuthUser;
+            let user = {}; // <-- a user must be defined anyway, otherwise the OAuth2Server will fail
             try {
                 if (this.getUserInfoInteractor) {
                     userInfo = await this.getUserInfoInteractor.execute(token.accessToken);
