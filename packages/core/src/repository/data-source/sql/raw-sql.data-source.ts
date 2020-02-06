@@ -275,12 +275,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
                 .then(() => Promise.resolve())
                 .catch(e => { throw this.sqlDialect.mapError(e); });
-        }
-        throw new QueryNotSupportedError();
-    }
-
-    async deleteAll(query: Query): Promise<void> {
-        if (query instanceof IdsQuery) {
+        } else if (query instanceof IdsQuery) {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
                 .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
@@ -293,6 +288,13 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 .then(() => Promise.resolve())
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         }
+
         throw new QueryNotSupportedError();
+    }
+
+    async deleteAll(query: Query): Promise<void> {
+        // tslint:disable-next-line:max-line-length
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.delete(query);
     }
 }

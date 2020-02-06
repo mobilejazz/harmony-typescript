@@ -189,6 +189,9 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
     }
 
     public async deleteAll(query: Query, operation: Operation): Promise<void> {
+        // tslint:disable-next-line:max-line-length
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.deleteAll(query, new MainSyncOperation());

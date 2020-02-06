@@ -20,6 +20,7 @@ export class VoidRepository<T> implements GetRepository<T>, PutRepository<T>, De
         throw new MethodNotImplementedError('Called delete on VoidRepository');
     }
     public async deleteAll(query: Query, operation: Operation): Promise<void> {
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
         throw new MethodNotImplementedError('Called deleteAll on VoidRepository');
     }
 }
@@ -47,6 +48,7 @@ export class VoidDeleteRepository implements DeleteRepository {
         throw new MethodNotImplementedError('Called delete on VoidDeleteRepository');
     }
     public async deleteAll(query: Query, operation: Operation): Promise<void> {
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
         throw new MethodNotImplementedError('Called deleteAll on VoidDeleteRepository');
     }
 }

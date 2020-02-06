@@ -32,7 +32,8 @@ export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepos
     }
 
     public deleteAll(query: Query, operation: Operation): Promise<void> {
-        return this.deleteDataSource.deleteAll(query);
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.deleteDataSource.delete(query);
     }
 
 }
@@ -80,6 +81,7 @@ export class SingleDeleteDataSourceRepository implements DeleteRepository {
     }
 
     public deleteAll(query: Query, operation: Operation): Promise<void> {
-        return this.deleteDataSource.deleteAll(query);
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.deleteDataSource.delete(query);
     }
 }

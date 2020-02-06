@@ -66,6 +66,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
         let scope: string[];
         if (value.scope !== undefined && value.scope !== null && value.scope.length > 0) {
             // Deleting all grants
+            console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
             await this.deleteTokenScopeDataSource.deleteAll(new OAuthTokenIdQuery(token.id));
             // Adding new grants
             scope = await this.putTokenScopeDataSource
@@ -96,6 +97,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
 
     async deleteAll(query: Query, operation: Operation): Promise<void> {
         // token scopes will be deleted as table column is configured on delete cascade.
-        return this.deleteTokenDataSource.deleteAll(query);
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+        return this.deleteTokenDataSource.delete(query);
     }
 }

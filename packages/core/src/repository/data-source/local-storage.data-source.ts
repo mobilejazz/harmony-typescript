@@ -42,10 +42,16 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
 
     public async delete(query: Query): Promise<void> {
         if (query instanceof KeyQuery) {
-            localStorage.removeItem(query.key);
-            if (localStorage.getItem(query.key) !== null) {
+            let keys = query.key.split(',');
+            let result = keys.map(key => {
+                localStorage.removeItem(key);
+                return localStorage.getItem(key) === null;
+            });
+
+            if (result.indexOf(false) !== -1) {
                 throw new DeleteError();
             }
+
             return;
         } else {
             throw QueryNotSupportedError;
@@ -53,18 +59,8 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
     }
 
     public async deleteAll(query: Query): Promise<void> {
-        if (query instanceof KeyQuery) {
-            let keys = query.key.split(',');
-            let result = keys.map((key: string) => {
-                localStorage.removeItem(key);
-                return localStorage.getItem(key) === null;
-            });
-            if (result.indexOf(false) !== -1) {
-                throw new DeleteError();
-            }
-            return;
-        } else {
-            throw QueryNotSupportedError;
-        }
+        // tslint:disable-next-line:max-line-length
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.delete(query);
     }
 }

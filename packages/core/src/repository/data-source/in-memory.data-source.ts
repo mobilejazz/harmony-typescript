@@ -63,28 +63,24 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
 
     public async delete(query: Query): Promise<void> {
         if (query instanceof KeyQuery) {
+            delete this.arrays[query.key];
             delete this.objects[query.key];
-            return;
+        } else if (query instanceof IdsQuery) {
+            for (let key of query.ids) {
+                delete this.arrays[key];
+                delete this.objects[key];
+            }
+        } else if (query instanceof AllObjectsQuery) {
+            this.arrays = {};
+            this.objects = {};
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
     public async deleteAll(query: Query): Promise<void> {
-        if (query instanceof KeyQuery) {
-            delete this.arrays[query.key];
-            return;
-        } else if (query instanceof IdsQuery) {
-            for (let key of query.ids) {
-                delete this.objects[key];
-            }
-            return;
-        } else if (query instanceof AllObjectsQuery) {
-            this.objects = {};
-            this.arrays = {};
-            return;
-        } else {
-            throw new QueryNotSupportedError();
-        }
+        // tslint:disable-next-line:max-line-length
+        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead. Rewrite using `delete` with `AllObjectsQuery` to remove all entries or with any other `Query` to remove one or more entries.');
+        return this.delete(query);
     }
 }
