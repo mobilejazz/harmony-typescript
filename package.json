@@ -20,7 +20,7 @@
     "scripts": {
         "prebuild": "npm run validate",
         "build": "lerna run build",
-        "validate": "lerna run lint",
+        "validate": "lerna run lint && npm test",
         "publish": "npm run build && lerna publish --contents dist --force-publish",
         "test": "jest"
     },
