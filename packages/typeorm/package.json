@@ -1,6 +1,6 @@
 {
     "name": "@mobilejazz/harmony-typeorm",
-    "version": "0.3.0-alpha.5",
+    "version": "0.3.0-alpha.6",
     "description": "Building blocks for a typescript application based on Harmony concept",
     "author": "Mobile Jazz",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/typeorm#readme",
@@ -22,7 +22,7 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
-        "@mobilejazz/harmony-core": "^0.3.0-alpha.5",
+        "@mobilejazz/harmony-core": "^0.3.0-alpha.6",
         "typeorm": "~0.2.16"
     },
     "devDependencies": {
