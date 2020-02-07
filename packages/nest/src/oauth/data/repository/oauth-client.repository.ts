@@ -3,11 +3,13 @@ import {
     DeleteRepository,
     GetDataSource,
     GetRepository,
-    IdQuery, MethodNotImplementedError,
+    MethodNotImplementedError,
     Operation,
     PutDataSource,
     PutRepository,
-    Query, QueryNotSupportedError, VoidQuery,
+    Query,
+    VoidQuery,
+    Logger,
 } from '@mobilejazz/harmony-core';
 import {OAuthClientModel} from '../../domain/oauth-client.model';
 import {OAuthClientEntity} from '../entity/oauth-client.entity';
@@ -22,6 +24,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         private readonly getClientGrantsDataSource: GetDataSource<OAuthClientGrantEntity>,
         private readonly putClientGrantsDataSource: PutDataSource<OAuthClientGrantEntity>,
         private readonly deleteClientGrantsDataSource: DeleteDataSource,
+        private readonly logger: Logger,
     ) {}
 
     async get(query: Query, operation: Operation): Promise<OAuthClientModel> {
@@ -73,7 +76,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         let grants: string[];
         if (value.grants !== undefined) {
             // Deleting all grants
-            console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+            this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
             await this.deleteClientGrantsDataSource.deleteAll(new OAuthClientIdQuery(client.id));
             // Adding new grants
             grants = await this.putClientGrantsDataSource
@@ -102,7 +105,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
     }
 
     deleteAll(query: Query, operation: Operation): Promise<void> {
-        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
         // client grants will be deleted as table column is configured on delete cascade.
         return undefined;
     }

@@ -9,12 +9,17 @@ import {
     Query,
     QueryNotSupportedError,
     VoidQuery,
-    DeleteError, NotFoundError,
+    DeleteError,
+    NotFoundError,
+    Logger,
 } from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
-    constructor(private readonly repository: TypeORMRepository<T>) {}
+    constructor(
+        private readonly repository: TypeORMRepository<T>,
+        private readonly logger: Logger,
+    ) {}
 
     async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
@@ -99,7 +104,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
     }
 
     async deleteAll(query: Query): Promise<void> {
-        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
         return this.delete(query);
     }
 

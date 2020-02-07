@@ -27,6 +27,7 @@ import {
     SQLWherePaginationQuery,
     SQLWhereQuery,
 } from "./sql.query";
+import { Logger } from "helpers";
 
 export type RawSQLData = any;
 
@@ -55,6 +56,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly sqlInterface: SQLInterface,
         protected readonly tableName: string,
         protected readonly columns: string[],
+        protected readonly logger: Logger,
         protected readonly idColumn = BaseColumnId,
         protected readonly createdAtColumn = BaseColumnCreatedAt,
         protected readonly updatedAtColumn = BaseColumnUpdatedAt,
@@ -294,7 +296,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     async deleteAll(query: Query): Promise<void> {
         // tslint:disable-next-line:max-line-length
-        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
         return this.delete(query);
     }
 }

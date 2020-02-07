@@ -1,8 +1,13 @@
 import {AllObjectsQuery, DeleteDataSource, GetDataSource, IdsQuery, KeyQuery, PutDataSource, Query, QueryNotSupportedError} from '..';
+import {Logger} from 'helpers';
 
 export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     private objects: any = {};
     private arrays: any = {};
+
+    constructor(
+        private readonly logger: Logger,
+    ) {}
 
     public async get(query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
@@ -80,7 +85,7 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
 
     public async deleteAll(query: Query): Promise<void> {
         // tslint:disable-next-line:max-line-length
-        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead. Rewrite using `delete` with `AllObjectsQuery` to remove all entries or with any other `Query` to remove one or more entries.');
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead. Rewrite using `delete` with `AllObjectsQuery` to remove all entries or with any other `Query` to remove one or more entries.');
         return this.delete(query);
     }
 }

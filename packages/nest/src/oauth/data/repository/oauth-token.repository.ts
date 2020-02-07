@@ -2,11 +2,16 @@ import {
     DeleteDataSource,
     DeleteRepository,
     GetDataSource,
-    GetRepository, IdQuery, InvalidArgumentError, MethodNotImplementedError,
+    GetRepository,
+    IdQuery,
+    InvalidArgumentError,
+    MethodNotImplementedError,
     Operation,
     PutDataSource,
     PutRepository,
-    Query, VoidQuery,
+    Query,
+    VoidQuery,
+    Logger,
 } from '@mobilejazz/harmony-core';
 import {OAuthTokenModel} from '../../domain/oauth-token.model';
 import {OAuthClientModel} from '../../domain/oauth-client.model';
@@ -24,6 +29,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
         private readonly getTokenScopeDataSource: GetDataSource<OAuthTokenScopeEntity>,
         private readonly putTokenScopeDataSource: PutDataSource<OAuthTokenScopeEntity>,
         private readonly deleteTokenScopeDataSource: DeleteDataSource,
+        private readonly logger: Logger,
     ) {}
 
     async get(query: Query, operation: Operation): Promise<OAuthTokenModel> {
@@ -66,7 +72,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
         let scope: string[];
         if (value.scope !== undefined && value.scope !== null && value.scope.length > 0) {
             // Deleting all grants
-            console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+            this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
             await this.deleteTokenScopeDataSource.deleteAll(new OAuthTokenIdQuery(token.id));
             // Adding new grants
             scope = await this.putTokenScopeDataSource
@@ -97,7 +103,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
 
     async deleteAll(query: Query, operation: Operation): Promise<void> {
         // token scopes will be deleted as table column is configured on delete cascade.
-        console.warn('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
         return this.deleteTokenDataSource.delete(query);
     }
 }
