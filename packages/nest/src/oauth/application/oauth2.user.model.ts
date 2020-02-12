@@ -55,9 +55,9 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
             return user;
         } catch (err) {
             if (callback) {
-                callback(err, null);
+                callback(false, null);
             }
-            return null;
+            return false;
         }
     }
 
