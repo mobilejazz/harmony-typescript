@@ -24,7 +24,9 @@
         "publish": "npm run build && lerna publish --contents dist --force-publish",
         "test": "jest"
     },
-    "dependencies": {},
+    "dependencies": {
+        "typeorm": "^0.2.22"
+    },
     "devDependencies": {
         "@types/jest": "^25.1.2",
         "@types/node": "~11.12.0",
