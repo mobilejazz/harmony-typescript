@@ -75,12 +75,15 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         return [this.idColumn, ...this.tableColumns].join(', ');
     }
 
-    protected orderLimitSQL(limitIdx: number, offsetIdx: number, column: string, ascending: boolean): string {
-        // tslint:disable-next-line:max-line-length
-        return `order by ${column} ${(ascending ? 'asc' : 'desc')} limit ${this.sqlDialect.getParameterSymbol(limitIdx)} offset ${this.sqlDialect.getParameterSymbol(offsetIdx)}`;
+    protected orderSQL(column: string, ascending: boolean): string {
+        return `order by ${column} ${(ascending ? 'asc' : 'desc')}`;
     }
 
-    protected getComposition(query: Query, limit = 10, offset = 0): SQLQueryComposition {
+    protected limitSQL(limitIdx: number, offsetIdx: number): string {
+        return `limit ${this.sqlDialect.getParameterSymbol(limitIdx)} offset ${this.sqlDialect.getParameterSymbol(offsetIdx)}`;
+    }
+
+    protected getComposition(query: Query, limit?: number, offset?: number): SQLQueryComposition {
         let whereParams = [];
         let whereParamsLength = 0;
         let whereSql = "";
@@ -97,18 +100,24 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             column = query.orderBy();
             ascending = query.ascending();
         }
+        const orderSQL = this.orderSQL(column, ascending);
 
         if (query instanceof PaginationOffsetLimitQuery) {
             offset = query.offset;
             limit = query.limit;
         }
 
-        const orderLimitSQL = this.orderLimitSQL(whereParamsLength + 1, whereParamsLength + 2, column, ascending);
-        const params = whereParams.concat([limit, offset]);
-        // tslint:disable-next-line:max-line-length
-        const queryStr = `select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} ${whereSql} ${orderLimitSQL}`;
+        let limitSQL = "";
+        if (limit !== undefined && offset !== undefined) {
+            limitSQL = this.limitSQL(whereParamsLength + 1, whereParamsLength + 2);
+            whereParams.push(limit);
+            whereParams.push(offset);
+        }
 
-        return new SQLQueryComposition(queryStr, params);
+        // tslint:disable-next-line:max-line-length
+        const queryStr = `select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} ${whereSql} ${orderSQL} ${limitSQL}`;
+
+        return new SQLQueryComposition(queryStr, whereParams);
     }
     async get(query: Query): Promise<RawSQLData> {
         if (query instanceof IdQuery) {
