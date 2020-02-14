@@ -27,6 +27,7 @@ import {
     SQLWherePaginationQuery,
     SQLWhereQuery,
 } from "./sql.query";
+import { Logger, DeviceConsoleLogger } from "helpers";
 
 export type RawSQLData = any;
 
@@ -58,6 +59,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly idColumn = BaseColumnId,
         protected readonly createdAtColumn = BaseColumnCreatedAt,
         protected readonly updatedAtColumn = BaseColumnUpdatedAt,
+        protected readonly logger: Logger = new DeviceConsoleLogger(),
     ) {
         let tableColumns = [];
         if (createdAtColumn) {
@@ -284,12 +286,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
                 .then(() => Promise.resolve())
                 .catch(e => { throw this.sqlDialect.mapError(e); });
-        }
-        throw new QueryNotSupportedError();
-    }
-
-    async deleteAll(query: Query): Promise<void> {
-        if (query instanceof IdsQuery) {
+        } else if (query instanceof IdsQuery) {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
                 .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
@@ -302,6 +299,13 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 .then(() => Promise.resolve())
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         }
+
         throw new QueryNotSupportedError();
+    }
+
+    async deleteAll(query: Query): Promise<void> {
+        // tslint:disable-next-line:max-line-length
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.delete(query);
     }
 }

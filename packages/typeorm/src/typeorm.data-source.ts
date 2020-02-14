@@ -9,12 +9,18 @@ import {
     Query,
     QueryNotSupportedError,
     VoidQuery,
-    DeleteError, NotFoundError,
+    DeleteError,
+    NotFoundError,
+    Logger,
+    DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
-    constructor(private readonly repository: TypeORMRepository<T>) {}
+    constructor(
+        private readonly repository: TypeORMRepository<T>,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
+    ) {}
 
     async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
@@ -90,18 +96,17 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         if (query instanceof IdQuery) {
             const entity = await this.repository.findOne(query.id);
             return this.remove(entity);
+        } else if (query instanceof IdsQuery) {
+            const entities = await this.findAllEntitiesByIds(query.ids);
+            return this.remove(entities);
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
     async deleteAll(query: Query): Promise<void> {
-        if (query instanceof IdsQuery) {
-            const entities = await this.findAllEntitiesByIds(query.ids);
-            return this.remove(entities);
-        } else {
-            throw new QueryNotSupportedError();
-        }
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.delete(query);
     }
 
     private buildArrayQuery(conditions: any): any {
