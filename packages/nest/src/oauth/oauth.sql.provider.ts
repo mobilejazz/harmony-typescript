@@ -50,7 +50,7 @@ import {
     RepositoryMapper,
     SingleDataSourceRepository,
     SQLInterface,
-    SQLDialect,
+    SQLDialect, DeleteRepository, SingleDeleteDataSourceRepository,
 } from '@mobilejazz/harmony-core';
 import {OAuthTokenScopeRawSqlToEntityMapper} from './data/datasource/mappers/oauth-token-scope.raw-sql-to-entity.mapper';
 import {OAuthTokenScopeEntityToRawSqlMapper} from './data/datasource/mappers/oauth-token-scope.entity-to-raw-sql.mapper';
@@ -59,6 +59,9 @@ import {OAuth2UserModel} from "./application/oauth2.user.model";
 import {LoginOAuthUserInteractor} from "./domain/interactors/login-oauth-user.interactor";
 import {OAuth2BaseModel} from "./application/oauth2.base.model";
 import {ValidateScopeInteractor} from "./domain/interactors/validate-scope.interactor";
+import {InvalidateClientTokensInteractor} from "./domain/interactors/invalidate-client-tokens.interactor";
+import {InvalidateUserTokensInteractor} from "./domain/interactors/invalidate-user-tokens.interactor";
+import {DeleteTokensDataSource} from "./data/datasource/delete-tokens.data-source";
 
 export class OAuthSQLProvider implements OAuthProvider {
     constructor(
@@ -93,6 +96,14 @@ export class OAuthSQLProvider implements OAuthProvider {
         );
     }
 
+    public invalidateClientTokensInteractor(): InvalidateClientTokensInteractor {
+        return new InvalidateClientTokensInteractor(new DeleteAllInteractor(this.deleteTokensRepository()));
+    }
+
+    public invalidateUserTokensInteractor(): InvalidateUserTokensInteractor {
+        return new InvalidateUserTokensInteractor(new DeleteAllInteractor(this.deleteTokensRepository()));
+    }
+
     private deleteToken(): DeleteOAuthTokenInteractor {
         return new DeleteOAuthTokenInteractor(new DeleteAllInteractor(this.tokenRepository()));
     }
@@ -121,6 +132,11 @@ export class OAuthSQLProvider implements OAuthProvider {
             new PutInteractor(this.tokenRepository()),
             new PutInteractor(this.userInfoRepository()),
         );
+    }
+
+    private deleteTokensRepository(): DeleteRepository {
+        const deleteDataSource = new DeleteTokensDataSource(this.sqlDialect, this.sqlInterface);
+        return new SingleDeleteDataSourceRepository(deleteDataSource);
     }
 
     private clientRepository(): OAuthClientRepository {

@@ -11,3 +11,5 @@ export * from './domain/interactors/auth-controller.interactor';
 export * from './domain/interactors/get-oauth-user.interactor';
 export * from './domain/interactors/login-oauth-user.interactor';
 export * from './domain/interactors/validate-scope.interactor';
+export * from './domain/interactors/invalidate-client-tokens.interactor';
+export * from './domain/interactors/invalidate-user-tokens.interactor';

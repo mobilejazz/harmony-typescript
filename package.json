@@ -20,15 +20,20 @@
     "scripts": {
         "prebuild": "npm run validate",
         "build": "lerna run build",
-        "validate": "lerna run lint",
-        "publish": "npm run build && lerna publish --contents dist --force-publish"
+        "validate": "lerna run lint && npm test",
+        "publish": "npm run build && lerna publish --contents dist --force-publish",
+        "test": "jest"
     },
-    "dependencies": {},
+    "dependencies": {
+        "typeorm": "^0.2.22"
+    },
     "devDependencies": {
+        "@types/jest": "^25.1.2",
         "@types/node": "~11.12.0",
         "husky": "~1.3.1",
+        "jest": "^25.1.0",
         "lerna": "^3.13.4",
-        "typeorm": "^0.2.22",
+        "ts-jest": "^25.2.0",
         "typescript": "~3.1.6"
     },
     "husky": {
