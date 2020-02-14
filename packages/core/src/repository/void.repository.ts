@@ -2,11 +2,11 @@ import { MethodNotImplementedError } from './errors';
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
-import { Logger } from 'helpers';
+import { Logger, DeviceConsoleLogger } from 'helpers';
 
 export class VoidRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
     constructor(
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query, operation: Operation): Promise<T> {
@@ -50,7 +50,7 @@ export class VoidPutRepository<T> implements PutRepository<T> {
 
 export class VoidDeleteRepository implements DeleteRepository {
     constructor(
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async delete(query: Query, operation: Operation): Promise<void> {

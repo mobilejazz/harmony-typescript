@@ -27,7 +27,7 @@ import {
     SQLWherePaginationQuery,
     SQLWhereQuery,
 } from "./sql.query";
-import { Logger } from "helpers";
+import { Logger, DeviceConsoleLogger } from "helpers";
 
 export type RawSQLData = any;
 
@@ -56,10 +56,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly sqlInterface: SQLInterface,
         protected readonly tableName: string,
         protected readonly columns: string[],
-        protected readonly logger: Logger,
         protected readonly idColumn = BaseColumnId,
         protected readonly createdAtColumn = BaseColumnCreatedAt,
         protected readonly updatedAtColumn = BaseColumnUpdatedAt,
+        protected readonly logger: Logger = new DeviceConsoleLogger(),
     ) {
         let tableColumns = [];
         if (createdAtColumn) {

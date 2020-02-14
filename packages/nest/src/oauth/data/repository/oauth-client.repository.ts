@@ -10,6 +10,7 @@ import {
     Query,
     VoidQuery,
     Logger,
+    DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
 import {OAuthClientModel} from '../../domain/oauth-client.model';
 import {OAuthClientEntity} from '../entity/oauth-client.entity';
@@ -24,7 +25,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         private readonly getClientGrantsDataSource: GetDataSource<OAuthClientGrantEntity>,
         private readonly putClientGrantsDataSource: PutDataSource<OAuthClientGrantEntity>,
         private readonly deleteClientGrantsDataSource: DeleteDataSource,
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     async get(query: Query, operation: Operation): Promise<OAuthClientModel> {

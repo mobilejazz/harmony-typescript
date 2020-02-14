@@ -2,7 +2,7 @@ import { Mapper } from './mapper/mapper';
 import { DefaultOperation, Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
-import { Logger } from 'helpers';
+import { Logger, DeviceConsoleLogger } from 'helpers';
 
 /**
  * This repository uses mappers to map objects and redirects them to the contained repository, acting as a simple "translator".
@@ -21,7 +21,7 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         private readonly deleteRepository: DeleteRepository,
         private readonly toOutMapper: Mapper<In, Out>,
         private readonly toInMapper: Mapper<Out, In>,
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query, operation: Operation): Promise<Out> {

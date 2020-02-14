@@ -1,12 +1,12 @@
 import {AllObjectsQuery, DeleteDataSource, GetDataSource, IdsQuery, KeyQuery, PutDataSource, Query, QueryNotSupportedError} from '..';
-import {Logger} from 'helpers';
+import {Logger, DeviceConsoleLogger} from 'helpers';
 
 export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     private objects: any = {};
     private arrays: any = {};
 
     constructor(
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query): Promise<T> {

@@ -12,13 +12,14 @@ import {
     DeleteError,
     NotFoundError,
     Logger,
+    DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
 import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
         private readonly repository: TypeORMRepository<T>,
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     async get(query: Query): Promise<T> {

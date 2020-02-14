@@ -1,10 +1,10 @@
 import { DeleteError, KeyQuery, Query, QueryNotSupportedError } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
-import { Logger } from 'helpers';
+import { Logger, DeviceConsoleLogger } from 'helpers';
 
 export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
     constructor(
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query): Promise<string> {

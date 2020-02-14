@@ -1,12 +1,12 @@
 import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source';
 import {Query} from '..';
-import {Logger} from 'helpers';
+import {Logger, DeviceConsoleLogger} from 'helpers';
 
 export class MockDataSource<T> implements  GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
         private readonly one: T,
         private readonly many: T[],
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query): Promise<T> {

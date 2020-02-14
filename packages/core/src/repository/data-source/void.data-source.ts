@@ -1,10 +1,10 @@
 import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source';
 import {MethodNotImplementedError, Query} from '..';
-import {Logger} from 'helpers';
+import {Logger, DeviceConsoleLogger} from 'helpers';
 
 export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query): Promise<T> {
@@ -55,7 +55,7 @@ export class VoidPutDataSource<T> implements PutDataSource<T> {
 
 export class VoidDeleteDataSource implements DeleteDataSource {
     constructor(
-        private readonly logger: Logger,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async delete(query: Query): Promise<void> {
