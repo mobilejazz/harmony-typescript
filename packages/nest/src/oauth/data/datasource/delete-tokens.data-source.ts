@@ -28,7 +28,7 @@ export class DeleteTokensDataSource implements DeleteDataSource {
         throw new QueryNotSupportedError('Use deleteAll on DeleteUserTokensDataSource');
     }
 
-    deleteAll(query: Query): Promise<void> {
+    async deleteAll(query: Query): Promise<void> {
         if (query instanceof OAuthUserIdQuery) {
             const sqlQuery = `
                 delete from ${this.sqlDialect.getTableName(OAuthTokenTableName)} t
