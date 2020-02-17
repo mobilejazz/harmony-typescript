@@ -1,6 +1,6 @@
 import { Mapper, Query } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
-import { Logger, DeviceConsoleLogger } from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 /**
  * This data source uses mappers to map objects and redirects them to the contained data source, acting as a simple "translator".

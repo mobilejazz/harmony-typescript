@@ -2,7 +2,7 @@ import { Mapper } from './mapper/mapper';
 import { DefaultOperation, Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
-import { Logger, DeviceConsoleLogger } from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../helpers';
 
 /**
  * This repository uses mappers to map objects and redirects them to the contained repository, acting as a simple "translator".

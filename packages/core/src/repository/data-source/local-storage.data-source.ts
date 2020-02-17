@@ -1,6 +1,6 @@
 import { DeleteError, KeyQuery, Query, QueryNotSupportedError } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
-import { Logger, DeviceConsoleLogger } from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
     constructor(

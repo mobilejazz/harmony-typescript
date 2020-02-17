@@ -3,7 +3,7 @@ import {IdQuery, IdsQuery, Query} from './query/query';
 import {Operation, DefaultOperation} from './operation/operation';
 import {MethodNotImplementedError, NotFoundError, NotValidError, OperationNotSupportedError} from './errors';
 import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source/data-source';
-import {Logger, DeviceConsoleLogger} from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../helpers';
 
 export class MainOperation implements  Operation {}
 export class MainSyncOperation implements  Operation {}

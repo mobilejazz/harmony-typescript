@@ -1,6 +1,6 @@
 import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source';
 import {MethodNotImplementedError, Query} from '..';
-import {Logger, DeviceConsoleLogger} from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(

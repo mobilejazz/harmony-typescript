@@ -1,5 +1,5 @@
 import {AllObjectsQuery, DeleteDataSource, GetDataSource, IdsQuery, KeyQuery, PutDataSource, Query, QueryNotSupportedError} from '..';
-import {Logger, DeviceConsoleLogger} from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     private objects: any = {};

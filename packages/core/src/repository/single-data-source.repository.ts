@@ -2,7 +2,7 @@ import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/da
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
-import { Logger, DeviceConsoleLogger } from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../helpers';
 
 export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
 

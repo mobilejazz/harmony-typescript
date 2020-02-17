@@ -1,5 +1,5 @@
 import { DefaultOperation, DeleteRepository, Operation, Query, VoidQuery } from '../index';
-import { Logger, DeviceConsoleLogger } from 'helpers';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 export class DeleteAllInteractor {
     constructor(
