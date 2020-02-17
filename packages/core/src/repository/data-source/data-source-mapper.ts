@@ -1,5 +1,6 @@
 import { Mapper, Query } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { Logger, DeviceConsoleLogger } from 'helpers';
 
 /**
  * This data source uses mappers to map objects and redirects them to the contained data source, acting as a simple "translator".
@@ -18,6 +19,7 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
         private readonly deleteDataSource: DeleteDataSource,
         private readonly toOutMapper: Mapper<In, Out>,
         private readonly toInMapper: Mapper<Out, In>,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) { }
 
     public async get(query: Query): Promise<Out> {
@@ -47,7 +49,9 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
     }
 
     public deleteAll(query: Query): Promise<void> {
-        return this.deleteDataSource.deleteAll(query);
+        // tslint:disable-next-line:max-line-length
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.deleteDataSource.delete(query);
     }
 }
 
