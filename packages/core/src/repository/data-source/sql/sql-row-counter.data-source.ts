@@ -1,7 +1,7 @@
 import {GetDataSource} from "../data-source";
 import {SQLDialect, SQLInterface} from "../../../data";
 import {QueryNotSupportedError} from "../../errors";
-import {Query} from "../..";
+import {Query, SQLWherePaginationQuery} from "../..";
 import {SQLWhereQuery} from "./sql.query";
 
 export class SQLRowCounterDataSource implements GetDataSource<number> {
@@ -12,7 +12,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
     ) {}
 
     get(query: Query): Promise<number> {
-        if (query instanceof SQLWhereQuery) {
+        if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
                 .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
