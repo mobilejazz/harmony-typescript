@@ -27,7 +27,7 @@ import {
     SQLWherePaginationQuery,
     SQLWhereQuery,
 } from "./sql.query";
-import { Logger, DeviceConsoleLogger } from "helpers";
+import {DeviceConsoleLogger, Logger} from '../../../helpers';
 
 export type RawSQLData = any;
 
