@@ -124,28 +124,28 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
                 .query(`select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
+                .catch(e => {
+                    throw this.sqlDialect.mapError(e);
+                })
                 .then(rows => {
                     if (rows.length === 0) {
                         throw new NotFoundError();
                     } else {
                         return rows[0];
                     }
-                })
-                .catch(e => {
-                    throw this.sqlDialect.mapError(e);
                 });
         } else {
             const composition = this.getComposition(query, 1, 0);
             return this.sqlInterface
                 .query(composition.query, composition.params)
+                .catch(e => { throw this.sqlDialect.mapError(e); })
                 .then(rows => {
                     if (rows.length === 0) {
                         throw new NotFoundError();
                     } else {
                         return rows[0];
                     }
-                })
-                .catch(e => { throw this.sqlDialect.mapError(e); });
+                });
         }
     }
 
