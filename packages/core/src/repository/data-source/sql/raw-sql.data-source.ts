@@ -71,8 +71,13 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         this.tableColumns = tableColumns.concat(columns);
     }
 
-    private getColumnsQuery(): string {
+    protected getColumnsQuery(): string {
         return [this.idColumn, ...this.tableColumns].join(', ');
+    }
+
+    protected selectSQL(): string {
+        const queryStr = `select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)}`;
+        return queryStr;
     }
 
     protected orderSQL(column: string, ascending: boolean): string {
@@ -107,7 +112,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             limit = query.limit;
         }
 
-        let limitSQL = "";
+        let limitSQL = '';
         if (limit !== undefined && offset !== undefined) {
             limitSQL = this.limitSQL(whereParamsLength + 1, whereParamsLength + 2);
             whereParams.push(limit);
@@ -115,10 +120,11 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         }
 
         // tslint:disable-next-line:max-line-length
-        const queryStr = `select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} ${whereSql} ${orderSQL} ${limitSQL}`;
+        const queryStr = `${this.selectSQL()} ${whereSql} ${orderSQL} ${limitSQL}`;
 
         return new SQLQueryComposition(queryStr, whereParams);
     }
+
     async get(query: Query): Promise<RawSQLData> {
         if (query instanceof IdQuery) {
             return this.sqlInterface
