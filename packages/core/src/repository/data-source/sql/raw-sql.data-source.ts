@@ -129,7 +129,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         if (query instanceof IdQuery) {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
-                .query(`select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
+                .query(`${this.selectSQL()} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
                 .catch(e => {
                     throw this.sqlDialect.mapError(e);
                 })
@@ -165,7 +165,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     async getAll(query: Query): Promise<RawSQLData[]> {
         if (query instanceof IdsQuery) {
             // tslint:disable-next-line:max-line-length
-            return this.sqlInterface.query(`select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids);
+            return this.sqlInterface.query(`${this.selectSQL()} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids);
         } else {
             const composition = this.getComposition(query);
             return this.sqlInterface
