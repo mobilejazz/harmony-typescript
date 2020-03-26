@@ -35,13 +35,13 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
     }
 
     public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        let mapped: In  = this.toInMapper.map(value);
+        let mapped: In = value ? this.toInMapper.map(value) : undefined;
         let result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
-        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let mapped: In[]  = values ? values.map(v => v ? this.toInMapper.map(v) : undefined) : undefined;
         let results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }

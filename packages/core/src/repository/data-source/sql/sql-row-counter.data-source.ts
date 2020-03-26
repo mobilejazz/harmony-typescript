@@ -11,16 +11,20 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         protected readonly tableName: string,
     ) {}
 
+    protected selectSQL(): string {
+        return `select count(*) from ${this.sqlDialect.getTableName(this.tableName)}`;
+    }
+
     get(query: Query): Promise<number> {
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             return this.sqlInterface
                 // tslint:disable-next-line:max-line-length
-                .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
+                .query(`${this.selectSQL()} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
                 .then(result => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         } else {
             return this.sqlInterface
-                .query(`select count(*) from ${this.sqlDialect.getTableName(this.tableName)}`)
+                .query(this.selectSQL())
                 .then(result => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         }
