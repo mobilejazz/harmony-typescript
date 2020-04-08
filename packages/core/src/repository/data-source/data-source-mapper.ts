@@ -93,13 +93,13 @@ export class PutDataSourceMapper<In, Out> implements PutDataSource<Out> {
     ) {}
 
     public async put(value: Out, query: Query): Promise<Out> {
-        let mapped: In  = this.toInMapper.map(value);
+        let mapped: In  = value ? this.toInMapper.map(value) : undefined;
         let result: In = await this.putDataSource.put(mapped, query);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query): Promise<Out[]> {
-        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let mapped: In[]  = values ? values.map(v => this.toInMapper.map(v)) : undefined;
         let results: In[] = await this.putDataSource.putAll(mapped, query);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
