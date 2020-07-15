@@ -10,9 +10,8 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         protected readonly sqlInterface: SQLInterface,
         protected readonly tableName: string,
         protected readonly deleteAtColumn = BaseColumnDeletedAt,
+        protected readonly softDeleteEnabled = false,
     ) {}
-
-    public softDeleteEnabled = false;
 
     protected selectSQL(): string {
         return `select count(*) from ${this.sqlDialect.getTableName(this.tableName)}`;

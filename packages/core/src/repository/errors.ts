@@ -1,7 +1,7 @@
 
 export const UnknownErrorCode = -1;
 
-export const MethodNotImplementedErrorName =  'ethod Not Implemented';
+export const MethodNotImplementedErrorName =  'Method Not Implemented';
 export class MethodNotImplementedError extends Error {
     constructor(message?: string, public readonly code: number = UnknownErrorCode) {
         super(message);

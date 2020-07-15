@@ -60,6 +60,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly createdAtColumn = BaseColumnCreatedAt,
         protected readonly updatedAtColumn = BaseColumnUpdatedAt,
         protected readonly deletedAtColumn = BaseColumnDeletedAt,
+        protected readonly softDeleteEnabled = false,
         protected readonly logger: Logger = new DeviceConsoleLogger(),
     ) {
         let tableColumns = [];
@@ -71,8 +72,6 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         }
         this.tableColumns = tableColumns.concat(columns);
     }
-
-    public softDeleteEnabled = false;
 
     protected getColumnsQuery(): string {
         return [this.idColumn, ...this.tableColumns].join(', ');
