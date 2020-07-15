@@ -3,6 +3,7 @@ import {IdQuery, IdsQuery, Query} from './query/query';
 import {Operation, DefaultOperation} from './operation/operation';
 import {MethodNotImplementedError, NotFoundError, NotValidError, OperationNotSupportedError} from './errors';
 import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source/data-source';
+import {DeviceConsoleLogger, Logger} from '../helpers';
 
 export class MainOperation implements  Operation {}
 export class MainSyncOperation implements  Operation {}
@@ -43,6 +44,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         private readonly putCache: PutDataSource<T>,
         private readonly deleteCache: DeleteDataSource,
         private readonly validator: ObjectValidator,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query, operation: Operation): Promise<T> {
@@ -189,6 +191,9 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
     }
 
     public async deleteAll(query: Query, operation: Operation): Promise<void> {
+        // tslint:disable-next-line:max-line-length
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
+
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.deleteAll(query, new MainSyncOperation());

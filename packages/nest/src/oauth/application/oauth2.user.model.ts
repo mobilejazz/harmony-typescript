@@ -8,8 +8,8 @@ import {LoginOAuthUserInteractor} from '../domain/interactors/login-oauth-user.i
 import {GetOAuthUserInteractor} from '../domain/interactors/get-oauth-user.interactor';
 import {GetOAuthRefreshTokenInteractor} from '../domain/interactors/get-oauth-refresh-token.interactor';
 import {DeleteOAuthTokenInteractor} from '../domain/interactors/delete-oauth-token.interactor';
+import {ValidateScopeInteractor} from '../domain/interactors/validate-scope.interactor';
 import {ForbiddenException} from '@nestjs/common';
-import {AlwaysValidScopeInteractor, ValidateScopeInteractor} from '../domain/interactors/validate-scope.interactor';
 
 class OAuthRefreshToken implements RefreshToken {
     constructor(
@@ -21,7 +21,6 @@ class OAuthRefreshToken implements RefreshToken {
     ) {}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, RefreshTokenModel {
     constructor(
         getClientInteractor: GetOAuthClientInteractor,
@@ -32,7 +31,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         protected readonly loginUserInteractor: LoginOAuthUserInteractor,
         protected readonly getRefreshTokenInteractor: GetOAuthRefreshTokenInteractor,
         protected readonly deleteTokenInteractor: DeleteOAuthTokenInteractor,
-        protected readonly validateScopeInteractor: ValidateScopeInteractor = new AlwaysValidScopeInteractor(),
+        protected readonly validateScopeInteractor: ValidateScopeInteractor,
     ) {
         super(
             getClientInteractor,
@@ -56,9 +55,9 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
             return user;
         } catch (err) {
             if (callback) {
-                callback(err, null);
+                callback(false, null);
             }
-            return null;
+            return false;
         }
     }
 

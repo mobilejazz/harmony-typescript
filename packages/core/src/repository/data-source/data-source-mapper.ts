@@ -1,5 +1,6 @@
 import { Mapper, Query } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 /**
  * This data source uses mappers to map objects and redirects them to the contained data source, acting as a simple "translator".
@@ -18,6 +19,7 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
         private readonly deleteDataSource: DeleteDataSource,
         private readonly toOutMapper: Mapper<In, Out>,
         private readonly toInMapper: Mapper<Out, In>,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) { }
 
     public async get(query: Query): Promise<Out> {
@@ -31,13 +33,13 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
     }
 
     public async put(value: Out, query: Query): Promise<Out> {
-        let mapped: In  = this.toInMapper.map(value);
+        let mapped: In  = value ? this.toInMapper.map(value) : undefined;
         let result: In = await this.putDataSource.put(mapped, query);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query): Promise<Out[]> {
-        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let mapped: In[]  = values ? values.map(v => v ? this.toInMapper.map(v) : undefined) : undefined;
         let results: In[] = await this.putDataSource.putAll(mapped, query);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
@@ -47,7 +49,9 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
     }
 
     public deleteAll(query: Query): Promise<void> {
-        return this.deleteDataSource.deleteAll(query);
+        // tslint:disable-next-line:max-line-length
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.deleteDataSource.delete(query);
     }
 }
 
@@ -89,13 +93,13 @@ export class PutDataSourceMapper<In, Out> implements PutDataSource<Out> {
     ) {}
 
     public async put(value: Out, query: Query): Promise<Out> {
-        let mapped: In  = this.toInMapper.map(value);
+        let mapped: In  = value ? this.toInMapper.map(value) : undefined;
         let result: In = await this.putDataSource.put(mapped, query);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query): Promise<Out[]> {
-        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let mapped: In[]  = values ? values.map(v => this.toInMapper.map(v)) : undefined;
         let results: In[] = await this.putDataSource.putAll(mapped, query);
         return results.map((r: In) => this.toOutMapper.map(r));
     }

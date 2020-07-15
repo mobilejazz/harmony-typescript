@@ -2,6 +2,7 @@ import { Mapper } from './mapper/mapper';
 import { DefaultOperation, Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import {DeviceConsoleLogger, Logger} from '../helpers';
 
 /**
  * This repository uses mappers to map objects and redirects them to the contained repository, acting as a simple "translator".
@@ -20,6 +21,7 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         private readonly deleteRepository: DeleteRepository,
         private readonly toOutMapper: Mapper<In, Out>,
         private readonly toInMapper: Mapper<Out, In>,
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query, operation: Operation): Promise<Out> {
@@ -33,13 +35,13 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
     }
 
     public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        let mapped: In  = this.toInMapper.map(value);
+        let mapped: In = value ? this.toInMapper.map(value) : undefined;
         let result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
-        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let mapped: In[]  = values ? values.map(v => v ? this.toInMapper.map(v) : undefined) : undefined;
         let results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
@@ -49,7 +51,8 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
     }
 
     public async deleteAll(query: Query, operation: Operation): Promise<void> {
-        return this.deleteRepository.deleteAll(query, operation);
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
+        return this.deleteRepository.delete(query, operation);
     }
 
 }
@@ -94,14 +97,14 @@ export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
     ) {}
 
     public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        let mapped: In  = this.toInMapper.map(value);
+        let mapped: In  = value ? this.toInMapper.map(value) : undefined;
         let result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
 
-        let mapped: In[]  = values.map(v => this.toInMapper.map(v));
+        let mapped: In[] = values ? values.map(v => this.toInMapper.map(v)) : undefined;
         let results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }

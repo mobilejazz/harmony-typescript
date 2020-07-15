@@ -1,10 +1,12 @@
 import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source';
 import {Query} from '..';
+import {DeviceConsoleLogger, Logger} from '../../helpers';
 
 export class MockDataSource<T> implements  GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
         private readonly one: T,
         private readonly many: T[],
+        private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query): Promise<T> {
@@ -28,6 +30,6 @@ export class MockDataSource<T> implements  GetDataSource<T>, PutDataSource<T>, D
     }
 
     public async deleteAll(query: Query): Promise<void> {
-        return;
+        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
     }
 }
