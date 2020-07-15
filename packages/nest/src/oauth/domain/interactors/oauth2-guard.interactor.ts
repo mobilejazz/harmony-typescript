@@ -21,6 +21,7 @@ export class OAuth2GuardInteractor {
                 });
                 req.user = token.user;
                 req.client = token.client;
+                req.scope = token.scope;
                 return true;
             })
             .catch(error => {

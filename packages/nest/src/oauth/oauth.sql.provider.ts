@@ -45,10 +45,12 @@ import {
     DataSourceMapper,
     DeleteAllInteractor,
     GetInteractor,
-    PutInteractor, RawMysqlDataSource,
+    PutInteractor,
+    RawSQLDataSource,
     RepositoryMapper,
     SingleDataSourceRepository,
     SQLInterface,
+    SQLDialect, DeleteRepository, SingleDeleteDataSourceRepository,
 } from '@mobilejazz/harmony-core';
 import {OAuthTokenScopeRawSqlToEntityMapper} from './data/datasource/mappers/oauth-token-scope.raw-sql-to-entity.mapper';
 import {OAuthTokenScopeEntityToRawSqlMapper} from './data/datasource/mappers/oauth-token-scope.entity-to-raw-sql.mapper';
@@ -56,9 +58,14 @@ import {GetOAuthUserInteractor} from "./domain/interactors/get-oauth-user.intera
 import {OAuth2UserModel} from "./application/oauth2.user.model";
 import {LoginOAuthUserInteractor} from "./domain/interactors/login-oauth-user.interactor";
 import {OAuth2BaseModel} from "./application/oauth2.base.model";
+import {ValidateScopeInteractor} from "./domain/interactors/validate-scope.interactor";
+import {InvalidateClientTokensInteractor} from "./domain/interactors/invalidate-client-tokens.interactor";
+import {InvalidateUserTokensInteractor} from "./domain/interactors/invalidate-user-tokens.interactor";
+import {DeleteTokensDataSource} from "./data/datasource/delete-tokens.data-source";
 
-export class OAuthSqlProvider implements OAuthProvider {
+export class OAuthSQLProvider implements OAuthProvider {
     constructor(
+        private readonly sqlDialect: SQLDialect,
         private readonly sqlInterface: SQLInterface,
     ) {}
 
@@ -71,7 +78,11 @@ export class OAuthSqlProvider implements OAuthProvider {
             null,
         );
     }
-    public userModel(getUser: GetOAuthUserInteractor, loginUser: LoginOAuthUserInteractor): OAuth2UserModel {
+    public userModel(
+        getUser: GetOAuthUserInteractor,
+        loginUser: LoginOAuthUserInteractor,
+        scopeValidation: ValidateScopeInteractor,
+        ): OAuth2UserModel {
         return new OAuth2UserModel(
             this.getClient(),
             this.putToken(),
@@ -81,7 +92,16 @@ export class OAuthSqlProvider implements OAuthProvider {
             loginUser,
             this.getRefreshToken(),
             this.deleteToken(),
+            scopeValidation,
         );
+    }
+
+    public invalidateClientTokensInteractor(): InvalidateClientTokensInteractor {
+        return new InvalidateClientTokensInteractor(new DeleteAllInteractor(this.deleteTokensRepository()));
+    }
+
+    public invalidateUserTokensInteractor(): InvalidateUserTokensInteractor {
+        return new InvalidateUserTokensInteractor(new DeleteAllInteractor(this.deleteTokensRepository()));
     }
 
     private deleteToken(): DeleteOAuthTokenInteractor {
@@ -114,8 +134,14 @@ export class OAuthSqlProvider implements OAuthProvider {
         );
     }
 
+    private deleteTokensRepository(): DeleteRepository {
+        const deleteDataSource = new DeleteTokensDataSource(this.sqlDialect, this.sqlInterface);
+        return new SingleDeleteDataSourceRepository(deleteDataSource);
+    }
+
     private clientRepository(): OAuthClientRepository {
-        const clientRawDataSource = new RawMysqlDataSource(
+        const clientRawDataSource = new RawSQLDataSource(
+            this.sqlDialect,
             this.sqlInterface,
             OAuthClientTableName,
             [OAuthClientColumnClientId, OAuthClientColumnClientSecret,
@@ -125,7 +151,8 @@ export class OAuthSqlProvider implements OAuthProvider {
             clientRawDataSource, clientRawDataSource, clientRawDataSource,
             new OAuthClientRawSqlToEntityMapper(), new OAuthClientEntityToRawSqlMapper(),
         );
-        const clientGrantsRawDataSource = new RawMysqlDataSource(
+        const clientGrantsRawDataSource = new RawSQLDataSource(
+            this.sqlDialect,
             this.sqlInterface,
             OAuthClientGrantTableName,
             [OAuthClientGrantColumnClientId, OAuthClientGrantColumnGrantName],
@@ -141,7 +168,8 @@ export class OAuthSqlProvider implements OAuthProvider {
     }
 
     private tokenRepository(): OAuthTokenRepository {
-        const tokenRawDataSource = new RawMysqlDataSource(
+        const tokenRawDataSource = new RawSQLDataSource(
+            this.sqlDialect,
             this.sqlInterface,
             OAuthTokenTableName,
             [OAuthTokenColumnAccessToken, OAuthTokenColumnAccessTokenExpiresAt,
@@ -153,7 +181,8 @@ export class OAuthSqlProvider implements OAuthProvider {
             new OAuthTokenRawSqlToEntityMapper(), new OAuthTokenEntityToRawSqlMapper(),
         );
 
-        const tokenScopeRawDataSource = new RawMysqlDataSource(
+        const tokenScopeRawDataSource = new RawSQLDataSource(
+            this.sqlDialect,
             this.sqlInterface,
             OAuthTokenScopeTableName,
             [OAuthTokenScopeColumnScope, OAuthTokenScopeColumnTokenId],
@@ -171,7 +200,8 @@ export class OAuthSqlProvider implements OAuthProvider {
     }
 
     private userInfoRepository(): RepositoryMapper<OAuthUserInfoEntity, OAuthUserInfoModel> {
-        const rawDataSource = new RawMysqlDataSource(
+        const rawDataSource = new RawSQLDataSource(
+            this.sqlDialect,
             this.sqlInterface,
             OAuthUserInfoTableName,
             [OAuthUserInfoColumnTokenId, OAuthUserInfoColumnUserId],

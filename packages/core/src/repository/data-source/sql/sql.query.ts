@@ -1,6 +1,7 @@
 import {PaginationOffsetLimitQuery, Query} from "../..";
-import {SQLOrderBy, SQLWhere} from "./raw-mysql.data-source";
+import {SQLOrderBy, SQLWhere} from "./raw-sql.data-source";
 import {BaseColumnCreatedAt} from "./sql.constants";
+import {SQLDialect} from "../../../data";
 
 export abstract class SQLOrderByQuery extends Query implements SQLOrderBy {
     abstract orderBy(): string;
@@ -13,7 +14,7 @@ export abstract class SQLOrderByPaginationQuery extends PaginationOffsetLimitQue
 }
 
 export abstract class SQLWhereQuery extends SQLOrderByQuery implements SQLWhere {
-    abstract whereSql(): string;
+    abstract whereSql(dialect: SQLDialect): string;
     abstract whereParams(): any[];
 
     orderBy(): string {
@@ -26,7 +27,7 @@ export abstract class SQLWhereQuery extends SQLOrderByQuery implements SQLWhere 
 }
 
 export abstract class SQLWherePaginationQuery extends SQLOrderByPaginationQuery implements SQLWhere {
-    abstract whereSql(): string;
+    abstract whereSql(dialect: SQLDialect): string;
     abstract whereParams(): any[];
 
     orderBy(): string {

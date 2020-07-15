@@ -1,4 +1,12 @@
-import {BaseModel, RequestAuthenticationModel, Client, Falsey, Token, User, ClientCredentialsModel} from 'oauth2-server';
+import {
+    BaseModel,
+    RequestAuthenticationModel,
+    Client,
+    Falsey,
+    Token,
+    User,
+    ClientCredentialsModel,
+} from 'oauth2-server';
 import {GetOAuthClientInteractor} from '../domain/interactors/get-oauth-client.interactor';
 import {PutOAuthTokenInteractor} from '../domain/interactors/put-oauth-token.interactor';
 import {GetOAuthTokenInteractor} from '../domain/interactors/get-oauth-token.interactor';
@@ -17,7 +25,6 @@ export class OAuthClient implements Client {
     ) {}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class OAuthToken implements Token {
     constructor(
         readonly accessToken: string,
@@ -30,8 +37,7 @@ export class OAuthToken implements Token {
     ) {}
 }
 
-// tslint:disable-next-line:max-classes-per-file
-export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, ClientCredentialsModel {
+export class OAuth2BaseModel implements ClientCredentialsModel {
     constructor(
         protected readonly getClientInteractor: GetOAuthClientInteractor,
         protected readonly putTokenInteractor: PutOAuthTokenInteractor,
@@ -79,13 +85,19 @@ export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, C
         } else if (token.scope instanceof Array) {
             scope = token.scope;
         }
+        let userId: string;
+        if (typeof user.oauthId === 'function') {
+            // Can't enforce to implement OAuthUser,
+            // Also, user can be undefined if doing a client_credentials grant type
+            userId = user.oauthId();
+        }
         await this.putTokenInteractor.execute(
             token.accessToken,
             token.accessTokenExpiresAt,
             token.refreshToken,
             token.refreshTokenExpiresAt,
             client.id,
-            user.oauthId(), // <- can't enforce to implement OAuthUser
+            userId,
             scope,
         );
         token.client = client;
@@ -104,7 +116,7 @@ export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, C
             const token = await this.getTokenInteractor.execute(accessToken);
 
             let userInfo: OAuthUserInfoModel;
-            let user: OAuthUser;
+            let user = {}; // <-- a user must be defined anyway, otherwise the OAuth2Server will fail
             try {
                 if (this.getUserInfoInteractor) {
                     userInfo = await this.getUserInfoInteractor.execute(token.accessToken);
@@ -149,7 +161,7 @@ export class OAuth2BaseModel implements BaseModel, RequestAuthenticationModel, C
         scope: string | string[],
         callback?: (err?: any, result?: boolean) => void,
     ): Promise<boolean> {
-        console.log('WARNING: Scope Verification not implemented! Always returning true!');
+        // console.log('WARNING: Scope Verification not implemented! Always returning true!');
         if (callback) {
             callback(null, true);
         }

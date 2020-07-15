@@ -1,11 +1,13 @@
 
 export class StringUtils {
-    public static randomString(length = 8): string {
-        let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        let password = "";
+    public static randomString(
+        length = 8,
+        charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        ): string {
+        let str = '';
         for (let i = 0, n = charset.length; i < length; ++i) {
-            password += charset.charAt(Math.floor(Math.random() * n));
+            str += charset.charAt(Math.floor(Math.random() * n));
         }
-        return password;
+        return str;
     }
 }
