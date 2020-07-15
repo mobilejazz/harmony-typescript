@@ -30,7 +30,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         } else {
             let sql = this.selectSQL();
             if (this.softDeleteEnabled) {
-                sql = `where ${this.deleteAtColumn} is null`;
+                sql = `${sql} where ${this.deleteAtColumn} is null`;
             }
             return this.sqlInterface
                 .query(sql)
