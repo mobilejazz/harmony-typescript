@@ -15,7 +15,7 @@ import {
     IdQuery,
     IdsQuery,
     PaginationOffsetLimitQuery,
-    Query,
+    Query, BaseColumnDeletedAt,
 } from "../..";
 import {
     SQLDialect,
@@ -59,6 +59,8 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly idColumn = BaseColumnId,
         protected readonly createdAtColumn = BaseColumnCreatedAt,
         protected readonly updatedAtColumn = BaseColumnUpdatedAt,
+        protected readonly deletedAtColumn = BaseColumnDeletedAt,
+        protected readonly softDeleteEnabled = false,
         protected readonly logger: Logger = new DeviceConsoleLogger(),
     ) {
         let tableColumns = [];
@@ -91,12 +93,19 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     protected getComposition(query: Query, limit?: number, offset?: number): SQLQueryComposition {
         let whereParams = [];
         let whereParamsLength = 0;
-        let whereSql = "";
+        let whereSql = '';
 
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             whereParams = query.whereParams();
             whereParamsLength = whereParams.length;
             whereSql = `where ${query.whereSql(this.sqlDialect)}`;
+            if (this.softDeleteEnabled) {
+                whereSql = `${whereSql} and ${this.deletedAtColumn} is null`;
+            }
+        } else {
+            if (this.softDeleteEnabled) {
+                whereSql = `where ${this.deletedAtColumn} is null`;
+            }
         }
 
         let column = this.createdAtColumn;
@@ -127,9 +136,12 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     async get(query: Query): Promise<RawSQLData> {
         if (query instanceof IdQuery) {
+            let sql = `${this.selectSQL()} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`;
+            if (this.softDeleteEnabled) {
+                sql = `${sql} and ${this.deletedAtColumn} is null`;
+            }
             return this.sqlInterface
-                // tslint:disable-next-line:max-line-length
-                .query(`${this.selectSQL()} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
+                .query(sql, [query.id])
                 .catch(e => {
                     throw this.sqlDialect.mapError(e);
                 })
@@ -164,8 +176,11 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     async getAll(query: Query): Promise<RawSQLData[]> {
         if (query instanceof IdsQuery) {
-            // tslint:disable-next-line:max-line-length
-            return this.sqlInterface.query(`${this.selectSQL()} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids);
+            let sql = `${this.selectSQL()} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`;
+            if (this.softDeleteEnabled) {
+                sql = `${sql} and ${this.deletedAtColumn} is null`;
+            }
+            return this.sqlInterface.query(sql, query.ids);
         } else {
             const composition = this.getComposition(query);
             return this.sqlInterface
@@ -286,24 +301,58 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     async delete(query: Query): Promise<void> {
-        if (query instanceof IdQuery) {
-            return this.sqlInterface
-                // tslint:disable-next-line:max-line-length
-                .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
-                .then(() => Promise.resolve())
-                .catch(e => { throw this.sqlDialect.mapError(e); });
-        } else if (query instanceof IdsQuery) {
-            return this.sqlInterface
-                // tslint:disable-next-line:max-line-length
-                .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
-                .then(() => Promise.resolve())
-                .catch(e => { throw this.sqlDialect.mapError(e); });
-        } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
-            return this.sqlInterface
-                // tslint:disable-next-line:max-line-length
-                .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
-                .then(() => Promise.resolve())
-                .catch(e => { throw this.sqlDialect.mapError(e); });
+        if (this.softDeleteEnabled) {
+            if (query instanceof IdQuery) {
+                return this.sqlInterface
+                    // tslint:disable-next-line:max-line-length
+                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
+                    .then(() => Promise.resolve())
+                    .catch(e => {
+                        throw this.sqlDialect.mapError(e);
+                    });
+            } else if (query instanceof IdsQuery) {
+                return this.sqlInterface
+                    // tslint:disable-next-line:max-line-length
+                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
+                    .then(() => Promise.resolve())
+                    .catch(e => {
+                        throw this.sqlDialect.mapError(e);
+                    });
+            } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
+                return this.sqlInterface
+                    // tslint:disable-next-line:max-line-length
+                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
+                    .then(() => Promise.resolve())
+                    .catch(e => {
+                        throw this.sqlDialect.mapError(e);
+                    });
+            }
+        } else {
+            if (query instanceof IdQuery) {
+                return this.sqlInterface
+                    // tslint:disable-next-line:max-line-length
+                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
+                    .then(() => Promise.resolve())
+                    .catch(e => {
+                        throw this.sqlDialect.mapError(e);
+                    });
+            } else if (query instanceof IdsQuery) {
+                return this.sqlInterface
+                    // tslint:disable-next-line:max-line-length
+                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
+                    .then(() => Promise.resolve())
+                    .catch(e => {
+                        throw this.sqlDialect.mapError(e);
+                    });
+            } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
+                return this.sqlInterface
+                    // tslint:disable-next-line:max-line-length
+                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect)}`, query.whereParams())
+                    .then(() => Promise.resolve())
+                    .catch(e => {
+                        throw this.sqlDialect.mapError(e);
+                    });
+            }
         }
 
         throw new QueryNotSupportedError();
