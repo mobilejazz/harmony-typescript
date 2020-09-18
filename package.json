@@ -25,7 +25,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "@bugfender/sdk": "^0.4.3",
+        "@bugfender/sdk": "^1.1.2",
         "typeorm": "^0.2.22"
     },
     "devDependencies": {

@@ -1,9 +1,9 @@
 import {AbstractLogger, LogLevel, UnknownLogLevelError} from './logger';
-import {Bugfender as BugfenderSDK} from '@bugfender/sdk/lib/bugfender';
+import {BugfenderClass} from '@bugfender/sdk';
 
 export class BugfenderLogger extends AbstractLogger {
     constructor(
-        protected bugfender: BugfenderSDK,
+        protected bugfender: BugfenderClass,
     ) {
         super();
     }
