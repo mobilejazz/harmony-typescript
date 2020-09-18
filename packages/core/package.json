@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@types/mysql": "^2.15.7",
-        "class-transformer": "~0.2.0"
+        "class-transformer": "~0.3.1"
     },
     "peerDependencies": {
         "@bugfender/sdk": "0.x || 1.x"
