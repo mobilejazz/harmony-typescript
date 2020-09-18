@@ -11,3 +11,10 @@ This repository contains the core structure for typescript of the Mobile Jazz Ha
 - `npx lerna exec -- npm ci`: install packages dependencies
 
 Anytime you're working in the project ensure you `nvm use` to stay on the correct NodeJS version.
+
+## Publish new version
+
+- `git checkout master`: ensure you're on `master`
+- `nvm use`: ensure we're using the proper NodeJS version
+- `npm whoami`: ensure you're using the correct NPM user (`npm login` if not)
+- `npm run publish`: run at root `package.json`
