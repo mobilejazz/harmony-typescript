@@ -1,6 +1,6 @@
 {
     "name": "@mobilejazz/harmony-angular",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "description": "Building blocks for a typescript application based on Harmony concept",
     "author": "Mobile Jazz",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/typeorm#readme",
@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@angular/common": "7.2.1",
-        "@mobilejazz/harmony-core": "^0.6.1"
+        "@mobilejazz/harmony-core": "^0.6.2"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",
