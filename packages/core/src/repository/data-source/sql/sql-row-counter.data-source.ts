@@ -19,10 +19,22 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
 
     async get(query: Query): Promise<number> {
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
-            let sql = `${this.selectSQL()} where ${query.whereSql(this.sqlDialect)}`;
+            let sql = `${this.selectSQL()}`;
+
+            let queryWhereSQL = query.whereSql(this.sqlDialect);
+            let whereSql = queryWhereSQL ? queryWhereSQL : '';
+
             if (this.softDeleteEnabled) {
-                sql = `${sql} and ${this.deleteAtColumn} is null`;
+                if (whereSql.length > 0) {
+                    whereSql += ' and ';
+                }
+                whereSql += `${this.deleteAtColumn} is null`;
             }
+
+            if (whereSql.length > 0) {
+                sql += ' where ' + whereSql;
+            }
+
             return this.sqlInterface
                 .query(sql, query.whereParams())
                 .then(result => Number(result[0][this.sqlDialect.getCountName()]))
