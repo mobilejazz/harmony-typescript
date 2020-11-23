@@ -1,32 +1,17 @@
-import {
-    GetDataSource,
-    PutDataSource,
-    DeleteDataSource,
-} from "../data-source";
-import {
-    InvalidArgumentError,
-    NotFoundError,
-    QueryNotSupportedError,
-} from "../../errors";
+import {DeleteDataSource, GetDataSource, PutDataSource} from '../data-source';
+import {InvalidArgumentError, NotFoundError, QueryNotSupportedError} from '../../errors';
 import {
     BaseColumnCreatedAt,
-    BaseColumnUpdatedAt,
+    BaseColumnDeletedAt,
     BaseColumnId,
+    BaseColumnUpdatedAt,
     IdQuery,
     IdsQuery,
     PaginationOffsetLimitQuery,
-    Query, BaseColumnDeletedAt,
-} from "../..";
-import {
-    SQLDialect,
-    SQLInterface,
-} from "../../../data";
-import {
-    SQLOrderByPaginationQuery,
-    SQLOrderByQuery,
-    SQLWherePaginationQuery,
-    SQLWhereQuery,
-} from "./sql.query";
+    Query,
+} from '../..';
+import {SQLDialect, SQLInterface} from '../../../data';
+import {SQLOrderByPaginationQuery, SQLOrderByQuery, SQLWherePaginationQuery, SQLWhereQuery} from './sql.query';
 import {DeviceConsoleLogger, Logger} from '../../../helpers';
 
 export type RawSQLData = any;
@@ -49,7 +34,6 @@ class SQLQueryComposition {
 }
 
 export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSource<RawSQLData>, DeleteDataSource {
-    private tableColumns: string[] = [];
 
     constructor(
         protected readonly sqlDialect: SQLDialect,
@@ -72,14 +56,24 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         }
         this.tableColumns = tableColumns.concat(columns);
     }
+    private tableColumns: string[] = [];
+
+    private static getId(data: RawSQLData, queryOrId: Query): number {
+        let id: number;
+        if (queryOrId instanceof IdQuery) {
+            id = queryOrId.id;
+        } else {
+            id = data[BaseColumnId];
+        }
+        return id;
+    }
 
     protected getColumnsQuery(): string {
         return [this.idColumn, ...this.tableColumns].join(', ');
     }
 
     protected selectSQL(): string {
-        const queryStr = `select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)}`;
-        return queryStr;
+        return `select ${this.getColumnsQuery()} from ${this.sqlDialect.getTableName(this.tableName)}`;
     }
 
     protected orderSQL(column: string, ascending: boolean): string {
@@ -96,16 +90,30 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         let whereSql = '';
 
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
-            whereParams = query.whereParams();
-            whereParamsLength = whereParams.length;
-            whereSql = `where ${query.whereSql(this.sqlDialect)}`;
-            if (this.softDeleteEnabled) {
-                whereSql = `${whereSql} and ${this.deletedAtColumn} is null`;
+            // If query supports SQLWhere interface
+            const querySQL = query.whereSql(this.sqlDialect);
+            whereSql = querySQL ? querySQL : ''; // <-- note we allow the case where the querySQL is empty (aka, no conditions!)
+
+            if (whereSql.length > 0) {
+                // This is a safety check: ensuring we only retrieve
+                // whereSQL parameters if the whereSQL string contains some conditions.
+                whereParams = query.whereParams();
+                whereParamsLength = whereParams.length;
             }
-        } else {
-            if (this.softDeleteEnabled) {
-                whereSql = `where ${this.deletedAtColumn} is null`;
+        }
+
+        // Additionally, append soft deletion condition
+        if (this.softDeleteEnabled) {
+            if (whereSql.length > 0) {
+                // If previous conditions exist, attach an "and" operator
+                whereSql += ' and ';
             }
+            whereSql = `${this.deletedAtColumn} is null`;
+        }
+
+        if (whereSql.length > 0) {
+            // If where SQL contains any condition, append the "where" keyword, otherwise live it empty
+            whereSql = `where ${whereSql}`;
         }
 
         let column = this.createdAtColumn;
@@ -189,16 +197,6 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         }
     }
 
-    private getId(data: RawSQLData, queryOrId: Query): number {
-        let id = null;
-        if (queryOrId instanceof IdQuery) {
-            id = queryOrId.id;
-        } else {
-            id = data[BaseColumnId];
-        }
-        return id;
-    }
-
     private updateSQLQuery(value: RawSQLData): string {
         const paramList = this.tableColumns
             .filter(column => value[column] !== undefined)
@@ -270,7 +268,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     async put(value: RawSQLData, query: Query): Promise<RawSQLData> {
-        let id = this.getId(value, query);
+        let id = RawSQLDataSource.getId(value, query);
         return this.sqlInterface.transaction((sqlInterface: SQLInterface) => {
             return this.executePutQuery(value, id, sqlInterface);
         })
