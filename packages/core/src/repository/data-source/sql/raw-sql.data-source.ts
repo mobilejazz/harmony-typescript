@@ -108,7 +108,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 // If previous conditions exist, attach an "and" operator
                 whereSql += ' and ';
             }
-            whereSql = `${this.deletedAtColumn} is null`;
+            whereSql += `${this.deletedAtColumn} is null`;
         }
 
         if (whereSql.length > 0) {
