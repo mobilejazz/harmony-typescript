@@ -20,11 +20,31 @@ export class AuthControllerInteractor {
             oauthResponse,
             null,
             () => {
-                response.status(oauthResponse.status);
                 Object.keys(oauthResponse.headers).forEach(key => {
                     response.setHeader(key, oauthResponse.headers[key]);
                 });
-                response.send(oauthResponse.body);
+
+                if (oauthResponse.status >= 400) {
+                    // If error, always returning Forbidden
+                    let error = oauthResponse.body.error ? oauthResponse.body.error : 'Forbidden';
+                    let message = 'Forbidden access';
+                    if (typeof oauthResponse.body.error_description === 'string') {
+                        message = oauthResponse.body.error_description;
+                        // tslint:disable-next-line:max-line-length
+                    } else if (oauthResponse.body.error_description.error && oauthResponse.body.error_description.message) {
+                        error = oauthResponse.body.error_description.error;
+                        message = oauthResponse.body.error_description.message;
+                    }
+                    response.status(403);
+                    response.send({
+                        error: error,
+                        message: message,
+                    });
+                } else {
+                    // Otherwise, returning the corresponding status
+                    response.status(oauthResponse.status);
+                    response.send(oauthResponse.body);
+                }
             },
         );
     }
