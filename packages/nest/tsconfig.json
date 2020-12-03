@@ -2,7 +2,12 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "baseUrl": "./src",
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "paths": {
+            "@mobilejazz/harmony-core": [
+                "../../core/src"
+            ]
+        }
     },
     "include": ["*.ts", "**/*.ts"]
 }
