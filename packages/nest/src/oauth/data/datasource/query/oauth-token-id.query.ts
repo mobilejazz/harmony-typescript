@@ -1,4 +1,4 @@
-import {SQLWhereQuery, SQLDialect} from '@mobilejazz/harmony-core';
+import {SQLWhereQuery, SQLDialect, SQLQueryParamComposer} from '@mobilejazz/harmony-core';
 
 export class OAuthTokenIdQuery extends SQLWhereQuery {
     constructor(
@@ -7,7 +7,7 @@ export class OAuthTokenIdQuery extends SQLWhereQuery {
     whereParams(): any[] {
         return [this.tokenId];
     }
-    whereSql(dialect: SQLDialect): string {
-        return `token_id = ${dialect.getParameterSymbol(1)}`;
+    whereSql(dialect: SQLDialect, params: SQLQueryParamComposer): string {
+        return `token_id = ${params.next()}`;
     }
 }
