@@ -22,7 +22,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
             let sql = `${this.selectSQL()}`;
 
             let params = new SQLQueryParamComposer(this.sqlDialect);
-            let queryWhereSQL = query.whereSql(params);
+            let queryWhereSQL = query.where(params.push, this.sqlDialect);
             let whereSql = queryWhereSQL ? queryWhereSQL : '';
 
             if (this.softDeleteEnabled) {

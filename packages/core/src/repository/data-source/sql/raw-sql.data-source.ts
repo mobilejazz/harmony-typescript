@@ -8,21 +8,22 @@ import {
     IdQuery,
     IdsQuery,
     PaginationOffsetLimitQuery,
-    Query,
+    Query, SQLQueryParamFn,
 } from '../..';
 import {SQLDialect, SQLInterface} from '../../../data';
 import {SQLOrderByPaginationQuery, SQLOrderByQuery, SQLWherePaginationQuery, SQLWhereQuery} from './sql.query';
 import {DeviceConsoleLogger, Logger} from '../../../helpers';
+import {SQLQueryParamComposer} from './sql-query-param-composer';
 
 export type RawSQLData = any;
 
 export interface SQLOrderBy {
-    orderBy(params: SQLQueryParamComposer): string;
+    orderBy(param?: SQLQueryParamFn, dialect?: SQLDialect): string;
     ascending(): boolean;
 }
 
 export interface SQLWhere {
-    whereSql(params: SQLQueryParamComposer): string;
+    where(param?: SQLQueryParamFn, dialect?: SQLDialect): string;
 }
 
 class SQLQueryComposition {
@@ -30,23 +31,6 @@ class SQLQueryComposition {
         readonly query: string,
         readonly params: any[],
     ) {}
-}
-
-export class SQLQueryParamComposer {
-    constructor(
-        private readonly dialect: SQLDialect,
-    ) {}
-    private params: any[] = [];
-    public next(param: any): string {
-        this.params.push(param);
-        return this.dialect.getParameterSymbol(this.params.length);
-    }
-    public getCount(): number {
-        return this.params.length;
-    }
-    getParams(): any[] {
-        return this.params;
-    }
 }
 
 export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSource<RawSQLData>, DeleteDataSource {
@@ -103,7 +87,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             // If query supports SQLWhere interface
-            const querySQL = query.whereSql(params);
+            const querySQL = query.where(params.push, this.sqlDialect);
             whereSql = querySQL ? querySQL : ''; // <-- note we allow the case where the querySQL is empty (aka, no conditions!)
         }
 
@@ -124,7 +108,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         let column = this.createdAtColumn;
         let ascending = true;
         if (query instanceof SQLOrderByQuery || query instanceof SQLOrderByPaginationQuery) {
-            column = query.orderBy(params);
+            column = query.orderBy(params.push, this.sqlDialect);
             ascending = query.ascending();
         }
         const orderSQL = this.orderSQL(column, ascending);
@@ -136,7 +120,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
         let limitSQL = '';
         if (limit !== undefined && offset !== undefined) {
-            limitSQL = `limit ${params.next(limit)} offset ${params.next(offset)}`;
+            limitSQL = `limit ${params.push(limit)} offset ${params.push(offset)}`;
         }
 
         // tslint:disable-next-line:max-line-length
@@ -323,7 +307,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 let params = new SQLQueryParamComposer(this.sqlDialect);
                 return this.sqlInterface
                     // tslint:disable-next-line:max-line-length
-                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.whereSql(params)}`, params.getParams())
+                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.where(params.push, this.sqlDialect)}`, params.getParams())
                     .then(() => Promise.resolve())
                     .catch(e => {
                         throw this.sqlDialect.mapError(e);
@@ -350,7 +334,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 let params = new SQLQueryParamComposer(this.sqlDialect);
                 return this.sqlInterface
                     // tslint:disable-next-line:max-line-length
-                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(params)}`, params.getParams())
+                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.where(params.push, this.sqlDialect)}`, params.getParams())
                     .then(() => Promise.resolve())
                     .catch(e => {
                         throw this.sqlDialect.mapError(e);
