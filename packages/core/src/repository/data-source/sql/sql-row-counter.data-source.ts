@@ -21,8 +21,8 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             let sql = `${this.selectSQL()}`;
 
-            let paramComposer = new SQLQueryParamComposer(this.sqlDialect);
-            let queryWhereSQL = query.whereSql(this.sqlDialect, paramComposer);
+            let params = new SQLQueryParamComposer(this.sqlDialect);
+            let queryWhereSQL = query.whereSql(params);
             let whereSql = queryWhereSQL ? queryWhereSQL : '';
 
             if (this.softDeleteEnabled) {
@@ -36,9 +36,11 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
                 sql += ' where ' + whereSql;
             }
 
-            const params = query.whereParams().slice(0, paramComposer.getCount());
+            if (sql.indexOf('count(*)') === -1) {
+                sql = `select count(*) from (${sql}) as t`;
+            }
             return this.sqlInterface
-                .query(sql, params)
+                .query(sql, params.getParams())
                 .then(result => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch(e => { throw this.sqlDialect.mapError(e); });
         } else {

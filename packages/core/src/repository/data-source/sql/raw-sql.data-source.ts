@@ -17,14 +17,12 @@ import {DeviceConsoleLogger, Logger} from '../../../helpers';
 export type RawSQLData = any;
 
 export interface SQLOrderBy {
-    orderBy(dialect?: SQLDialect, params?: SQLQueryParamComposer): string;
-    orderByParams(): any[];
+    orderBy(params: SQLQueryParamComposer): string;
     ascending(): boolean;
 }
 
 export interface SQLWhere {
-    whereSql(dialect?: SQLDialect, params?: SQLQueryParamComposer): string;
-    whereParams(): any[];
+    whereSql(params: SQLQueryParamComposer): string;
 }
 
 class SQLQueryComposition {
@@ -37,16 +35,17 @@ class SQLQueryComposition {
 export class SQLQueryParamComposer {
     constructor(
         private readonly dialect: SQLDialect,
-    ) {
-        this.counter = 0;
-    }
-    private counter: number;
-    public next(): string {
-        this.counter += 1;
-        return this.dialect.getParameterSymbol(this.counter);
+    ) {}
+    private params: any[] = [];
+    public next(param: any): string {
+        this.params.push(param);
+        return this.dialect.getParameterSymbol(this.params.length);
     }
     public getCount(): number {
-        return this.counter;
+        return this.params.length;
+    }
+    getParams(): any[] {
+        return this.params;
     }
 }
 
@@ -97,26 +96,15 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         return `order by ${column} ${(ascending ? 'asc' : 'desc')}`;
     }
 
-    protected limitSQL(params: SQLQueryParamComposer): string {
-        return `limit ${params.next()} offset ${params.next()}`;
-    }
-
     protected getComposition(query: Query, limit?: number, offset?: number): SQLQueryComposition {
-        let params: any[] = [];
         let whereSql = '';
 
-        let paramComposer = new SQLQueryParamComposer(this.sqlDialect);
+        let params = new SQLQueryParamComposer(this.sqlDialect);
 
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             // If query supports SQLWhere interface
-            const querySQL = query.whereSql(this.sqlDialect, paramComposer);
+            const querySQL = query.whereSql(params);
             whereSql = querySQL ? querySQL : ''; // <-- note we allow the case where the querySQL is empty (aka, no conditions!)
-
-            if (whereSql.length > 0) {
-                // This is a safety check: ensuring we only retrieve
-                // whereSQL parameters if the whereSQL string contains some conditions.
-                params = query.whereParams();
-            }
         }
 
         // Additionally, append soft deletion condition
@@ -136,8 +124,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         let column = this.createdAtColumn;
         let ascending = true;
         if (query instanceof SQLOrderByQuery || query instanceof SQLOrderByPaginationQuery) {
-            column = query.orderBy(this.sqlDialect, paramComposer);
-            query.orderByParams().forEach(it => params.push(it));
+            column = query.orderBy(params);
             ascending = query.ascending();
         }
         const orderSQL = this.orderSQL(column, ascending);
@@ -149,15 +136,13 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
         let limitSQL = '';
         if (limit !== undefined && offset !== undefined) {
-            limitSQL = this.limitSQL(paramComposer);
-            params.push(limit);
-            params.push(offset);
+            limitSQL = `limit ${params.next(limit)} offset ${params.next(offset)}`;
         }
 
         // tslint:disable-next-line:max-line-length
         const queryStr = `${this.selectSQL()} ${whereSql} ${orderSQL} ${limitSQL}`;
 
-        return new SQLQueryComposition(queryStr, params);
+        return new SQLQueryComposition(queryStr, params.getParams());
     }
 
     async get(query: Query): Promise<RawSQLData> {
@@ -335,9 +320,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                         throw this.sqlDialect.mapError(e);
                     });
             } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
+                let params = new SQLQueryParamComposer(this.sqlDialect);
                 return this.sqlInterface
                     // tslint:disable-next-line:max-line-length
-                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.whereSql(this.sqlDialect, new SQLQueryParamComposer(this.sqlDialect))}`, query.whereParams())
+                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.whereSql(params)}`, params.getParams())
                     .then(() => Promise.resolve())
                     .catch(e => {
                         throw this.sqlDialect.mapError(e);
@@ -361,9 +347,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                         throw this.sqlDialect.mapError(e);
                     });
             } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
+                let params = new SQLQueryParamComposer(this.sqlDialect);
                 return this.sqlInterface
                     // tslint:disable-next-line:max-line-length
-                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(this.sqlDialect, new SQLQueryParamComposer(this.sqlDialect))}`, query.whereParams())
+                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.whereSql(params)}`, params.getParams())
                     .then(() => Promise.resolve())
                     .catch(e => {
                         throw this.sqlDialect.mapError(e);
