@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 export class HttpRequestBuilder<T> {
     private urlBuilder: UrlBuilder;
 
-    private body = '';
+    private body: string | FormData = '';
     private headers: HttpHeaders = new HttpHeaders();
     private responseConstructor: any;
 
@@ -31,6 +31,13 @@ export class HttpRequestBuilder<T> {
 
     public setBody(body: object): HttpRequestBuilder<T> {
         this.body = JSON.stringify(body);
+        return this;
+    }
+
+    public setFormData(form: FormData): HttpRequestBuilder<T> {
+        // Remove `Content-Type`, let `HttpClient` generate the proper `multipart/form-data` header with the boundary delimiter
+        this.headers = this.headers.delete('Content-Type');
+        this.body = form;
         return this;
     }
 

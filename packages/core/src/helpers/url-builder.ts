@@ -34,8 +34,12 @@ export class UrlBuilder {
 
     private prepareQueryParameters(url: string, queryParameters: Dictionary<ParameterType>): string {
         let firstProperty = true;
-        for (let property in queryParameters ) {
-            if (queryParameters.hasOwnProperty(property) && queryParameters[property]) {
+
+        for (let property in queryParameters) {
+            if (
+                queryParameters.hasOwnProperty(property) &&
+                (typeof queryParameters[property] !== 'undefined' && queryParameters[property] !== null)
+            ) {
                 url += firstProperty ? '?' : '&';
                 firstProperty = false;
                 url += `${property}=${encodeURIComponent(queryParameters[property].toString())}`;

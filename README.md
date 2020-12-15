@@ -9,7 +9,7 @@ This repository contains the core structure for typescript of the Mobile Jazz Ha
 - `nvm use`: ensure we're using the proper NodeJS version
 - `npm ci`: install root dependencies
 - `npx lerna exec -- npm ci`: install packages dependencies
-- `npx lerna bootstrap`: replace internal modules as symlinks (required to apply changes to the library) 
+- `npx lerna bootstrap`: replace internal modules as symlinks (required to apply changes to the library)
 
 Anytime you're working in the project ensure you `nvm use` to stay on the correct NodeJS version.
 
