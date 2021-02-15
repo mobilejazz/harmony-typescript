@@ -1,13 +1,15 @@
-import {DeleteRepository, GetRepository, PutRepository} from './repository';
-import {IdQuery, IdsQuery, Query} from './query/query';
-import {Operation, DefaultOperation} from './operation/operation';
-import {MethodNotImplementedError, NotFoundError, NotValidError, OperationNotSupportedError} from './errors';
-import {DeleteDataSource, GetDataSource, PutDataSource} from './data-source/data-source';
-import {DeviceConsoleLogger, Logger} from '../helpers';
+import { DeviceConsoleLogger, Logger } from '../helpers';
+import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/data-source';
+import { NotFoundError, NotValidError, OperationNotSupportedError } from './errors';
+import { DefaultOperation, Operation } from './operation/operation';
+import { Query } from './query/query';
+import { DeleteRepository, GetRepository, PutRepository } from './repository';
 
 export class MainOperation implements  Operation {}
 export class MainSyncOperation implements  Operation {}
-export class CacheOperation implements Operation {}
+export class CacheOperation implements Operation {
+    constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
+}
 export class CacheSyncOperation implements Operation {
     constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
 }
@@ -54,7 +56,28 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
             case MainOperation:
                 return this.getMain.get(query);
             case CacheOperation:
-                return this.getCache.get(query);
+                return this.getCache.get(query).then((value: T) => {
+                    if (value == null) {
+                        throw new NotFoundError();
+                    }
+                    if (!this.validator.isObjectValid(value)) {
+                        throw new NotValidError();
+                    }
+                    return value;
+                }).catch((err: Error) => {
+                    if (err instanceof NotValidError || err instanceof NotFoundError) {
+                        return this.get(query, new MainOperation()).catch((finalError: Error) => {
+                            let op = operation as CacheOperation;
+                            if (op.fallback(finalError)) {
+                                return this.getCache.get(query);
+                            } else {
+                                throw finalError;
+                            }
+                        });
+                    } else {
+                        throw err;
+                    }
+                });
             case MainSyncOperation:
                 return this.getMain.get(query).then((value: T) => {
                     return this.putCache.put(value, query);
@@ -94,7 +117,28 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
             case MainOperation:
                 return this.getMain.getAll(query);
             case CacheOperation:
-                return this.getCache.getAll(query);
+                return this.getCache.getAll(query).then((values: T[]) => {
+                    if (values == null) {
+                        throw new NotFoundError();
+                    }
+                    if (!this.validator.isArrayValid(values)) {
+                        throw new NotValidError();
+                    }
+                    return values;
+                }).catch((err: Error) => {
+                    if (err instanceof NotValidError || err instanceof NotFoundError) {
+                        return this.getAll(query, new MainOperation()).catch((finalError: Error) => {
+                            let op = operation as CacheOperation;
+                            if (op.fallback(finalError)) {
+                                return this.getCache.getAll(query);
+                            } else {
+                                throw finalError;
+                            }
+                        });
+                    } else {
+                        throw err;
+                    }
+                });
             case MainSyncOperation:
                 return this.getMain.getAll(query).then((values: T[]) => {
                     return this.putCache.putAll(values, query);
