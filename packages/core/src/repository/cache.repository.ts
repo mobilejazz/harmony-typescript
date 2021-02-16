@@ -65,15 +65,9 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     }
                     return value;
                 }).catch((err: Error) => {
-                    if (err instanceof NotValidError || err instanceof NotFoundError) {
-                        return this.get(query, new MainOperation()).catch((finalError: Error) => {
-                            let op = operation as CacheOperation;
-                            if (op.fallback(finalError)) {
-                                return this.getCache.get(query);
-                            } else {
-                                throw finalError;
-                            }
-                        });
+                    let op = operation as CacheOperation;
+                    if (err instanceof NotValidError && op.fallback(err)) {
+                        return this.getCache.get(query);
                     } else {
                         throw err;
                     }
