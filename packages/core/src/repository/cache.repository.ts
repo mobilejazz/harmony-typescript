@@ -8,7 +8,7 @@ import { DeleteRepository, GetRepository, PutRepository } from './repository';
 export class MainOperation implements  Operation {}
 export class MainSyncOperation implements  Operation {}
 export class CacheOperation implements Operation {
-    constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
+    constructor(readonly fallback: ((error: Error) => boolean) = (() => true)) {}
 }
 export class CacheSyncOperation implements Operation {
     constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
