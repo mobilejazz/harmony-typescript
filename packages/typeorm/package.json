@@ -22,7 +22,7 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "dependencies": {
-        "@mobilejazz/harmony-core": "^0.8.1"
+        "@mobilejazz/harmony-core": "0.8.0"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",

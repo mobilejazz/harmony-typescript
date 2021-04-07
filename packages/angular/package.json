@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@angular/common": "7.2.1",
-        "@mobilejazz/harmony-core": "^0.8.1"
+        "@mobilejazz/harmony-core": "0.8.0"
     },
     "devDependencies": {
         "rimraf": "^2.6.3",
