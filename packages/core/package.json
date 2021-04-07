@@ -35,5 +35,5 @@
         "tslint": "~5.14.0"
     },
     "main": "dist/index.js",
-    "gitHead": "f4ea81086d967e967739c8082512b13ccebdffe3"
+    "gitHead": "4526b13c3283cb03577d0b3b6972f04a6b41fe86"
 }

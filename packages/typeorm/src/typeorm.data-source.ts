@@ -14,7 +14,7 @@ import {
     Logger,
     DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
-import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
+import { Repository as TypeORMRepository, In } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
@@ -25,7 +25,8 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
     async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
             return this.repository
-                .findOne(query.id).then(value => {
+                .findOne(query.id)
+                .then((value: any) => {
                     if (value === undefined) {
                         throw new NotFoundError();
                     } else {
@@ -37,7 +38,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 .findOne({
                     where: this.buildArrayQuery(query.value),
                     relations: query.relations,
-                }).then(value => {
+                }).then((value: any) => {
                     if (value === undefined) {
                         throw new NotFoundError();
                     } else {
@@ -47,7 +48,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         } else if (query instanceof ObjectQuery) {
             return this.repository
                 .findOne({ where: this.buildArrayQuery(query.value) })
-                .then(value => {
+                .then((value: any) => {
                     if (value === undefined) {
                         throw new NotFoundError();
                     } else {
