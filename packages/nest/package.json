@@ -1,6 +1,6 @@
 {
     "name": "@mobilejazz/harmony-nest",
-    "version": "0.8.1",
+    "version": "0.8.2",
     "description": "NestJS resources",
     "author": "Mobile Jazz",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/nest#readme",
