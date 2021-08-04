@@ -1,39 +1,25 @@
 {
     "name": "@mobilejazz/harmony-core",
     "version": "0.8.2",
-    "description": "Building blocks for a typescript application based on Harmony concept",
+    "description": "Mobile Jazz Harmony framework for TypeScript",
     "author": "Mobile Jazz",
+    "license": "Apache-2.0",
+    "repository": "github:mobilejazz/harmony-typescript",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/core#readme",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/mobilejazz/harmony-typescript.git"
-    },
+    "bugs": "https://github.com/mobilejazz/harmony-typescript/issues",
+    "main": "dist/index.js",
+    "gitHead": "4526b13c3283cb03577d0b3b6972f04a6b41fe86",
     "publishConfig": {
         "access": "public"
     },
-    "license": "Apache-2.0",
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
         "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*'  '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
-    "bugs": {
-        "url": "https://github.com/mobilejazz/harmony-typescript/issues"
-    },
     "dependencies": {
         "@types/mysql": "^2.15.7",
         "class-transformer": "~0.3.1"
-    },
-    "peerDependencies": {
-        "@bugfender/sdk": "1.x"
-    },
-    "devDependencies": {
-        "rimraf": "^2.6.3",
-        "ts-node": "^5.0.0",
-        "tsconfig-paths": "^3.8.0",
-        "tslint": "~5.14.0"
-    },
-    "main": "dist/index.js",
-    "gitHead": "4526b13c3283cb03577d0b3b6972f04a6b41fe86"
+    }
 }
