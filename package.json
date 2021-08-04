@@ -14,8 +14,8 @@
         "url": "https://github.com/mobilejazz/harmony-typescript/issues"
     },
     "engines": {
-        "node": "~10.13",
-        "npm": "~6.4"
+        "node": "16.x",
+        "npm": "7.x"
     },
     "scripts": {
         "prebuild": "npm run validate",
