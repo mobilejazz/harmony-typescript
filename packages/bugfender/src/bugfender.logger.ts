@@ -1,5 +1,5 @@
-import {AbstractLogger, LogLevel, UnknownLogLevelError} from './logger';
-import {BugfenderClass} from '@bugfender/sdk';
+import { AbstractLogger, LogLevel, UnknownLogLevelError } from '@mobilejazz/harmony-core';
+import { BugfenderClass } from '@bugfender/sdk';
 
 export class BugfenderLogger extends AbstractLogger {
     constructor(
@@ -8,7 +8,7 @@ export class BugfenderLogger extends AbstractLogger {
         super();
     }
 
-    logKeyValue(key: string, value: any): void {
+    public logKeyValue(key: string, value: any): void {
         if (value === null) {
             this.bugfender.removeDeviceKey(key);
         } else {
@@ -16,9 +16,9 @@ export class BugfenderLogger extends AbstractLogger {
         }
     }
 
-    log(level: LogLevel, message: string): void;
-    log(level: LogLevel, tag: string, message: string): void;
-    log(level: LogLevel, tagOrMessage: string, message?: string): void {
+    public log(level: LogLevel, message: string): void;
+    public log(level: LogLevel, tag: string, message: string): void;
+    public log(level: LogLevel, tagOrMessage: string, message?: string): void {
         const hasTag = typeof message !== 'undefined';
 
         if (hasTag) {
