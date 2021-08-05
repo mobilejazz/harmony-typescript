@@ -1,21 +1,36 @@
-# ![Mobile Jazz Badge](https://raw.githubusercontent.com/mobilejazz/metadata/master/images/icons/mj-40x40.png) Harmony Typescript
+<p align="center">
+  <a href="https://harmony.mobilejazz.com">
+    <img src="https://raw.githubusercontent.com/mobilejazz/metadata/master/images/icons/harmony.svg" alt="MJ Harmony logo" width="80" height="80">
+  </a>
 
-This repository contains the core structure for typescript of the Mobile Jazz Harmony project.
+  <h3 align="center">Harmony TypeScript</h3>
 
-## Initial Setup
+  <p align="center">
+    Harmony is a <em>framework</em> developed by <a href="https://mobilejazz.com">Mobile Jazz</a> that specifies best practices, software architectural patterns and other software development related guidelines.
+    <br />
+    <br />
+    <a href="https://harmony.mobilejazz.com">Documentation</a>
+    ·
+    <a href="https://github.com/mobilejazz/harmony-kotlin">Kotlin</a>
+    ·
+    <a href="https://github.com/mobilejazz/harmony-swift">Swift</a>
+    ·
+    <a href="https://github.com/mobilejazz/harmony-php">PHP</a>
+  </p>
+</p>
 
-- Ensure [NVM](https://github.com/nvm-sh/nvm) is installed on your system
-- `nvm install`: install the NodeJS version required by Harmony TS
-- `nvm use`: ensure we're using the proper NodeJS version
-- `npm ci`: install root dependencies
-- `npx lerna exec -- npm ci`: install packages dependencies
-- `npx lerna bootstrap`: replace internal modules as symlinks (required to apply changes to the library)
+## Getting Started
 
-Anytime you're working in the project ensure you `nvm use` to stay on the correct NodeJS version.
+Harmony TypeScript is split into several NPM packages, being `@mobilejazz/harmony-core` the only **required** package. The other packages are optional and make sense in the context of the project type (e.g. frontend/backend…).
 
-## Publish new version
+| Package                         | Description
+| ------------------------------- | -------------
+| `@mobilejazz/harmony-core`      | Core repository with the Harmony implementation and types.
+| `@mobilejazz/harmony-angular`   | Integration with [Angular](https://angular.io).
+| `@mobilejazz/harmony-bugfender` | Integration with [Bugfender](https://bugfender.com).
+| `@mobilejazz/harmony-nest`      | Integration with [NestJS](https://nestjs.com).
+| `@mobilejazz/harmony-typeorm`   | Integration with [TypeORM](https://typeorm.io).
 
-- `git checkout master`: ensure you're on `master`
-- `nvm use`: ensure we're using the proper NodeJS version
-- `npm whoami`: ensure you're using the correct NPM user (`npm login` if not)
-- `npm run publish`: run at root `package.json`
+## Contributing
+
+Please check the [development README](README-DEV.md).
