@@ -15,11 +15,11 @@
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
-        "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*'  '**/*.ts'",
+        "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*' '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "peerDependencies": {
         "@mobilejazz/harmony-core": "0.x",
-        "typeorm": "~0.2.16"
+        "typeorm": "^0.2.37"
     }
 }

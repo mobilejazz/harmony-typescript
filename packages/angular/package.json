@@ -18,10 +18,8 @@
         "lint": "tslint -c ../../tslint.json -p './' -e '**/node_modules/**/*' -e '**/dist/**/*'  '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
-    "dependencies": {
-        "@angular/common": "7.2.1"
-    },
     "peerDependencies": {
+        "@angular/common": "10.x",
         "@mobilejazz/harmony-core": "0.x"
     }
 }
