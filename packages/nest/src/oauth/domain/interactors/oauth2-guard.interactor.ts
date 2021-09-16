@@ -1,11 +1,9 @@
 import OAuth2Server = require('oauth2-server');
-import {ExecutionContext} from '@nestjs/common';
-import {Request, Response} from 'oauth2-server';
+import { ExecutionContext } from '@nestjs/common';
+import { Request, Response } from 'oauth2-server';
 
 export class OAuth2GuardInteractor {
-    constructor(
-        private readonly oauthServer: OAuth2Server,
-    ) {}
+    constructor(private readonly oauthServer: OAuth2Server) {}
 
     async execute(context: ExecutionContext): Promise<boolean> {
         const req = context.switchToHttp().getRequest();
@@ -15,8 +13,8 @@ export class OAuth2GuardInteractor {
 
         return this.oauthServer
             .authenticate(oauthRequest, oauthResponse)
-            .then(token => {
-                Object.keys(oauthResponse.headers).forEach(key => {
+            .then((token) => {
+                Object.keys(oauthResponse.headers).forEach((key) => {
                     req.res.setHeader(key, oauthResponse.headers[key]);
                 });
                 req.user = token.user;
@@ -24,7 +22,7 @@ export class OAuth2GuardInteractor {
                 req.scope = token.scope;
                 return true;
             })
-            .catch(error => {
+            .catch((error) => {
                 return false;
             });
     }

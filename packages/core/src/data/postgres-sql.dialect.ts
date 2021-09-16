@@ -1,5 +1,5 @@
-import {FailedError, ForbiddenError, InvalidArgumentError} from "../repository";
-import {SQLDialect} from "./sql.dialect";
+import { FailedError, ForbiddenError, InvalidArgumentError } from '../repository';
+import { SQLDialect } from './sql.dialect';
 
 export class PostgresSQLDialect implements SQLDialect {
     getParameterSymbol(idx?: number): string {

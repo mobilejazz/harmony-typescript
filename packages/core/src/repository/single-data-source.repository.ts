@@ -2,10 +2,9 @@ import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/da
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
-import {DeviceConsoleLogger, Logger} from '../helpers';
+import { DeviceConsoleLogger, Logger } from '../helpers';
 
 export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
-
     constructor(
         private readonly getDataSource: GetDataSource<T>,
         private readonly putDataSource: PutDataSource<T>,
@@ -37,14 +36,10 @@ export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepos
         this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
         return this.deleteDataSource.delete(query);
     }
-
 }
 
 export class SingleGetDataSourceRepository<T> implements GetRepository<T> {
-
-    constructor(
-        private readonly getDataSource: GetDataSource<T>,
-    ) {}
+    constructor(private readonly getDataSource: GetDataSource<T>) {}
 
     public get(query: Query, _operation: Operation): Promise<T> {
         return this.getDataSource.get(query);
@@ -53,17 +48,12 @@ export class SingleGetDataSourceRepository<T> implements GetRepository<T> {
     public getAll(query: Query, _operation: Operation): Promise<T[]> {
         return this.getDataSource.getAll(query);
     }
-
 }
 
 export class SinglePutDataSourceRepository<T> implements PutRepository<T> {
-
-    constructor(
-        private readonly putDataSource: PutDataSource<T>,
-    ) {}
+    constructor(private readonly putDataSource: PutDataSource<T>) {}
 
     public put(value: T, query: Query, _operation: Operation): Promise<T> {
-
         return this.putDataSource.put(value, query);
     }
 

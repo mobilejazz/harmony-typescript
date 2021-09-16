@@ -1,4 +1,4 @@
-import {AbstractLogger, LogLevel, UnknownLogLevelError} from "./logger";
+import { AbstractLogger, LogLevel, UnknownLogLevelError } from './logger';
 
 export class DeviceConsoleLogger extends AbstractLogger {
     protected logger: Console;

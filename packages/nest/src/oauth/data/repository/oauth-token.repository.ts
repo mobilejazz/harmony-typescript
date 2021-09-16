@@ -14,14 +14,16 @@ import {
     Logger,
     DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
-import {OAuthTokenModel} from '../../domain/oauth-token.model';
-import {OAuthClientModel} from '../../domain/oauth-client.model';
-import {OAuthTokenEntity} from '../entity/oauth-token.entity';
-import {OAuthClientIdQuery} from '../datasource/query/oauth-client-id.query';
-import {OAuthTokenScopeEntity} from '../entity/oauth-token-scope.entity';
-import {OAuthTokenIdQuery} from '../datasource/query/oauth-token-id.query';
+import { OAuthTokenModel } from '../../domain/oauth-token.model';
+import { OAuthClientModel } from '../../domain/oauth-client.model';
+import { OAuthTokenEntity } from '../entity/oauth-token.entity';
+import { OAuthClientIdQuery } from '../datasource/query/oauth-client-id.query';
+import { OAuthTokenScopeEntity } from '../entity/oauth-token-scope.entity';
+import { OAuthTokenIdQuery } from '../datasource/query/oauth-token-id.query';
 
-export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, PutRepository<OAuthTokenModel>, DeleteRepository {
+export class OAuthTokenRepository
+    implements GetRepository<OAuthTokenModel>, PutRepository<OAuthTokenModel>, DeleteRepository
+{
     constructor(
         private readonly getClientRepository: GetRepository<OAuthClientModel>,
         private readonly getTokenDataSource: GetDataSource<OAuthTokenEntity>,
@@ -46,7 +48,7 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
             token.refreshToken,
             token.refreshTokenExpiresAt,
             client,
-            scopes.map(s => s.scope),
+            scopes.map((s) => s.scope),
         );
     }
 
@@ -77,8 +79,11 @@ export class OAuthTokenRepository implements GetRepository<OAuthTokenModel>, Put
             await this.deleteTokenScopeDataSource.deleteAll(new OAuthTokenIdQuery(token.id));
             // Adding new grants
             scope = await this.putTokenScopeDataSource
-                .putAll(value.scope.map(s => new OAuthTokenScopeEntity(undefined, undefined, undefined, s, token.id)), new VoidQuery())
-                .then(array => array.map(s => s.scope));
+                .putAll(
+                    value.scope.map((s) => new OAuthTokenScopeEntity(undefined, undefined, undefined, s, token.id)),
+                    new VoidQuery(),
+                )
+                .then((array) => array.map((s) => s.scope));
         }
         return new OAuthTokenModel(
             token.id,

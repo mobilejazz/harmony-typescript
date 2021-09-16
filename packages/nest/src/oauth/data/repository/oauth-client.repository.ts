@@ -12,12 +12,14 @@ import {
     Logger,
     DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
-import {OAuthClientModel} from '../../domain/oauth-client.model';
-import {OAuthClientEntity} from '../entity/oauth-client.entity';
-import {OAuthClientGrantEntity} from '../entity/oauth-client-grant.entity';
-import {OAuthClientIdQuery} from '../datasource/query/oauth-client-id.query';
+import { OAuthClientModel } from '../../domain/oauth-client.model';
+import { OAuthClientEntity } from '../entity/oauth-client.entity';
+import { OAuthClientGrantEntity } from '../entity/oauth-client-grant.entity';
+import { OAuthClientIdQuery } from '../datasource/query/oauth-client-id.query';
 
-export class OAuthClientRepository implements GetRepository<OAuthClientModel>, PutRepository<OAuthClientModel>, DeleteRepository {
+export class OAuthClientRepository
+    implements GetRepository<OAuthClientModel>, PutRepository<OAuthClientModel>, DeleteRepository
+{
     constructor(
         private readonly getClientDataSource: GetDataSource<OAuthClientEntity>,
         private readonly putClientDataSource: PutDataSource<OAuthClientEntity>,
@@ -29,7 +31,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
     ) {}
 
     async get(query: Query, _operation: Operation): Promise<OAuthClientModel> {
-        const client =  await this.getClientDataSource.get(query);
+        const client = await this.getClientDataSource.get(query);
         const grants = await this.getClientGrantsDataSource.getAll(new OAuthClientIdQuery(client.id));
         return new OAuthClientModel(
             client.id,
@@ -37,7 +39,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
             client.updatedAt,
             client.clientId,
             client.clientSecret,
-            grants.map(el => el.grant),
+            grants.map((el) => el.grant),
             client.accessTokenLifetime,
             client.refreshTokenLifetime,
         );
@@ -45,22 +47,22 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
 
     async getAll(query: Query, _operation: Operation): Promise<OAuthClientModel[]> {
         const clients = await this.getClientDataSource.getAll(query);
-        return Promise.all(clients.map(client => {
-            return this.getClientGrantsDataSource
-                .getAll(new OAuthClientIdQuery(client.id))
-                .then(grants => {
+        return Promise.all(
+            clients.map((client) => {
+                return this.getClientGrantsDataSource.getAll(new OAuthClientIdQuery(client.id)).then((grants) => {
                     return new OAuthClientModel(
                         client.id,
                         client.createdAt,
                         client.updatedAt,
                         client.clientId,
                         client.clientSecret,
-                        grants.map(el => el.grant),
+                        grants.map((el) => el.grant),
                         client.accessTokenLifetime,
                         client.refreshTokenLifetime,
                     );
                 });
-        }));
+            }),
+        );
     }
 
     async put(value: OAuthClientModel, query: Query, _operation: Operation): Promise<OAuthClientModel> {
@@ -81,8 +83,11 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
             await this.deleteClientGrantsDataSource.deleteAll(new OAuthClientIdQuery(client.id));
             // Adding new grants
             grants = await this.putClientGrantsDataSource
-                .putAll(value.grants.map(el => new OAuthClientGrantEntity(null, null, null, el, client.id)), new VoidQuery())
-                .then(array => array.map(el => el.grant));
+                .putAll(
+                    value.grants.map((el) => new OAuthClientGrantEntity(null, null, null, el, client.id)),
+                    new VoidQuery(),
+                )
+                .then((array) => array.map((el) => el.grant));
         }
         return new OAuthClientModel(
             client.id,

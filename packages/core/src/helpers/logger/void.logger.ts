@@ -1,4 +1,4 @@
-import {AbstractLogger, LogLevel} from "./logger";
+import { AbstractLogger, LogLevel } from './logger';
 
 export class VoidLogger extends AbstractLogger {
     constructor() {

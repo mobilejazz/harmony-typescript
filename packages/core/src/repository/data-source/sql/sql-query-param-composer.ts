@@ -1,4 +1,4 @@
-import {SQLDialect} from '../../../data';
+import { SQLDialect } from '../../../data';
 
 export type SQLQueryParamFn = (param: any) => string;
 
@@ -13,9 +13,7 @@ export class SQLQueryParamComposer {
      * Constructor
      * @param dialect The associated SQL dialect
      */
-    constructor(
-        private readonly dialect: SQLDialect,
-    ) {}
+    constructor(private readonly dialect: SQLDialect) {}
 
     /**
      * Add a new parameter. Returns the parameter symbol associated to the dialect to be used
@@ -25,7 +23,7 @@ export class SQLQueryParamComposer {
     public readonly push: SQLQueryParamFn = (param: any) => {
         this.params.push(param);
         return this.dialect.getParameterSymbol(this.params.length);
-    }
+    };
 
     /**
      * Returns the amount of params currently stored

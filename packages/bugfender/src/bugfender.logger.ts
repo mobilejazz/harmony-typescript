@@ -2,9 +2,7 @@ import { AbstractLogger, LogLevel, UnknownLogLevelError } from '@mobilejazz/harm
 import { BugfenderClass } from '@bugfender/sdk';
 
 export class BugfenderLogger extends AbstractLogger {
-    constructor(
-        protected bugfender: BugfenderClass,
-    ) {
+    constructor(protected bugfender: BugfenderClass) {
         super();
     }
 

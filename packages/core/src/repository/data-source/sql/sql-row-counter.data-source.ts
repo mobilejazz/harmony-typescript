@@ -1,8 +1,8 @@
-import {GetDataSource} from "../data-source";
-import {SQLDialect, SQLInterface} from "../../../data";
-import {QueryNotSupportedError} from "../../errors";
-import {BaseColumnDeletedAt, Query, SQLQueryParamComposer, SQLWherePaginationQuery} from '../..';
-import {SQLWhereQuery} from "./sql.query";
+import { GetDataSource } from '../data-source';
+import { SQLDialect, SQLInterface } from '../../../data';
+import { QueryNotSupportedError } from '../../errors';
+import { BaseColumnDeletedAt, Query, SQLQueryParamComposer, SQLWherePaginationQuery } from '../..';
+import { SQLWhereQuery } from './sql.query';
 
 export class SQLRowCounterDataSource implements GetDataSource<number> {
     constructor(
@@ -41,8 +41,10 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
             }
             return this.sqlInterface
                 .query(sql, params.getParams())
-                .then(result => Number(result[0][this.sqlDialect.getCountName()]))
-                .catch(e => { throw this.sqlDialect.mapError(e); });
+                .then((result) => Number(result[0][this.sqlDialect.getCountName()]))
+                .catch((e) => {
+                    throw this.sqlDialect.mapError(e);
+                });
         } else {
             let sql = this.selectSQL();
             if (this.softDeleteEnabled) {
@@ -50,8 +52,10 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
             }
             return this.sqlInterface
                 .query(sql)
-                .then(result => Number(result[0][this.sqlDialect.getCountName()]))
-                .catch(e => { throw this.sqlDialect.mapError(e); });
+                .then((result) => Number(result[0][this.sqlDialect.getCountName()]))
+                .catch((e) => {
+                    throw this.sqlDialect.mapError(e);
+                });
         }
     }
 

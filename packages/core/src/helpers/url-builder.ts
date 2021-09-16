@@ -2,10 +2,7 @@ import { Dictionary } from '../data';
 import { ParameterType } from '../data/parameter-type';
 
 export class UrlBuilder {
-
-    constructor(
-        private url: string,
-    ) {}
+    constructor(private url: string) {}
 
     public getUrl(): string {
         return this.url;
@@ -22,7 +19,7 @@ export class UrlBuilder {
     }
 
     private prepareUrlParameters(url: string, urlParameters: Dictionary<ParameterType>): string {
-        for (const property in urlParameters ) {
+        for (const property in urlParameters) {
             if (Object.prototype.hasOwnProperty.call(urlParameters, property) && url.indexOf(`:${property}`) > -1) {
                 url = url.replace(`:${property}`, urlParameters[property].toString());
             } else {
@@ -38,7 +35,8 @@ export class UrlBuilder {
         for (const property in queryParameters) {
             if (
                 Object.prototype.hasOwnProperty.call(queryParameters, property) &&
-                (typeof queryParameters[property] !== 'undefined' && queryParameters[property] !== null)
+                typeof queryParameters[property] !== 'undefined' &&
+                queryParameters[property] !== null
             ) {
                 url += firstProperty ? '?' : '&';
                 firstProperty = false;
@@ -47,5 +45,4 @@ export class UrlBuilder {
         }
         return url;
     }
-
 }

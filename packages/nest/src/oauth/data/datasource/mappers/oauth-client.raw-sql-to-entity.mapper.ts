@@ -1,5 +1,5 @@
-import {Mapper, RawSQLData} from '@mobilejazz/harmony-core';
-import {OAuthClientEntity} from '../../entity/oauth-client.entity';
+import { Mapper, RawSQLData } from '@mobilejazz/harmony-core';
+import { OAuthClientEntity } from '../../entity/oauth-client.entity';
 import {
     OAuthColumnCreatedAt,
     OAuthColumnId,

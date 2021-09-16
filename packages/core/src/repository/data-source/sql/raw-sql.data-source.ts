@@ -1,5 +1,5 @@
-import {DeleteDataSource, GetDataSource, PutDataSource} from '../data-source';
-import {InvalidArgumentError, NotFoundError, QueryNotSupportedError} from '../../errors';
+import { DeleteDataSource, GetDataSource, PutDataSource } from '../data-source';
+import { InvalidArgumentError, NotFoundError, QueryNotSupportedError } from '../../errors';
 import {
     BaseColumnCreatedAt,
     BaseColumnDeletedAt,
@@ -8,12 +8,13 @@ import {
     IdQuery,
     IdsQuery,
     PaginationOffsetLimitQuery,
-    Query, SQLQueryParamFn,
+    Query,
+    SQLQueryParamFn,
 } from '../..';
-import {SQLDialect, SQLInterface} from '../../../data';
-import {SQLOrderByPaginationQuery, SQLOrderByQuery, SQLWherePaginationQuery, SQLWhereQuery} from './sql.query';
-import {DeviceConsoleLogger, Logger} from '../../../helpers';
-import {SQLQueryParamComposer} from './sql-query-param-composer';
+import { SQLDialect, SQLInterface } from '../../../data';
+import { SQLOrderByPaginationQuery, SQLOrderByQuery, SQLWherePaginationQuery, SQLWhereQuery } from './sql.query';
+import { DeviceConsoleLogger, Logger } from '../../../helpers';
+import { SQLQueryParamComposer } from './sql-query-param-composer';
 
 export type RawSQLData = any;
 
@@ -27,14 +28,10 @@ export interface SQLWhere {
 }
 
 class SQLQueryComposition {
-    constructor(
-        readonly query: string,
-        readonly params: any[],
-    ) {}
+    constructor(readonly query: string, readonly params: any[]) {}
 }
 
 export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSource<RawSQLData>, DeleteDataSource {
-
     constructor(
         protected readonly sqlDialect: SQLDialect,
         protected readonly sqlInterface: SQLInterface,
@@ -77,7 +74,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     protected orderSQL(column: string, ascending: boolean): string {
-        return `order by ${column} ${(ascending ? 'asc' : 'desc')}`;
+        return `order by ${column} ${ascending ? 'asc' : 'desc'}`;
     }
 
     protected getComposition(query: Query, limit?: number, offset?: number): SQLQueryComposition {
@@ -137,10 +134,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             }
             return this.sqlInterface
                 .query(sql, [query.id])
-                .catch(e => {
+                .catch((e) => {
                     throw this.sqlDialect.mapError(e);
                 })
-                .then(rows => {
+                .then((rows) => {
                     if (rows.length === 0) {
                         throw new NotFoundError();
                     } else {
@@ -151,8 +148,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             const composition = this.getComposition(query, 1, 0);
             return this.sqlInterface
                 .query(composition.query, composition.params)
-                .catch(e => { throw this.sqlDialect.mapError(e); })
-                .then(rows => {
+                .catch((e) => {
+                    throw this.sqlDialect.mapError(e);
+                })
+                .then((rows) => {
                     if (rows.length === 0) {
                         throw new NotFoundError();
                     } else {
@@ -164,7 +163,8 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     // Returns the content of the 'in (...)' statement for the number of given arguments.
     private inStatement(count: number): string {
-        return Array(count).fill(0)
+        return Array(count)
+            .fill(0)
             .map((_value, idx) => this.sqlDialect.getParameterSymbol(idx + 1))
             .join(', ');
     }
@@ -178,25 +178,25 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             return this.sqlInterface.query(sql, query.ids);
         } else {
             const composition = this.getComposition(query);
-            return this.sqlInterface
-                .query(composition.query, composition.params)
-                .catch(e => { throw this.sqlDialect.mapError(e); });
+            return this.sqlInterface.query(composition.query, composition.params).catch((e) => {
+                throw this.sqlDialect.mapError(e);
+            });
         }
     }
 
     private updateSQLQuery(value: RawSQLData): string {
         const paramList = this.tableColumns
-            .filter(column => value[column] !== undefined)
+            .filter((column) => value[column] !== undefined)
             .map((column, idx) => `${column} = ${this.sqlDialect.getParameterSymbol(idx + 1)}`);
         const params = paramList.join(',');
         // tslint:disable-next-line:max-line-length
-        return `update ${this.sqlDialect.getTableName(this.tableName)} set ${params} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(paramList.length + 1)}`;
+        return `update ${this.sqlDialect.getTableName(this.tableName)} set ${params} where ${
+            this.idColumn
+        } = ${this.sqlDialect.getParameterSymbol(paramList.length + 1)}`;
     }
 
     private updateSQLParams(id: any, value: RawSQLData): any[] {
-        const params = this.tableColumns
-            .filter(column => value[column] !== undefined)
-            .map(column => value[column]);
+        const params = this.tableColumns.filter((column) => value[column] !== undefined).map((column) => value[column]);
         params.push(id);
         return params;
     }
@@ -205,19 +205,19 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         const params: string[] = [];
         const values: any[] = [];
         this.tableColumns
-            .filter(column => value[column] !== undefined)
+            .filter((column) => value[column] !== undefined)
             .forEach((column, idx) => {
                 params.push(`${column}`);
                 values.push(this.sqlDialect.getParameterSymbol(idx + 1));
             });
         // tslint:disable-next-line:max-line-length
-        return `insert into ${this.sqlDialect.getTableName(this.tableName)} (${params.join(',')}) values (${values.join(',')}) ${this.sqlDialect.getInsertionIdQueryStatement(this.idColumn)}`;
+        return `insert into ${this.sqlDialect.getTableName(this.tableName)} (${params.join(',')}) values (${values.join(
+            ',',
+        )}) ${this.sqlDialect.getInsertionIdQueryStatement(this.idColumn)}`;
     }
 
     private insertSQLQueryParams(value: RawSQLData): any[] {
-        return this.tableColumns
-            .filter(column => value[column] !== undefined)
-            .map(column => value[column]);
+        return this.tableColumns.filter((column) => value[column] !== undefined).map((column) => value[column]);
     }
 
     // Subclasses can override
@@ -234,111 +234,164 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     // If desired, call it inside a transaction.
     private executePutQuery(value: RawSQLData, id: number, sqlInterface: SQLInterface): Promise<number> {
         const isInsertion = id === undefined || id === null;
-        return sqlInterface.query(
-            isInsertion ? this.insertSQLQuery(value) : this.updateSQLQuery(value),
-            isInsertion ? this.insertSQLQueryParams(value) : this.updateSQLParams(id, value),
-        ).then(result => {
-            if (isInsertion) {
-                const rowId = this.sqlDialect.getInsertionId(result);
-                // After a succesfull insertion, checking if subclasses
-                // might want to perform any further action within the same
-                // transaction scope.
-                return this.postInsert(sqlInterface, rowId).then(() => rowId);
-            } else {
-                const rowId = id;
-                // After a succesfull udpate, checking if subclasses
-                // might want to perform any further action within the same
-                // transaction scope.
-                return this.postUpdate(sqlInterface, rowId).then(() => rowId);
-            }
-        });
+        return sqlInterface
+            .query(
+                isInsertion ? this.insertSQLQuery(value) : this.updateSQLQuery(value),
+                isInsertion ? this.insertSQLQueryParams(value) : this.updateSQLParams(id, value),
+            )
+            .then((result) => {
+                if (isInsertion) {
+                    const rowId = this.sqlDialect.getInsertionId(result);
+                    // After a succesfull insertion, checking if subclasses
+                    // might want to perform any further action within the same
+                    // transaction scope.
+                    return this.postInsert(sqlInterface, rowId).then(() => rowId);
+                } else {
+                    const rowId = id;
+                    // After a succesfull udpate, checking if subclasses
+                    // might want to perform any further action within the same
+                    // transaction scope.
+                    return this.postUpdate(sqlInterface, rowId).then(() => rowId);
+                }
+            });
     }
 
     async put(value: RawSQLData, query: Query): Promise<RawSQLData> {
         const id = RawSQLDataSource.getId(value, query);
-        return this.sqlInterface.transaction((sqlInterface: SQLInterface) => {
-            return this.executePutQuery(value, id, sqlInterface);
-        })
-            .then(rowId => this.get(new IdQuery(rowId)))
-            .catch(e => { throw this.sqlDialect.mapError(e); });
+        return this.sqlInterface
+            .transaction((sqlInterface: SQLInterface) => {
+                return this.executePutQuery(value, id, sqlInterface);
+            })
+            .then((rowId) => this.get(new IdQuery(rowId)))
+            .catch((e) => {
+                throw this.sqlDialect.mapError(e);
+            });
     }
 
     async putAll(values: RawSQLData[], query: Query): Promise<RawSQLData[]> {
         if (query instanceof IdsQuery) {
             if (values.length !== query.ids.length) {
                 // tslint:disable-next-line:max-line-length
-                throw new InvalidArgumentError(`Error in PutAll: Length of ids (${query.ids.length}) doesn't match the array of values (${values.length})`);
+                throw new InvalidArgumentError(
+                    `Error in PutAll: Length of ids (${query.ids.length}) doesn't match the array of values (${values.length})`,
+                );
             }
         }
         const insertionIds = await this.sqlInterface.transaction((sqlInterface: SQLInterface) => {
-            return Promise.all(values.map((value, idx) => {
-                let id = value[BaseColumnId];
-                if (!id && query instanceof IdsQuery) {
-                    id = query.ids[idx];
-                }
-                return this.executePutQuery(value, id, sqlInterface);
-            }));
+            return Promise.all(
+                values.map((value, idx) => {
+                    let id = value[BaseColumnId];
+                    if (!id && query instanceof IdsQuery) {
+                        id = query.ids[idx];
+                    }
+                    return this.executePutQuery(value, id, sqlInterface);
+                }),
+            );
         });
 
         // Finally, select all data
-        return this.getAll(new IdsQuery(insertionIds))
-            .catch(e => { throw this.sqlDialect.mapError(e); });
+        return this.getAll(new IdsQuery(insertionIds)).catch((e) => {
+            throw this.sqlDialect.mapError(e);
+        });
     }
 
     async delete(query: Query): Promise<void> {
         if (this.softDeleteEnabled) {
             if (query instanceof IdQuery) {
-                return this.sqlInterface
-                    // tslint:disable-next-line:max-line-length
-                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
-                    .then(() => Promise.resolve())
-                    .catch(e => {
-                        throw this.sqlDialect.mapError(e);
-                    });
+                return (
+                    this.sqlInterface
+                        // tslint:disable-next-line:max-line-length
+                        .query(
+                            `update ${this.sqlDialect.getTableName(this.tableName)} set ${
+                                this.deletedAtColumn
+                            } = now() where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`,
+                            [query.id],
+                        )
+                        .then(() => Promise.resolve())
+                        .catch((e) => {
+                            throw this.sqlDialect.mapError(e);
+                        })
+                );
             } else if (query instanceof IdsQuery) {
-                return this.sqlInterface
-                    // tslint:disable-next-line:max-line-length
-                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
-                    .then(() => Promise.resolve())
-                    .catch(e => {
-                        throw this.sqlDialect.mapError(e);
-                    });
+                return (
+                    this.sqlInterface
+                        // tslint:disable-next-line:max-line-length
+                        .query(
+                            `update ${this.sqlDialect.getTableName(this.tableName)} set ${
+                                this.deletedAtColumn
+                            } = now() where ${this.idColumn} in (${this.inStatement(query.ids.length)})`,
+                            query.ids,
+                        )
+                        .then(() => Promise.resolve())
+                        .catch((e) => {
+                            throw this.sqlDialect.mapError(e);
+                        })
+                );
             } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
                 const params = new SQLQueryParamComposer(this.sqlDialect);
-                return this.sqlInterface
-                    // tslint:disable-next-line:max-line-length
-                    .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.where(params.push, this.sqlDialect)}`, params.getParams())
-                    .then(() => Promise.resolve())
-                    .catch(e => {
-                        throw this.sqlDialect.mapError(e);
-                    });
+                return (
+                    this.sqlInterface
+                        // tslint:disable-next-line:max-line-length
+                        .query(
+                            `update ${this.sqlDialect.getTableName(this.tableName)} set ${
+                                this.deletedAtColumn
+                            } = now() where ${query.where(params.push, this.sqlDialect)}`,
+                            params.getParams(),
+                        )
+                        .then(() => Promise.resolve())
+                        .catch((e) => {
+                            throw this.sqlDialect.mapError(e);
+                        })
+                );
             }
         } else {
             if (query instanceof IdQuery) {
-                return this.sqlInterface
-                    // tslint:disable-next-line:max-line-length
-                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} = ${this.sqlDialect.getParameterSymbol(1)}`, [query.id])
-                    .then(() => Promise.resolve())
-                    .catch(e => {
-                        throw this.sqlDialect.mapError(e);
-                    });
+                return (
+                    this.sqlInterface
+                        // tslint:disable-next-line:max-line-length
+                        .query(
+                            `delete from ${this.sqlDialect.getTableName(this.tableName)} where ${
+                                this.idColumn
+                            } = ${this.sqlDialect.getParameterSymbol(1)}`,
+                            [query.id],
+                        )
+                        .then(() => Promise.resolve())
+                        .catch((e) => {
+                            throw this.sqlDialect.mapError(e);
+                        })
+                );
             } else if (query instanceof IdsQuery) {
-                return this.sqlInterface
-                    // tslint:disable-next-line:max-line-length
-                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${this.idColumn} in (${this.inStatement(query.ids.length)})`, query.ids)
-                    .then(() => Promise.resolve())
-                    .catch(e => {
-                        throw this.sqlDialect.mapError(e);
-                    });
+                return (
+                    this.sqlInterface
+                        // tslint:disable-next-line:max-line-length
+                        .query(
+                            `delete from ${this.sqlDialect.getTableName(this.tableName)} where ${
+                                this.idColumn
+                            } in (${this.inStatement(query.ids.length)})`,
+                            query.ids,
+                        )
+                        .then(() => Promise.resolve())
+                        .catch((e) => {
+                            throw this.sqlDialect.mapError(e);
+                        })
+                );
             } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
                 const params = new SQLQueryParamComposer(this.sqlDialect);
-                return this.sqlInterface
-                    // tslint:disable-next-line:max-line-length
-                    .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.where(params.push, this.sqlDialect)}`, params.getParams())
-                    .then(() => Promise.resolve())
-                    .catch(e => {
-                        throw this.sqlDialect.mapError(e);
-                    });
+                return (
+                    this.sqlInterface
+                        // tslint:disable-next-line:max-line-length
+                        .query(
+                            `delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.where(
+                                params.push,
+                                this.sqlDialect,
+                            )}`,
+                            params.getParams(),
+                        )
+                        .then(() => Promise.resolve())
+                        .catch((e) => {
+                            throw this.sqlDialect.mapError(e);
+                        })
+                );
             }
         }
 

@@ -1,4 +1,3 @@
-
 export class OAuthUserInfoEntity {
     constructor(
         readonly id: number,
@@ -6,5 +5,5 @@ export class OAuthUserInfoEntity {
         readonly updatedAt: Date,
         readonly tokenId: number,
         readonly userId: string,
-    ) { }
+    ) {}
 }

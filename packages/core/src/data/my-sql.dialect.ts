@@ -1,6 +1,6 @@
-import {SQLDialect} from "./sql.dialect";
-import {MysqlError} from "mysql";
-import {FailedError, ForbiddenError} from "../repository";
+import { SQLDialect } from './sql.dialect';
+import { MysqlError } from 'mysql';
+import { FailedError, ForbiddenError } from '../repository';
 
 export class MySQLDialect implements SQLDialect {
     getParameterSymbol(_idx?: number): string {

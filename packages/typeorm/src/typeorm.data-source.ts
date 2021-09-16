@@ -24,21 +24,20 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
 
     async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
-            return this.repository
-                .findOne(query.id)
-                .then((value: any) => {
-                    if (value === undefined) {
-                        throw new NotFoundError();
-                    } else {
-                        return value;
-                    }
-                });
+            return this.repository.findOne(query.id).then((value: any) => {
+                if (value === undefined) {
+                    throw new NotFoundError();
+                } else {
+                    return value;
+                }
+            });
         } else if (query instanceof ObjectRelationsQuery) {
             return this.repository
                 .findOne({
                     where: this.buildArrayQuery(query.value),
                     relations: query.relations,
-                }).then((value: any) => {
+                })
+                .then((value: any) => {
                     if (value === undefined) {
                         throw new NotFoundError();
                     } else {
@@ -46,35 +45,33 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                     }
                 });
         } else if (query instanceof ObjectQuery) {
-            return this.repository
-                .findOne({ where: this.buildArrayQuery(query.value) })
-                .then((value: any) => {
-                    if (value === undefined) {
-                        throw new NotFoundError();
-                    } else {
-                        return value;
-                    }
-                });
+            return this.repository.findOne({ where: this.buildArrayQuery(query.value) }).then((value: any) => {
+                if (value === undefined) {
+                    throw new NotFoundError();
+                } else {
+                    return value;
+                }
+            });
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
     async getAll(query: Query): Promise<T[]> {
-            if (query instanceof VoidQuery) {
-                return this.repository.find();
-            } else if (query instanceof IdsQuery) {
-                return this.findAllEntitiesByIds(query.ids);
-            } else if (query instanceof ObjectRelationsQuery) {
-                return this.repository.find({
-                    where: this.buildArrayQuery(query.value),
-                    relations: query.relations,
-                });
-            } else if (query instanceof ObjectQuery) {
-                return this.repository.find({ where: this.buildArrayQuery(query.value) });
-            } else {
-                throw new QueryNotSupportedError();
-            }
+        if (query instanceof VoidQuery) {
+            return this.repository.find();
+        } else if (query instanceof IdsQuery) {
+            return this.findAllEntitiesByIds(query.ids);
+        } else if (query instanceof ObjectRelationsQuery) {
+            return this.repository.find({
+                where: this.buildArrayQuery(query.value),
+                relations: query.relations,
+            });
+        } else if (query instanceof ObjectQuery) {
+            return this.repository.find({ where: this.buildArrayQuery(query.value) });
+        } else {
+            throw new QueryNotSupportedError();
+        }
     }
 
     async put(value: T, query: Query): Promise<T> {
@@ -87,7 +84,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
 
     async putAll(values: T[], query: Query): Promise<T[]> {
         if (query instanceof VoidQuery) {
-            return await Promise.all(values.map(value => this.repository.save(value)));
+            return await Promise.all(values.map((value) => this.repository.save(value)));
         } else {
             throw new QueryNotSupportedError();
         }
