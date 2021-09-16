@@ -10,7 +10,7 @@ export enum LogLevel {
 export class UnknownLogLevelError extends Error {
     constructor(message?: string) {
         super(message);
-        this.name = "Unknown Log Level";
+        this.name = 'Unknown Log Level';
     }
 }
 

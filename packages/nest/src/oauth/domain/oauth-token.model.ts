@@ -1,4 +1,4 @@
-import {OAuthClientModel} from './oauth-client.model';
+import { OAuthClientModel } from './oauth-client.model';
 
 export class OAuthTokenModel {
     constructor(
@@ -11,5 +11,5 @@ export class OAuthTokenModel {
         readonly refreshTokenExpiresAt: Date,
         readonly client: OAuthClientModel,
         readonly scope: string[],
-    ) { }
+    ) {}
 }

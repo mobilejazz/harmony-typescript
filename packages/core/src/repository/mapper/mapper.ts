@@ -1,6 +1,6 @@
 import { plainToClass } from 'class-transformer';
-import {FailedError, MethodNotImplementedError} from "../errors";
-import {PaginationOffsetLimit, PaginationPage} from "../../data";
+import { FailedError, MethodNotImplementedError } from '../errors';
+import { PaginationOffsetLimit, PaginationPage } from '../../data';
 
 export interface Mapper<From, To> {
     map(from: From, toType?: new () => To): To;
@@ -10,7 +10,7 @@ export interface Mapper<From, To> {
  * VoidMapper default implementation.
  */
 export class VoidMapper<From, To> implements Mapper<From, To> {
-    public map(from: From): To {
+    public map(_from: From): To {
         throw new MethodNotImplementedError('VoidMapper is not implemented');
     }
 }
@@ -26,7 +26,7 @@ export class BlankMapper<T> implements Mapper<T, T> {
 
 export class ClosureMapper<From, To> implements Mapper<From, To> {
     private closure: (from: From) => To;
-    constructor( closure: (from: From) => To) {
+    constructor(closure: (from: From) => To) {
         this.closure = closure;
     }
     public map(from: From): To {
@@ -37,7 +37,7 @@ export class ClosureMapper<From, To> implements Mapper<From, To> {
 /**
  * CastMapper tries to casts the input value to the mapped type. Otherwise, throws an error.
  */
-export class CastMapper<From, To> implements Mapper <From, To> {
+export class CastMapper<From, To> implements Mapper<From, To> {
     public map(from: From): To {
         try {
             return from as unknown as To;
@@ -50,7 +50,7 @@ export class CastMapper<From, To> implements Mapper <From, To> {
 /**
  * ObjectMapper tries to casts the input value to the mapped type. Otherwise, throws an error.
  */
-export class ObjectMapper<From, To> implements Mapper <From, To> {
+export class ObjectMapper<From, To> implements Mapper<From, To> {
     public map(from: From): To {
         try {
             return Object.assign({}, from) as unknown as To;
@@ -62,8 +62,8 @@ export class ObjectMapper<From, To> implements Mapper <From, To> {
 /**
  * ClassTransformerMapper use class-transformer library to map objects. Otherwise, throws an error.
  */
-export class ClassTransformerMapper<From, To> implements Mapper <From, To> {
-    constructor(private toType: new() => To) {}
+export class ClassTransformerMapper<From, To> implements Mapper<From, To> {
+    constructor(private toType: new () => To) {}
     public map(from: From): To {
         try {
             return plainToClass(this.toType, from);
@@ -85,8 +85,8 @@ export class JsonSerializerMapper<From> implements Mapper<From, string> {
 /**
  * JsonDeserializerMapper
  */
-export class JsonDeserializerMapper<From, To> implements Mapper <From, To> {
-    constructor(private toType: new() => To) {}
+export class JsonDeserializerMapper<From, To> implements Mapper<From, To> {
+    constructor(private toType: new () => To) {}
     public map(from: From): To {
         try {
             if (typeof from === 'string') {
@@ -99,7 +99,7 @@ export class JsonDeserializerMapper<From, To> implements Mapper <From, To> {
     }
     private deserialize(from: From): To {
         const output = new this.toType();
-        let properties: string[] = Object.keys(from);
+        const properties: string[] = Object.keys(from);
         properties.forEach((property: string) => {
             output[property] = from[property];
         });
@@ -110,11 +110,13 @@ export class JsonDeserializerMapper<From, To> implements Mapper <From, To> {
 /**
  * Maps a pagination by offset limit object.
  */
-export class PaginationOffsetLimitMapper<From, To> implements Mapper<PaginationOffsetLimit<From>, PaginationOffsetLimit<To>> {
-    constructor(private readonly mapper: Mapper<From, To>) { }
+export class PaginationOffsetLimitMapper<From, To>
+    implements Mapper<PaginationOffsetLimit<From>, PaginationOffsetLimit<To>>
+{
+    constructor(private readonly mapper: Mapper<From, To>) {}
     map(from: PaginationOffsetLimit<From>): PaginationOffsetLimit<To> {
         return new PaginationOffsetLimit(
-            from.values.map(el => this.mapper.map(el)),
+            from.values.map((el) => this.mapper.map(el)),
             from.offset,
             from.limit,
             from.size,
@@ -126,10 +128,10 @@ export class PaginationOffsetLimitMapper<From, To> implements Mapper<PaginationO
  * Maps a pagination by page object.
  */
 export class PaginationPageMapper<From, To> implements Mapper<PaginationPage<From>, PaginationPage<To>> {
-    constructor(private readonly mapper: Mapper<From, To>) { }
+    constructor(private readonly mapper: Mapper<From, To>) {}
     map(from: PaginationPage<From>): PaginationPage<To> {
         return new PaginationPage(
-            from.values.map(el => this.mapper.map(el)),
+            from.values.map((el) => this.mapper.map(el)),
             from.page,
             from.size,
         );

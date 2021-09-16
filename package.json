@@ -13,24 +13,31 @@
         "npm": "7.x"
     },
     "scripts": {
-        "prebuild": "npm run validate",
+        "check-deps": "npm outdated && lerna exec -- npm outdated && npm audit && lerna exec -- npm audit",
+        "prebuild": "npm run validate && npm run format",
         "build": "lerna run build",
-        "validate": "lerna run lint && npm test",
+        "lint": "lerna run lint",
+        "format": "prettier --write .",
+        "validate": "npm run lint && npm test",
         "publish": "npm run build && lerna publish --contents dist --force-publish",
         "test": "jest",
         "prepare": "husky install"
     },
     "dependencies": {
         "@bugfender/sdk": "^1.5.0",
-        "typeorm": "^0.2.22"
+        "typeorm": "^0.2.37"
     },
     "devDependencies": {
-        "@types/node": "^16.4.11",
-        "husky": "^7.0.0",
-        "jest": "^27.0.6",
+        "@types/jest": "^27.0.1",
+        "@types/node": "16.9.x",
+        "@typescript-eslint/eslint-plugin": "^4.31.1",
+        "eslint": "^7.32.0",
+        "eslint-config-prettier": "^8.3.0",
+        "husky": "^7.0.2",
+        "jest": "^27.2.0",
         "lerna": "^4.0.0",
-        "ts-jest": "^27.0.4",
-        "tslint": "5.14.x",
-        "typescript": "^4.3.5"
+        "prettier": "2.4.1",
+        "ts-jest": "^27.0.5",
+        "typescript": "^4.4.3"
     }
 }

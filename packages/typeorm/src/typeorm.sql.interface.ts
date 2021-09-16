@@ -1,10 +1,8 @@
-import {EntityManager} from "typeorm";
-import {SQLInterface} from '@mobilejazz/harmony-core';
+import { EntityManager } from 'typeorm';
+import { SQLInterface } from '@mobilejazz/harmony-core';
 
 export class TypeORMSQLInterface implements SQLInterface {
-    constructor(
-        private readonly entityManager: EntityManager,
-    ) { }
+    constructor(private readonly entityManager: EntityManager) {}
 
     query(query: string, parameters?: any[]): Promise<any> {
         return this.entityManager.query(query, parameters);

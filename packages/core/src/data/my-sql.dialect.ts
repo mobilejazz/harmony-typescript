@@ -1,15 +1,15 @@
-import {SQLDialect} from "./sql.dialect";
-import {MysqlError} from "mysql";
-import {FailedError, ForbiddenError} from "../repository";
+import { SQLDialect } from './sql.dialect';
+import { MysqlError } from 'mysql';
+import { FailedError, ForbiddenError } from '../repository';
 
 export class MySQLDialect implements SQLDialect {
-    getParameterSymbol(idx?: number): string {
+    getParameterSymbol(_idx?: number): string {
         return '?';
     }
     getInsertionId(result: any): number {
         return result.insertId;
     }
-    getInsertionIdQueryStatement(idColumn: string): string {
+    getInsertionIdQueryStatement(_idColumn: string): string {
         return '';
     }
     getTableName(tableName: string): string {

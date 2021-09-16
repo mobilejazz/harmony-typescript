@@ -1,4 +1,3 @@
-
 export class OAuthClientEntity {
     constructor(
         readonly id: number,
@@ -8,5 +7,5 @@ export class OAuthClientEntity {
         readonly clientSecret: string,
         readonly accessTokenLifetime?: number,
         readonly refreshTokenLifetime?: number,
-    ) { }
+    ) {}
 }

@@ -1,6 +1,7 @@
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Repository {}
 
 export interface GetRepository<T> extends Repository {

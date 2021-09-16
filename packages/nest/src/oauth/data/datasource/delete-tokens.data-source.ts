@@ -1,10 +1,4 @@
-import {
-    DeleteDataSource,
-    Query,
-    QueryNotSupportedError,
-    SQLDialect,
-    SQLInterface,
-} from "@mobilejazz/harmony-core";
+import { DeleteDataSource, Query, QueryNotSupportedError, SQLDialect, SQLInterface } from '@mobilejazz/harmony-core';
 import {
     OAuthClientColumnClientId,
     OAuthClientTableName,
@@ -14,17 +8,14 @@ import {
     OAuthUserInfoColumnTokenId,
     OAuthUserInfoColumnUserId,
     OAuthUserInfoTableName,
-} from "./oauth.database-columns.constants";
-import {OAuthClientIdQuery} from "./query/oauth-client-id.query";
-import {OAuthUserIdQuery} from "./query/oauth-user-id.query";
+} from './oauth.database-columns.constants';
+import { OAuthClientIdQuery } from './query/oauth-client-id.query';
+import { OAuthUserIdQuery } from './query/oauth-user-id.query';
 
 export class DeleteTokensDataSource implements DeleteDataSource {
-    constructor(
-        private readonly sqlDialect: SQLDialect,
-        private readonly sqlInterface: SQLInterface,
-    ) {}
+    constructor(private readonly sqlDialect: SQLDialect, private readonly sqlInterface: SQLInterface) {}
 
-    async delete(query: Query): Promise<void> {
+    async delete(_query: Query): Promise<void> {
         throw new QueryNotSupportedError('Use deleteAll on DeleteUserTokensDataSource');
     }
 
@@ -33,7 +24,9 @@ export class DeleteTokensDataSource implements DeleteDataSource {
             const sqlQuery = `
                 delete from ${this.sqlDialect.getTableName(OAuthTokenTableName)} t
                 where t.${OAuthColumnId} in (
-                        select i.${OAuthUserInfoColumnTokenId} from ${this.sqlDialect.getTableName(OAuthUserInfoTableName)} i
+                        select i.${OAuthUserInfoColumnTokenId} from ${this.sqlDialect.getTableName(
+                OAuthUserInfoTableName,
+            )} i
                         where i.${OAuthUserInfoColumnUserId} = ${this.sqlDialect.getParameterSymbol(1)}
                         );`;
             const params = [query.userId];
@@ -48,7 +41,9 @@ export class DeleteTokensDataSource implements DeleteDataSource {
             const params = [query.clientId];
             return this.sqlInterface.query(sqlQuery, params);
         } else {
-            throw new QueryNotSupportedError('Use UserIdQuery or OAuthClientIdQuery on DeleteUserTokensDataSource.DeleteAll');
+            throw new QueryNotSupportedError(
+                'Use UserIdQuery or OAuthClientIdQuery on DeleteUserTokensDataSource.DeleteAll',
+            );
         }
     }
 }

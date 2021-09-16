@@ -1,4 +1,3 @@
-
 export class OAuthClientGrantEntity {
     constructor(
         readonly id: number,
@@ -6,5 +5,5 @@ export class OAuthClientGrantEntity {
         readonly updatedAt: Date,
         readonly grant: string,
         readonly clientId: number,
-    ) { }
+    ) {}
 }

@@ -11,10 +11,7 @@ export class HttpRequestBuilder<T> {
     private headers: HttpHeaders = new HttpHeaders();
     private responseConstructor: any;
 
-    constructor(
-        endpoint: string,
-        private http: HttpClient,
-    ) {
+    constructor(endpoint: string, private http: HttpClient) {
         this.urlBuilder = new UrlBuilder(endpoint);
         this.setDefaultHeaders();
     }
@@ -29,7 +26,7 @@ export class HttpRequestBuilder<T> {
         return this;
     }
 
-    public setBody(body: object): HttpRequestBuilder<T> {
+    public setBody(body: unknown): HttpRequestBuilder<T> {
         this.body = JSON.stringify(body);
         return this;
     }
@@ -56,79 +53,82 @@ export class HttpRequestBuilder<T> {
     private setDefaultHeaders() {
         const defaultHeaders = {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
+            Accept: 'application/json',
         };
         this.setHeaders(defaultHeaders);
     }
 
-    private mapResponse(responseItem: object): any {
-        const mapper = new JsonDeserializerMapper<object, any>(this.responseConstructor);
+    private mapResponse(responseItem: unknown): any {
+        const mapper = new JsonDeserializerMapper<unknown, any>(this.responseConstructor);
         return mapper.map(responseItem);
     }
 
     public get(): Observable<T> {
-        return this.http
-            .get<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers })
-            .pipe(map((response: any) => {
+        return this.http.get<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers }).pipe(
+            map((response: any) => {
                 if (!response.body) {
                     return null;
                 }
-                if ( !this.responseConstructor ) {
+                if (!this.responseConstructor) {
                     return response.body;
                 }
                 if (response.body instanceof Array) {
-                    return response.body.map((responseItem: object) => {
+                    return response.body.map((responseItem: unknown) => {
                         return this.mapResponse(responseItem);
                     });
                 }
                 return this.mapResponse(response.body);
-            } ));
+            }),
+        );
     }
 
     public post(): Observable<T> {
         return this.http
             .post<T>(this.urlBuilder.getUrl(), this.body, { observe: 'response', headers: this.headers })
-            .pipe(map((response: any) => {
-                if (!response.body) {
-                    return null;
-                }
-                if ( !this.responseConstructor ) {
-                    return response.body;
-                }
-                if (response.body instanceof Array) {
-                    return response.body.map((responseItem: object) => {
-                        return this.mapResponse(responseItem);
-                    });
-                }
-                return this.mapResponse(response.body);
-            } ));
+            .pipe(
+                map((response: any) => {
+                    if (!response.body) {
+                        return null;
+                    }
+                    if (!this.responseConstructor) {
+                        return response.body;
+                    }
+                    if (response.body instanceof Array) {
+                        return response.body.map((responseItem: unknown) => {
+                            return this.mapResponse(responseItem);
+                        });
+                    }
+                    return this.mapResponse(response.body);
+                }),
+            );
     }
 
     public put(): Observable<T> {
         return this.http
             .put<T>(this.urlBuilder.getUrl(), this.body, { observe: 'response', headers: this.headers })
-            .pipe(map((response: any) => {
-                if (!response.body) {
-                    return null;
-                }
-                if ( !this.responseConstructor ) {
-                    return response.body;
-                }
-                if (response.body instanceof Array) {
-                    return response.body.map((responseItem: object) => {
-                        return this.mapResponse(responseItem);
-                    });
-                }
-                return this.mapResponse(response.body);
-            } ));
+            .pipe(
+                map((response: any) => {
+                    if (!response.body) {
+                        return null;
+                    }
+                    if (!this.responseConstructor) {
+                        return response.body;
+                    }
+                    if (response.body instanceof Array) {
+                        return response.body.map((responseItem: unknown) => {
+                            return this.mapResponse(responseItem);
+                        });
+                    }
+                    return this.mapResponse(response.body);
+                }),
+            );
     }
 
     public delete(): Observable<void> {
-        return this.http
-            .delete<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers })
-            .pipe(map((response: any) => {
+        return this.http.delete<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers }).pipe(
+            map((response: any) => {
                 return;
-            } ));
+            }),
+        );
     }
-
 }

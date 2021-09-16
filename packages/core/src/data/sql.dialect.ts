@@ -1,4 +1,3 @@
-
 export interface SQLDialect {
     getParameterSymbol(idx?: number): string;
     getInsertionId(result: any): number;

@@ -1,4 +1,3 @@
-
 export class OAuthClientModel {
     constructor(
         readonly id: number | undefined,
@@ -9,5 +8,5 @@ export class OAuthClientModel {
         readonly grants: string[],
         readonly accessTokenLifetime?: number,
         readonly refreshTokenLifetime?: number,
-    ) { }
+    ) {}
 }

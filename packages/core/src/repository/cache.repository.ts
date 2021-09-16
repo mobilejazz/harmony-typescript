@@ -5,13 +5,13 @@ import { DefaultOperation, Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
 
-export class MainOperation implements  Operation {}
-export class MainSyncOperation implements  Operation {}
+export class MainOperation implements Operation {}
+export class MainSyncOperation implements Operation {}
 export class CacheOperation implements Operation {
-    constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
+    constructor(readonly fallback: (error: Error) => boolean = () => false) {}
 }
 export class CacheSyncOperation implements Operation {
-    constructor(readonly fallback: ((error: Error) => boolean) = (() => false)) {}
+    constructor(readonly fallback: (error: Error) => boolean = () => false) {}
 }
 
 export interface ObjectValidator {
@@ -20,14 +20,14 @@ export interface ObjectValidator {
 }
 
 export class DefaultObjectValidator implements ObjectValidator {
-    isObjectValid<T>(object: T): boolean {
+    isObjectValid<T>(_object: T): boolean {
         return true;
     }
     isArrayValid<T>(array: T[]): boolean {
         if (array.length === 0) {
             return false;
         }
-        for (let element of array) {
+        for (const element of array) {
             if (!this.isObjectValid(element)) {
                 return false;
             }
@@ -37,7 +37,6 @@ export class DefaultObjectValidator implements ObjectValidator {
 }
 
 export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
-
     constructor(
         private readonly getMain: GetDataSource<T>,
         private readonly putMain: PutDataSource<T>,
@@ -56,49 +55,55 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
             case MainOperation:
                 return this.getMain.get(query);
             case CacheOperation:
-                return this.getCache.get(query).then((value: T) => {
-                    if (value == null) {
-                        throw new NotFoundError();
-                    }
-                    if (!this.validator.isObjectValid(value)) {
-                        throw new NotValidError();
-                    }
-                    return value;
-                }).catch((err: Error) => {
-                    let op = operation as CacheOperation;
-                    if (err instanceof NotValidError && op.fallback(err)) {
-                        return this.getCache.get(query);
-                    } else {
-                        throw err;
-                    }
-                });
+                return this.getCache
+                    .get(query)
+                    .then((value: T) => {
+                        if (value == null) {
+                            throw new NotFoundError();
+                        }
+                        if (!this.validator.isObjectValid(value)) {
+                            throw new NotValidError();
+                        }
+                        return value;
+                    })
+                    .catch((err: Error) => {
+                        const op = operation as CacheOperation;
+                        if (err instanceof NotValidError && op.fallback(err)) {
+                            return this.getCache.get(query);
+                        } else {
+                            throw err;
+                        }
+                    });
             case MainSyncOperation:
                 return this.getMain.get(query).then((value: T) => {
                     return this.putCache.put(value, query);
                 });
             case CacheSyncOperation:
-                return this.getCache.get(query).then((value: T) => {
-                    if (value == null) {
-                        throw new NotFoundError();
-                    }
-                    if (!this.validator.isObjectValid(value)) {
-                        throw new NotValidError();
-                    }
-                    return value;
-                }).catch((err: Error) => {
-                   if (err instanceof NotValidError || err instanceof NotFoundError) {
-                        return this.get(query, new MainSyncOperation()).catch((finalError: Error) => {
-                            let op = operation as CacheSyncOperation;
-                            if (op.fallback(finalError)) {
-                                return this.getCache.get(query);
-                            } else {
-                                throw finalError;
-                            }
-                        });
-                   } else {
-                       throw err;
-                   }
-                });
+                return this.getCache
+                    .get(query)
+                    .then((value: T) => {
+                        if (value == null) {
+                            throw new NotFoundError();
+                        }
+                        if (!this.validator.isObjectValid(value)) {
+                            throw new NotValidError();
+                        }
+                        return value;
+                    })
+                    .catch((err: Error) => {
+                        if (err instanceof NotValidError || err instanceof NotFoundError) {
+                            return this.get(query, new MainSyncOperation()).catch((finalError: Error) => {
+                                const op = operation as CacheSyncOperation;
+                                if (op.fallback(finalError)) {
+                                    return this.getCache.get(query);
+                                } else {
+                                    throw finalError;
+                                }
+                            });
+                        } else {
+                            throw err;
+                        }
+                    });
             default:
                 throw new OperationNotSupportedError();
         }
@@ -111,49 +116,55 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
             case MainOperation:
                 return this.getMain.getAll(query);
             case CacheOperation:
-                return this.getCache.getAll(query).then((values: T[]) => {
-                    if (values == null) {
-                        throw new NotFoundError();
-                    }
-                    if (!this.validator.isArrayValid(values)) {
-                        throw new NotValidError();
-                    }
-                    return values;
-                }).catch((err: Error) => {
-                    let op = operation as CacheOperation;
-                    if (err instanceof NotValidError && op.fallback(err)) {
-                        return this.getCache.getAll(query);
-                    } else {
-                        throw err;
-                    }
-                });
+                return this.getCache
+                    .getAll(query)
+                    .then((values: T[]) => {
+                        if (values == null) {
+                            throw new NotFoundError();
+                        }
+                        if (!this.validator.isArrayValid(values)) {
+                            throw new NotValidError();
+                        }
+                        return values;
+                    })
+                    .catch((err: Error) => {
+                        const op = operation as CacheOperation;
+                        if (err instanceof NotValidError && op.fallback(err)) {
+                            return this.getCache.getAll(query);
+                        } else {
+                            throw err;
+                        }
+                    });
             case MainSyncOperation:
                 return this.getMain.getAll(query).then((values: T[]) => {
                     return this.putCache.putAll(values, query);
                 });
             case CacheSyncOperation:
-                return this.getCache.getAll(query).then((values: T[]) => {
-                    if (values == null) {
-                        throw new NotFoundError();
-                    }
-                    if (!this.validator.isArrayValid(values)) {
-                        throw new NotValidError();
-                    }
-                    return values;
-                }).catch((err: Error) => {
-                    if (err instanceof NotValidError || err instanceof NotFoundError) {
-                        return this.getAll(query, new MainSyncOperation()).catch((finalError: Error) => {
-                            let op = operation as CacheSyncOperation;
-                            if (op.fallback(finalError)) {
-                                return this.getCache.getAll(query);
-                            } else {
-                                throw finalError;
-                            }
-                        });
-                    } else {
-                        throw err;
-                    }
-                });
+                return this.getCache
+                    .getAll(query)
+                    .then((values: T[]) => {
+                        if (values == null) {
+                            throw new NotFoundError();
+                        }
+                        if (!this.validator.isArrayValid(values)) {
+                            throw new NotValidError();
+                        }
+                        return values;
+                    })
+                    .catch((err: Error) => {
+                        if (err instanceof NotValidError || err instanceof NotFoundError) {
+                            return this.getAll(query, new MainSyncOperation()).catch((finalError: Error) => {
+                                const op = operation as CacheSyncOperation;
+                                if (op.fallback(finalError)) {
+                                    return this.getCache.getAll(query);
+                                } else {
+                                    throw finalError;
+                                }
+                            });
+                        } else {
+                            throw err;
+                        }
+                    });
             default:
                 throw new OperationNotSupportedError();
         }
