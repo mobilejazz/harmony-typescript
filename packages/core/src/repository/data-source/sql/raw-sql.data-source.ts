@@ -47,7 +47,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         protected readonly softDeleteEnabled = false,
         protected readonly logger: Logger = new DeviceConsoleLogger(),
     ) {
-        let tableColumns = [];
+        const tableColumns = [];
         if (createdAtColumn) {
             tableColumns.push(createdAtColumn);
         }
@@ -83,7 +83,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     protected getComposition(query: Query, limit?: number, offset?: number): SQLQueryComposition {
         let whereSql = '';
 
-        let params = new SQLQueryParamComposer(this.sqlDialect);
+        const params = new SQLQueryParamComposer(this.sqlDialect);
 
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             // If query supports SQLWhere interface
@@ -194,7 +194,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     private updateSQLParams(id: any, value: RawSQLData): any[] {
-        let params = this.tableColumns
+        const params = this.tableColumns
             .filter(column => value[column] !== undefined)
             .map(column => value[column]);
         params.push(id);
@@ -202,8 +202,8 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     private insertSQLQuery(value: RawSQLData): string {
-        let params: string[] = [];
-        let values: any[] = [];
+        const params: string[] = [];
+        const values: any[] = [];
         this.tableColumns
             .filter(column => value[column] !== undefined)
             .forEach((column, idx) => {
@@ -221,12 +221,12 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     // Subclasses can override
-    public postInsert(sqlInterface: SQLInterface, insertionId: number): Promise<void> {
+    public postInsert(_sqlInterface: SQLInterface, _insertionId: number): Promise<void> {
         return Promise.resolve();
     }
 
     // Subclasses can override
-    public postUpdate(sqlInterface: SQLInterface, updateId: number): Promise<void> {
+    public postUpdate(_sqlInterface: SQLInterface, _updateId: number): Promise<void> {
         return Promise.resolve();
     }
 
@@ -255,7 +255,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     async put(value: RawSQLData, query: Query): Promise<RawSQLData> {
-        let id = RawSQLDataSource.getId(value, query);
+        const id = RawSQLDataSource.getId(value, query);
         return this.sqlInterface.transaction((sqlInterface: SQLInterface) => {
             return this.executePutQuery(value, id, sqlInterface);
         })
@@ -304,7 +304,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                         throw this.sqlDialect.mapError(e);
                     });
             } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
-                let params = new SQLQueryParamComposer(this.sqlDialect);
+                const params = new SQLQueryParamComposer(this.sqlDialect);
                 return this.sqlInterface
                     // tslint:disable-next-line:max-line-length
                     .query(`update ${this.sqlDialect.getTableName(this.tableName)} set ${this.deletedAtColumn} = now() where ${query.where(params.push, this.sqlDialect)}`, params.getParams())
@@ -331,7 +331,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                         throw this.sqlDialect.mapError(e);
                     });
             } else if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
-                let params = new SQLQueryParamComposer(this.sqlDialect);
+                const params = new SQLQueryParamComposer(this.sqlDialect);
                 return this.sqlInterface
                     // tslint:disable-next-line:max-line-length
                     .query(`delete from ${this.sqlDialect.getTableName(this.tableName)} where ${query.where(params.push, this.sqlDialect)}`, params.getParams())

@@ -1,6 +1,4 @@
 import {
-    BaseModel,
-    RequestAuthenticationModel,
     Client,
     Falsey,
     Token,
@@ -128,7 +126,6 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
                 // Nothing to do. There is just no associated user info or user model.
             }
 
-            // @ts-ignore
             const final = new OAuthToken(
                 token.accessToken,
                 token.accessTokenExpiresAt,

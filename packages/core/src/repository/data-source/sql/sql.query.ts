@@ -16,7 +16,7 @@ export abstract class SQLOrderByPaginationQuery extends PaginationOffsetLimitQue
 export abstract class SQLWhereQuery extends SQLOrderByQuery implements SQLWhere {
     abstract where(param?: SQLQueryParamFn, dialect?: SQLDialect): string;
 
-    orderBy(param?: SQLQueryParamFn, dialect?: SQLDialect): string {
+    orderBy(_param?: SQLQueryParamFn, _dialect?: SQLDialect): string {
         return BaseColumnCreatedAt;
     }
 
@@ -28,7 +28,7 @@ export abstract class SQLWhereQuery extends SQLOrderByQuery implements SQLWhere 
 export abstract class SQLWherePaginationQuery extends SQLOrderByPaginationQuery implements SQLWhere {
     abstract where(param?: SQLQueryParamFn, dialect?: SQLDialect): string;
 
-    orderBy(param?: SQLQueryParamFn, dialect?: SQLDialect): string {
+    orderBy(_param?: SQLQueryParamFn, _dialect?: SQLDialect): string {
         return BaseColumnCreatedAt;
     }
 

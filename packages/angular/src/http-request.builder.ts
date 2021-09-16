@@ -29,7 +29,7 @@ export class HttpRequestBuilder<T> {
         return this;
     }
 
-    public setBody(body: object): HttpRequestBuilder<T> {
+    public setBody(body: unknown): HttpRequestBuilder<T> {
         this.body = JSON.stringify(body);
         return this;
     }
@@ -61,8 +61,8 @@ export class HttpRequestBuilder<T> {
         this.setHeaders(defaultHeaders);
     }
 
-    private mapResponse(responseItem: object): any {
-        const mapper = new JsonDeserializerMapper<object, any>(this.responseConstructor);
+    private mapResponse(responseItem: unknown): any {
+        const mapper = new JsonDeserializerMapper<unknown, any>(this.responseConstructor);
         return mapper.map(responseItem);
     }
 
@@ -77,7 +77,7 @@ export class HttpRequestBuilder<T> {
                     return response.body;
                 }
                 if (response.body instanceof Array) {
-                    return response.body.map((responseItem: object) => {
+                    return response.body.map((responseItem: unknown) => {
                         return this.mapResponse(responseItem);
                     });
                 }
@@ -96,7 +96,7 @@ export class HttpRequestBuilder<T> {
                     return response.body;
                 }
                 if (response.body instanceof Array) {
-                    return response.body.map((responseItem: object) => {
+                    return response.body.map((responseItem: unknown) => {
                         return this.mapResponse(responseItem);
                     });
                 }
@@ -115,7 +115,7 @@ export class HttpRequestBuilder<T> {
                     return response.body;
                 }
                 if (response.body instanceof Array) {
-                    return response.body.map((responseItem: object) => {
+                    return response.body.map((responseItem: unknown) => {
                         return this.mapResponse(responseItem);
                     });
                 }

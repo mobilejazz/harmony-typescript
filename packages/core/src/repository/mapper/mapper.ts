@@ -10,7 +10,7 @@ export interface Mapper<From, To> {
  * VoidMapper default implementation.
  */
 export class VoidMapper<From, To> implements Mapper<From, To> {
-    public map(from: From): To {
+    public map(_from: From): To {
         throw new MethodNotImplementedError('VoidMapper is not implemented');
     }
 }
@@ -99,7 +99,7 @@ export class JsonDeserializerMapper<From, To> implements Mapper <From, To> {
     }
     private deserialize(from: From): To {
         const output = new this.toType();
-        let properties: string[] = Object.keys(from);
+        const properties: string[] = Object.keys(from);
         properties.forEach((property: string) => {
             output[property] = from[property];
         });

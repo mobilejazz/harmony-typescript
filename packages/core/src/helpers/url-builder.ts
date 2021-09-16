@@ -22,8 +22,8 @@ export class UrlBuilder {
     }
 
     private prepareUrlParameters(url: string, urlParameters: Dictionary<ParameterType>): string {
-        for (let property in urlParameters ) {
-            if (urlParameters.hasOwnProperty(property) && url.indexOf(`:${property}`) > -1) {
+        for (const property in urlParameters ) {
+            if (Object.prototype.hasOwnProperty.call(urlParameters, property) && url.indexOf(`:${property}`) > -1) {
                 url = url.replace(`:${property}`, urlParameters[property].toString());
             } else {
                 throw new Error(`Parameter "${property}" does not exist in URL "${url}"`);
@@ -35,9 +35,9 @@ export class UrlBuilder {
     private prepareQueryParameters(url: string, queryParameters: Dictionary<ParameterType>): string {
         let firstProperty = true;
 
-        for (let property in queryParameters) {
+        for (const property in queryParameters) {
             if (
-                queryParameters.hasOwnProperty(property) &&
+                Object.prototype.hasOwnProperty.call(queryParameters, property) &&
                 (typeof queryParameters[property] !== 'undefined' && queryParameters[property] !== null)
             ) {
                 url += firstProperty ? '?' : '&';

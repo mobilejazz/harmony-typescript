@@ -8,7 +8,7 @@ export class DeviceConsoleLogger extends AbstractLogger {
         this.logger = logger || console;
     }
 
-    logKeyValue(key: string, value: any): void {
+    logKeyValue(key: string, value: unknown): void {
         this.info(`${key}=${value}`);
     }
 

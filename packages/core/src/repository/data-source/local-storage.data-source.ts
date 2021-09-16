@@ -17,7 +17,7 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
 
     public async getAll(query: Query): Promise<string[]> {
         if (query instanceof KeyQuery) {
-            let keys = query.key.split(',');
+            const keys = query.key.split(',');
             return keys.map((key: string) => localStorage.getItem(key) as string);
         } else {
             throw QueryNotSupportedError;
@@ -35,7 +35,7 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
 
     public async putAll(values: string[], query: Query): Promise<string[]> {
         if (query instanceof KeyQuery) {
-            let keys = query.key.split(',');
+            const keys = query.key.split(',');
             return keys.map((key, index) => {
                 localStorage.setItem(key, values[index]);
                 return localStorage.getItem(key) as string;
@@ -47,8 +47,8 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
 
     public async delete(query: Query): Promise<void> {
         if (query instanceof KeyQuery) {
-            let keys = query.key.split(',');
-            let result = keys.map(key => {
+            const keys = query.key.split(',');
+            const result = keys.map(key => {
                 localStorage.removeItem(key);
                 return localStorage.getItem(key) === null;
             });

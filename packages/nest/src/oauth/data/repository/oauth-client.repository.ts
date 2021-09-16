@@ -28,7 +28,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
-    async get(query: Query, operation: Operation): Promise<OAuthClientModel> {
+    async get(query: Query, _operation: Operation): Promise<OAuthClientModel> {
         const client =  await this.getClientDataSource.get(query);
         const grants = await this.getClientGrantsDataSource.getAll(new OAuthClientIdQuery(client.id));
         return new OAuthClientModel(
@@ -43,7 +43,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         );
     }
 
-    async getAll(query: Query, operation: Operation): Promise<OAuthClientModel[]> {
+    async getAll(query: Query, _operation: Operation): Promise<OAuthClientModel[]> {
         const clients = await this.getClientDataSource.getAll(query);
         return Promise.all(clients.map(client => {
             return this.getClientGrantsDataSource
@@ -63,7 +63,7 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         }));
     }
 
-    async put(value: OAuthClientModel, query: Query, operation: Operation): Promise<OAuthClientModel> {
+    async put(value: OAuthClientModel, query: Query, _operation: Operation): Promise<OAuthClientModel> {
         const entity = new OAuthClientEntity(
             value.id,
             value.createdAt,
@@ -96,16 +96,16 @@ export class OAuthClientRepository implements GetRepository<OAuthClientModel>, P
         );
     }
 
-    async putAll(values: OAuthClientModel[], query: Query, operation: Operation): Promise<OAuthClientModel[]> {
+    async putAll(_values: OAuthClientModel[], _query: Query, _operation: Operation): Promise<OAuthClientModel[]> {
         throw new MethodNotImplementedError();
     }
 
-    async delete(query: Query, operation: Operation): Promise<void> {
+    async delete(query: Query, _operation: Operation): Promise<void> {
         // client grants will be deleted as table column is configured on delete cascade.
         return this.deleteClientDataSource.delete(query);
     }
 
-    deleteAll(query: Query, operation: Operation): Promise<void> {
+    deleteAll(_query: Query, _operation: Operation): Promise<void> {
         this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
         // client grants will be deleted as table column is configured on delete cascade.
         return undefined;

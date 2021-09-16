@@ -113,7 +113,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
     private buildArrayQuery(conditions: any): any {
         const obj = Object.assign(conditions);
         for (const key in conditions) {
-            if (conditions.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(conditions, key)) {
                 // If one of the condition is an array put the In() prefix operator
                 if (Array.isArray(conditions[key])) {
                     obj[key] = In(conditions[key]);

@@ -9,27 +9,27 @@ export class MockDataSource<T> implements  GetDataSource<T>, PutDataSource<T>, D
         private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
-    public async get(query: Query): Promise<T> {
+    public async get(_query: Query): Promise<T> {
         return this.one;
     }
 
-    public async getAll(query: Query): Promise<T[]> {
+    public async getAll(_query: Query): Promise<T[]> {
         return this.many;
     }
 
-    public async put(value: T, query: Query): Promise<T> {
+    public async put(_value: T, _query: Query): Promise<T> {
         return this.one;
     }
 
-    public async putAll(values: T[], query: Query): Promise<T[]> {
+    public async putAll(_values: T[], _query: Query): Promise<T[]> {
         return this.many;
     }
 
-    public async delete(query: Query): Promise<void> {
+    public async delete(_query: Query): Promise<void> {
         return;
     }
 
-    public async deleteAll(query: Query): Promise<void> {
+    public async deleteAll(_query: Query): Promise<void> {
         this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
     }
 }

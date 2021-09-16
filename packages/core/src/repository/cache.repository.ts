@@ -20,14 +20,14 @@ export interface ObjectValidator {
 }
 
 export class DefaultObjectValidator implements ObjectValidator {
-    isObjectValid<T>(object: T): boolean {
+    isObjectValid<T>(_object: T): boolean {
         return true;
     }
     isArrayValid<T>(array: T[]): boolean {
         if (array.length === 0) {
             return false;
         }
-        for (let element of array) {
+        for (const element of array) {
             if (!this.isObjectValid(element)) {
                 return false;
             }
@@ -65,7 +65,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     }
                     return value;
                 }).catch((err: Error) => {
-                    let op = operation as CacheOperation;
+                    const op = operation as CacheOperation;
                     if (err instanceof NotValidError && op.fallback(err)) {
                         return this.getCache.get(query);
                     } else {
@@ -88,7 +88,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                 }).catch((err: Error) => {
                    if (err instanceof NotValidError || err instanceof NotFoundError) {
                         return this.get(query, new MainSyncOperation()).catch((finalError: Error) => {
-                            let op = operation as CacheSyncOperation;
+                            const op = operation as CacheSyncOperation;
                             if (op.fallback(finalError)) {
                                 return this.getCache.get(query);
                             } else {
@@ -120,7 +120,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                     }
                     return values;
                 }).catch((err: Error) => {
-                    let op = operation as CacheOperation;
+                    const op = operation as CacheOperation;
                     if (err instanceof NotValidError && op.fallback(err)) {
                         return this.getCache.getAll(query);
                     } else {
@@ -143,7 +143,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                 }).catch((err: Error) => {
                     if (err instanceof NotValidError || err instanceof NotFoundError) {
                         return this.getAll(query, new MainSyncOperation()).catch((finalError: Error) => {
-                            let op = operation as CacheSyncOperation;
+                            const op = operation as CacheSyncOperation;
                             if (op.fallback(finalError)) {
                                 return this.getCache.getAll(query);
                             } else {

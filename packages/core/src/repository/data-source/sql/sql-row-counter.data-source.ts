@@ -21,8 +21,8 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             let sql = `${this.selectSQL()}`;
 
-            let params = new SQLQueryParamComposer(this.sqlDialect);
-            let queryWhereSQL = query.where(params.push, this.sqlDialect);
+            const params = new SQLQueryParamComposer(this.sqlDialect);
+            const queryWhereSQL = query.where(params.push, this.sqlDialect);
             let whereSql = queryWhereSQL ? queryWhereSQL : '';
 
             if (this.softDeleteEnabled) {
@@ -55,7 +55,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         }
     }
 
-    async getAll(query: Query): Promise<number[]> {
+    async getAll(_query: Query): Promise<number[]> {
         throw new QueryNotSupportedError('Use SQLRowCounterDataSource with a get method, not getAll.');
     }
 }

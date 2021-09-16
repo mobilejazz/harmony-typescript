@@ -24,7 +24,7 @@ export class DeleteTokensDataSource implements DeleteDataSource {
         private readonly sqlInterface: SQLInterface,
     ) {}
 
-    async delete(query: Query): Promise<void> {
+    async delete(_query: Query): Promise<void> {
         throw new QueryNotSupportedError('Use deleteAll on DeleteUserTokensDataSource');
     }
 

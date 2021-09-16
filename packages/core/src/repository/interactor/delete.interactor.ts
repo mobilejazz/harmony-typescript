@@ -1,4 +1,4 @@
-import { DefaultOperation, DeleteRepository, Operation, Query, VoidQuery } from '../index';
+import { DefaultOperation, DeleteRepository, Operation, Query } from '../index';
 
 export class DeleteInteractor {
 

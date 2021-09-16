@@ -11,15 +11,15 @@ import {
 
 export class OAuthTokenEntityToRawSqlMapper implements Mapper<OAuthTokenEntity, RawSQLData> {
     public map(from: OAuthTokenEntity): RawSQLData {
-        let raw = {};
-        raw[OAuthTokenColumnAccessToken] = from.accessToken;
-        raw[OAuthTokenColumnAccessTokenExpiresAt] = from.accessTokenExpiresAt;
-        raw[OAuthTokenColumnRefreshToken] = from.refreshToken;
-        raw[OAuthTokenColumnRefreshTokenExpiresAt] = from.refreshTokenExpiresAt;
-        raw[OAuthTokenColumnClientId] = from.clientId;
-        raw[OAuthColumnId] = from.id;
-        raw[OAuthColumnCreatedAt] = from.createdAt;
-        raw[OAuthColumnUpdatedAt] = from.updatedAt;
-        return raw;
+        return {
+            [OAuthTokenColumnAccessToken]: from.accessToken,
+            [OAuthTokenColumnAccessTokenExpiresAt]: from.accessTokenExpiresAt,
+            [OAuthTokenColumnRefreshToken]: from.refreshToken,
+            [OAuthTokenColumnRefreshTokenExpiresAt]: from.refreshTokenExpiresAt,
+            [OAuthTokenColumnClientId]: from.clientId,
+            [OAuthColumnId]: from.id,
+            [OAuthColumnCreatedAt]: from.createdAt,
+            [OAuthColumnUpdatedAt]: from.updatedAt,
+        };
     }
 }
