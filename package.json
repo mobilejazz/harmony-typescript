@@ -13,6 +13,7 @@
         "npm": "7.x"
     },
     "scripts": {
+        "check-deps": "npm outdated && npx lerna exec -- npm outdated && npm audit && npx lerna exec -- npm audit",
         "prebuild": "npm run validate",
         "build": "lerna run build",
         "lint": "lerna run lint",
