@@ -49,12 +49,6 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
     public async delete(query: Query, operation: Operation): Promise<void> {
         return this.deleteRepository.delete(query, operation);
     }
-
-    public async deleteAll(query: Query, operation: Operation): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
-        return this.deleteRepository.delete(query, operation);
-    }
-
 }
 
 /**

@@ -62,10 +62,4 @@ export class LocalStorageDataSource  implements GetDataSource<string>, PutDataSo
             throw QueryNotSupportedError;
         }
     }
-
-    public async deleteAll(query: Query): Promise<void> {
-        // tslint:disable-next-line:max-line-length
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
-        return this.delete(query);
-    }
 }

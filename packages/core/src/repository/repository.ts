@@ -15,5 +15,4 @@ export interface PutRepository<T> extends Repository {
 
 export interface DeleteRepository extends Repository {
     delete(query: Query, operation: Operation): Promise<void>;
-    deleteAll(query: Query, operation: Operation): Promise<void>;
 }

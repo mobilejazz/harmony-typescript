@@ -189,28 +189,4 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
                 throw new OperationNotSupportedError();
         }
     }
-
-    public async deleteAll(query: Query, operation: Operation): Promise<void> {
-        // tslint:disable-next-line:max-line-length
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
-
-        switch (operation.constructor) {
-            case DefaultOperation:
-                return this.deleteAll(query, new MainSyncOperation());
-            case MainOperation:
-                return this.deleteMain.deleteAll(query);
-            case CacheOperation:
-                return this.deleteCache.deleteAll(query);
-            case MainSyncOperation:
-                return this.deleteMain.deleteAll(query).then(() => {
-                    return this.deleteCache.deleteAll(query);
-                });
-            case CacheSyncOperation:
-                return this.deleteCache.deleteAll(query).then(() => {
-                    return this.deleteMain.deleteAll(query);
-                });
-            default:
-                throw new OperationNotSupportedError();
-        }
-    }
 }

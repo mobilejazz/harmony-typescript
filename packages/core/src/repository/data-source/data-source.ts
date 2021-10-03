@@ -14,5 +14,4 @@ export interface PutDataSource<T> extends DataSource {
 
 export interface DeleteDataSource extends DataSource {
     delete(query: Query): Promise<void>;
-    deleteAll(query: Query): Promise<void>;
 }

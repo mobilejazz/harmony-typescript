@@ -32,12 +32,6 @@ export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepos
     public delete(query: Query, operation: Operation): Promise<void> {
         return this.deleteDataSource.delete(query);
     }
-
-    public deleteAll(query: Query, operation: Operation): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
-        return this.deleteDataSource.delete(query);
-    }
-
 }
 
 export class SingleGetDataSourceRepository<T> implements GetRepository<T> {
@@ -79,11 +73,6 @@ export class SingleDeleteDataSourceRepository implements DeleteRepository {
     ) {}
 
     public delete(query: Query, operation: Operation): Promise<void> {
-        return this.deleteDataSource.delete(query);
-    }
-
-    public deleteAll(query: Query, operation: Operation): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
         return this.deleteDataSource.delete(query);
     }
 }

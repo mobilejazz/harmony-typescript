@@ -82,10 +82,4 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
             throw new QueryNotSupportedError();
         }
     }
-
-    public async deleteAll(query: Query): Promise<void> {
-        // tslint:disable-next-line:max-line-length
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead. Rewrite using `delete` with `AllObjectsQuery` to remove all entries or with any other `Query` to remove one or more entries.');
-        return this.delete(query);
-    }
 }
