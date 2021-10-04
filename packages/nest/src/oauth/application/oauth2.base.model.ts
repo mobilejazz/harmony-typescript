@@ -1,19 +1,11 @@
-import {
-    BaseModel,
-    RequestAuthenticationModel,
-    Client,
-    Falsey,
-    Token,
-    User,
-    ClientCredentialsModel,
-} from 'oauth2-server';
-import {GetOAuthClientInteractor} from '../domain/interactors/get-oauth-client.interactor';
-import {PutOAuthTokenInteractor} from '../domain/interactors/put-oauth-token.interactor';
-import {GetOAuthTokenInteractor} from '../domain/interactors/get-oauth-token.interactor';
-import {GetOAuthUserInfoInteractor} from '../domain/interactors/get-oauth-user-info.interactor';
-import {GetOAuthUserInteractor} from '../domain/interactors/get-oauth-user.interactor';
-import {OAuthUserInfoModel} from '../domain/oauth-user-info.model';
-import {OAuthUser} from '../domain/oauth-user.model';
+import { Client, Falsey, Token, User, ClientCredentialsModel } from 'oauth2-server';
+import { GetOAuthClientInteractor } from '../domain/interactors/get-oauth-client.interactor';
+import { PutOAuthTokenInteractor } from '../domain/interactors/put-oauth-token.interactor';
+import { GetOAuthTokenInteractor } from '../domain/interactors/get-oauth-token.interactor';
+import { GetOAuthUserInfoInteractor } from '../domain/interactors/get-oauth-user-info.interactor';
+import { GetOAuthUserInteractor } from '../domain/interactors/get-oauth-user.interactor';
+import { OAuthUserInfoModel } from '../domain/oauth-user-info.model';
+import { OAuthUser } from '../domain/oauth-user.model';
 
 export class OAuthClient implements Client {
     constructor(
@@ -49,11 +41,11 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
     async getClient(
         clientId: string,
         clientSecret: string,
-        callback?: (err?: any, result?: (Client | "" | 0 | false | null | undefined)) => void,
+        callback?: (err?: any, result?: Client | '' | 0 | false | null | undefined) => void,
     ): Promise<Client | Falsey> {
         return this.getClientInteractor
             .execute(clientId, clientSecret)
-            .then(client => {
+            .then((client) => {
                 const oauthClient = new OAuthClient(
                     clientId,
                     client.grants,
@@ -65,7 +57,8 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
                     callback(null, oauthClient);
                 }
                 return oauthClient;
-            }).catch(err => {
+            })
+            .catch((err) => {
                 if (callback) {
                     callback(err, null);
                 }
@@ -108,10 +101,7 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
         return token;
     }
 
-    async getAccessToken(
-        accessToken: string,
-        callback?: (err?: any, result?: Token) => void,
-    ): Promise<Token | Falsey> {
+    async getAccessToken(accessToken: string, callback?: (err?: any, result?: Token) => void): Promise<Token | Falsey> {
         try {
             const token = await this.getTokenInteractor.execute(accessToken);
 
@@ -128,7 +118,6 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
                 // Nothing to do. There is just no associated user info or user model.
             }
 
-            // @ts-ignore
             const final = new OAuthToken(
                 token.accessToken,
                 token.accessTokenExpiresAt,
@@ -170,7 +159,7 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
 
     async getUserFromClient(
         client: Client,
-        callback?: (err?: any, result?: (User | "" | 0 | false | null | undefined)) => void,
+        callback?: (err?: any, result?: User | '' | 0 | false | null | undefined) => void,
     ): Promise<User | Falsey> {
         // No user associated when using client_credentials
         if (callback) {
@@ -180,7 +169,7 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
     }
 
     // OPTIONAL METHODS
-/*
+    /*
     generateAccessToken(
         client: Client,
         user: User,

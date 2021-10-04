@@ -1,14 +1,10 @@
-import {SQLWhereQuery, SQLDialect} from '@mobilejazz/harmony-core';
+import { SQLWhereQuery, SQLQueryParamFn } from '@mobilejazz/harmony-core';
 
 export class OAuthClientQuery extends SQLWhereQuery {
-    constructor(
-        readonly clientId: string,
-        readonly clientSecret: string,
-    ) { super(); }
-    whereParams(): any[] {
-        return [this.clientId, this.clientSecret];
+    constructor(readonly clientId: string, readonly clientSecret: string) {
+        super();
     }
-    whereSql(dialect: SQLDialect): string {
-        return `client_id = ${dialect.getParameterSymbol(1)} and client_secret = ${dialect.getParameterSymbol(2)}`;
+    where(param: SQLQueryParamFn): string {
+        return `client_id = ${param(this.clientId)} and client_secret = ${param(this.clientSecret)}`;
     }
 }

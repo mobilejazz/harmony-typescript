@@ -1,5 +1,5 @@
-import {OAuthClientGrantEntity} from '../../entity/oauth-client-grant.entity';
-import {Mapper, RawSQLData} from '@mobilejazz/harmony-core';
+import { OAuthClientGrantEntity } from '../../entity/oauth-client-grant.entity';
+import { Mapper, RawSQLData } from '@mobilejazz/harmony-core';
 import {
     OAuthClientGrantColumnClientId,
     OAuthClientGrantColumnGrantName,
@@ -10,12 +10,12 @@ import {
 
 export class OAuthClientGrantEntityToRawSqlMapper implements Mapper<OAuthClientGrantEntity, RawSQLData> {
     map(from: OAuthClientGrantEntity): RawSQLData {
-        let raw = {};
-        raw[OAuthColumnId] = from.id;
-        raw[OAuthColumnCreatedAt] = from.createdAt;
-        raw[OAuthColumnUpdatedAt] = from.updatedAt;
-        raw[OAuthClientGrantColumnGrantName] = from.grant;
-        raw[OAuthClientGrantColumnClientId] = from.clientId;
-        return raw;
+        return {
+            [OAuthColumnId]: from.id,
+            [OAuthColumnCreatedAt]: from.createdAt,
+            [OAuthColumnUpdatedAt]: from.updatedAt,
+            [OAuthClientGrantColumnGrantName]: from.grant,
+            [OAuthClientGrantColumnClientId]: from.clientId,
+        };
     }
 }

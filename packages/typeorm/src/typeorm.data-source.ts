@@ -14,7 +14,7 @@ import {
     Logger,
     DeviceConsoleLogger,
 } from '@mobilejazz/harmony-core';
-import { Repository as TypeORMRepository, In, Condition } from 'typeorm';
+import { Repository as TypeORMRepository, In } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
@@ -24,20 +24,20 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
 
     async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
-            return this.repository
-                .findOne(query.id).then(value => {
-                    if (value === undefined) {
-                        throw new NotFoundError();
-                    } else {
-                        return value;
-                    }
-                });
+            return this.repository.findOne(query.id).then((value: any) => {
+                if (value === undefined) {
+                    throw new NotFoundError();
+                } else {
+                    return value;
+                }
+            });
         } else if (query instanceof ObjectRelationsQuery) {
             return this.repository
                 .findOne({
                     where: this.buildArrayQuery(query.value),
                     relations: query.relations,
-                }).then(value => {
+                })
+                .then((value: any) => {
                     if (value === undefined) {
                         throw new NotFoundError();
                     } else {
@@ -45,35 +45,33 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                     }
                 });
         } else if (query instanceof ObjectQuery) {
-            return this.repository
-                .findOne({ where: this.buildArrayQuery(query.value) })
-                .then(value => {
-                    if (value === undefined) {
-                        throw new NotFoundError();
-                    } else {
-                        return value;
-                    }
-                });
+            return this.repository.findOne({ where: this.buildArrayQuery(query.value) }).then((value: any) => {
+                if (value === undefined) {
+                    throw new NotFoundError();
+                } else {
+                    return value;
+                }
+            });
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
     async getAll(query: Query): Promise<T[]> {
-            if (query instanceof VoidQuery) {
-                return this.repository.find();
-            } else if (query instanceof IdsQuery) {
-                return this.findAllEntitiesByIds(query.ids);
-            } else if (query instanceof ObjectRelationsQuery) {
-                return this.repository.find({
-                    where: this.buildArrayQuery(query.value),
-                    relations: query.relations,
-                });
-            } else if (query instanceof ObjectQuery) {
-                return this.repository.find({ where: this.buildArrayQuery(query.value) });
-            } else {
-                throw new QueryNotSupportedError();
-            }
+        if (query instanceof VoidQuery) {
+            return this.repository.find();
+        } else if (query instanceof IdsQuery) {
+            return this.findAllEntitiesByIds(query.ids);
+        } else if (query instanceof ObjectRelationsQuery) {
+            return this.repository.find({
+                where: this.buildArrayQuery(query.value),
+                relations: query.relations,
+            });
+        } else if (query instanceof ObjectQuery) {
+            return this.repository.find({ where: this.buildArrayQuery(query.value) });
+        } else {
+            throw new QueryNotSupportedError();
+        }
     }
 
     async put(value: T, query: Query): Promise<T> {
@@ -86,7 +84,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
 
     async putAll(values: T[], query: Query): Promise<T[]> {
         if (query instanceof VoidQuery) {
-            return await Promise.all(values.map(value => this.repository.save(value)));
+            return await Promise.all(values.map((value) => this.repository.save(value)));
         } else {
             throw new QueryNotSupportedError();
         }
@@ -112,7 +110,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
     private buildArrayQuery(conditions: any): any {
         const obj = Object.assign(conditions);
         for (const key in conditions) {
-            if (conditions.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(conditions, key)) {
                 // If one of the condition is an array put the In() prefix operator
                 if (Array.isArray(conditions[key])) {
                     obj[key] = In(conditions[key]);

@@ -1,7 +1,6 @@
-
 export const UnknownErrorCode = -1;
 
-export const MethodNotImplementedErrorName =  'Method Not Implemented';
+export const MethodNotImplementedErrorName = 'Method Not Implemented';
 export class MethodNotImplementedError extends Error {
     constructor(message?: string, public readonly code: number = UnknownErrorCode) {
         super(message);
@@ -10,7 +9,7 @@ export class MethodNotImplementedError extends Error {
     }
 }
 
-export const OperationNotSupportedErrorName =  'Operation Not Supported';
+export const OperationNotSupportedErrorName = 'Operation Not Supported';
 export class OperationNotSupportedError extends Error {
     constructor(message?: string, public readonly code: number = UnknownErrorCode) {
         super(message);
@@ -19,7 +18,7 @@ export class OperationNotSupportedError extends Error {
     }
 }
 
-export const QueryNotSupportedErrorName =  'Query Not Supported';
+export const QueryNotSupportedErrorName = 'Query Not Supported';
 export class QueryNotSupportedError extends Error {
     constructor(message?: string, public readonly code: number = UnknownErrorCode) {
         super(message);
@@ -38,7 +37,7 @@ export class DeleteError extends Error {
 }
 
 export const NotValidErrorName = 'Not Valid Error';
-export class NotValidError extends  Error {
+export class NotValidError extends Error {
     constructor(message?: string, public readonly code: number = UnknownErrorCode) {
         super(message);
         Object.setPrototypeOf(this, NotValidError.prototype);
@@ -47,7 +46,7 @@ export class NotValidError extends  Error {
 }
 
 export const NotFoundErrorName = 'Not Found Error';
-export class NotFoundError extends  Error {
+export class NotFoundError extends Error {
     constructor(message?: string, public readonly code: number = UnknownErrorCode) {
         super(message);
         Object.setPrototypeOf(this, NotFoundError.prototype);

@@ -1,4 +1,4 @@
-import { DefaultOperation, GetRepository, Operation, Query, VoidQuery } from '../index';
+import { DefaultOperation, GetRepository, Operation, Query } from '../index';
 
 export class GetInteractor<T> {
     constructor(private readonly repository: GetRepository<T>) {}

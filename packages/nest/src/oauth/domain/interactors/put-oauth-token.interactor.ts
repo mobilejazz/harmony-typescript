@@ -1,7 +1,7 @@
-import {PutInteractor} from '@mobilejazz/harmony-core';
-import {OAuthTokenModel} from '../oauth-token.model';
-import {OAuthUserInfoModel} from '../oauth-user-info.model';
-import {OAuthClientModel} from '../oauth-client.model';
+import { PutInteractor } from '@mobilejazz/harmony-core';
+import { OAuthTokenModel } from '../oauth-token.model';
+import { OAuthUserInfoModel } from '../oauth-user-info.model';
+import { OAuthClientModel } from '../oauth-client.model';
 
 export class PutOAuthTokenInteractor {
     constructor(
@@ -18,14 +18,7 @@ export class PutOAuthTokenInteractor {
         scope?: string[],
     ): Promise<OAuthTokenModel> {
         // Configuring the client.
-        const client = new OAuthClientModel(
-            undefined,
-            undefined,
-            undefined,
-            clientId,
-            undefined,
-            undefined,
-        );
+        const client = new OAuthClientModel(undefined, undefined, undefined, clientId, undefined, undefined);
         // Creating the token
         const token = new OAuthTokenModel(
             undefined,
@@ -42,13 +35,7 @@ export class PutOAuthTokenInteractor {
         const result = await this.putToken.execute(token);
         if (userId) {
             // If user id, storing the user info.
-            await this.putUserInfo.execute(new OAuthUserInfoModel(
-                undefined,
-                undefined,
-                undefined,
-                result.id,
-                userId,
-            ));
+            await this.putUserInfo.execute(new OAuthUserInfoModel(undefined, undefined, undefined, result.id, userId));
         }
         // Returning the stored token
         return result;

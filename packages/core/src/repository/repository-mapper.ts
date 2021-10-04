@@ -1,8 +1,8 @@
 import { Mapper } from './mapper/mapper';
-import { DefaultOperation, Operation } from './operation/operation';
+import { Operation } from './operation/operation';
 import { Query } from './query/query';
 import { DeleteRepository, GetRepository, PutRepository } from './repository';
-import {DeviceConsoleLogger, Logger} from '../helpers';
+import { DeviceConsoleLogger, Logger } from '../helpers';
 
 /**
  * This repository uses mappers to map objects and redirects them to the contained repository, acting as a simple "translator".
@@ -14,7 +14,6 @@ import {DeviceConsoleLogger, Logger} from '../helpers';
  * @param toInMapper Mapper to map domain objects to data objects
  */
 export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutRepository<Out>, DeleteRepository {
-
     constructor(
         private readonly getRepository: GetRepository<In>,
         private readonly putRepository: PutRepository<In>,
@@ -35,14 +34,14 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
     }
 
     public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        let mapped: In = value ? this.toInMapper.map(value) : undefined;
-        let result: In = await this.putRepository.put(mapped, query, operation);
+        const mapped: In = value ? this.toInMapper.map(value) : undefined;
+        const result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
-        let mapped: In[]  = values ? values.map(v => v ? this.toInMapper.map(v) : undefined) : undefined;
-        let results: In[] = await this.putRepository.putAll(mapped, query, operation);
+        const mapped: In[] = values ? values.map((v) => (v ? this.toInMapper.map(v) : undefined)) : undefined;
+        const results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 
@@ -58,11 +57,7 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
  * @param toOutMapper Mapper to map data objects to domain objects
  */
 export class GetRepositoryMapper<In, Out> implements GetRepository<Out> {
-
-    constructor(
-        private getRepository: GetRepository<In>,
-        private toOutMapper: Mapper<In, Out>,
-    ) {}
+    constructor(private getRepository: GetRepository<In>, private toOutMapper: Mapper<In, Out>) {}
 
     public async get(query: Query, operation: Operation): Promise<Out> {
         const result: In = await this.getRepository.get(query, operation);
@@ -83,7 +78,6 @@ export class GetRepositoryMapper<In, Out> implements GetRepository<Out> {
  * @param toInMapper Mapper to map domain objects to data objects
  */
 export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
-
     constructor(
         private putRepository: PutRepository<In>,
         private toOutMapper: Mapper<In, Out>,
@@ -91,15 +85,14 @@ export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
     ) {}
 
     public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        let mapped: In  = value ? this.toInMapper.map(value) : undefined;
-        let result: In = await this.putRepository.put(mapped, query, operation);
+        const mapped: In = value ? this.toInMapper.map(value) : undefined;
+        const result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
-
-        let mapped: In[] = values ? values.map(v => this.toInMapper.map(v)) : undefined;
-        let results: In[] = await this.putRepository.putAll(mapped, query, operation);
+        const mapped: In[] = values ? values.map((v) => this.toInMapper.map(v)) : undefined;
+        const results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
 }

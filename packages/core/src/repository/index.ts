@@ -22,3 +22,4 @@ export * from './data-source/sql/sql.query';
 export * from './data-source/sql/sql.constants';
 export * from './data-source/sql/sql-row-counter.data-source';
 export * from './data-source/sql/raw-sql.data-source';
+export * from './data-source/sql/sql-query-param-composer';

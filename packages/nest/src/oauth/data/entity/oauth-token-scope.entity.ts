@@ -1,4 +1,3 @@
-
 export class OAuthTokenScopeEntity {
     constructor(
         readonly id: number,
@@ -6,5 +5,5 @@ export class OAuthTokenScopeEntity {
         readonly updatedAt: Date,
         readonly scope: string,
         readonly tokenId: number,
-    ) { }
+    ) {}
 }

@@ -1,5 +1,5 @@
-import {OAuthUser} from '../oauth-user.model';
-import {OAuthClient} from '../../application/oauth2.base.model';
+import { OAuthUser } from '../oauth-user.model';
+import { OAuthClient } from '../../application/oauth2.base.model';
 
 export interface ValidateScopeInteractor {
     execute(user: OAuthUser, client: OAuthClient, scope: string[]): Promise<string[]>;

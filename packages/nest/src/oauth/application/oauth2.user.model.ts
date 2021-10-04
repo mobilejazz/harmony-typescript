@@ -1,15 +1,15 @@
-import {OAuth2BaseModel, OAuthClient} from './oauth2.base.model';
-import {Client, Falsey, PasswordModel, RefreshToken, RefreshTokenModel, Token, User} from 'oauth2-server';
-import {GetOAuthClientInteractor} from '../domain/interactors/get-oauth-client.interactor';
-import {PutOAuthTokenInteractor} from '../domain/interactors/put-oauth-token.interactor';
-import {GetOAuthTokenInteractor} from '../domain/interactors/get-oauth-token.interactor';
-import {GetOAuthUserInfoInteractor} from '../domain/interactors/get-oauth-user-info.interactor';
-import {LoginOAuthUserInteractor} from '../domain/interactors/login-oauth-user.interactor';
-import {GetOAuthUserInteractor} from '../domain/interactors/get-oauth-user.interactor';
-import {GetOAuthRefreshTokenInteractor} from '../domain/interactors/get-oauth-refresh-token.interactor';
-import {DeleteOAuthTokenInteractor} from '../domain/interactors/delete-oauth-token.interactor';
-import {ValidateScopeInteractor} from '../domain/interactors/validate-scope.interactor';
-import {ForbiddenException} from '@nestjs/common';
+import { OAuth2BaseModel, OAuthClient } from './oauth2.base.model';
+import { Client, Falsey, PasswordModel, RefreshToken, RefreshTokenModel, Token, User } from 'oauth2-server';
+import { GetOAuthClientInteractor } from '../domain/interactors/get-oauth-client.interactor';
+import { PutOAuthTokenInteractor } from '../domain/interactors/put-oauth-token.interactor';
+import { GetOAuthTokenInteractor } from '../domain/interactors/get-oauth-token.interactor';
+import { GetOAuthUserInfoInteractor } from '../domain/interactors/get-oauth-user-info.interactor';
+import { LoginOAuthUserInteractor } from '../domain/interactors/login-oauth-user.interactor';
+import { GetOAuthUserInteractor } from '../domain/interactors/get-oauth-user.interactor';
+import { GetOAuthRefreshTokenInteractor } from '../domain/interactors/get-oauth-refresh-token.interactor';
+import { DeleteOAuthTokenInteractor } from '../domain/interactors/delete-oauth-token.interactor';
+import { ValidateScopeInteractor } from '../domain/interactors/validate-scope.interactor';
+import { ForbiddenException } from '@nestjs/common';
 
 class OAuthRefreshToken implements RefreshToken {
     constructor(
@@ -33,19 +33,13 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         protected readonly deleteTokenInteractor: DeleteOAuthTokenInteractor,
         protected readonly validateScopeInteractor: ValidateScopeInteractor,
     ) {
-        super(
-            getClientInteractor,
-            putTokenInteractor,
-            getTokenInteractor,
-            getUserInfoInteractor,
-            getUserInteractor,
-        );
+        super(getClientInteractor, putTokenInteractor, getTokenInteractor, getUserInfoInteractor, getUserInteractor);
     }
 
     async getUser(
         username: string,
         password: string,
-        callback?: (err?: any, result?: (User | "" | 0 | false | null | undefined)) => void,
+        callback?: (err?: any, result?: User | '' | 0 | false | null | undefined) => void,
     ): Promise<User | Falsey> {
         try {
             const user = await this.loginUserInteractor.execute(username, password);
@@ -94,10 +88,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         }
     }
 
-    async revokeToken(
-        token: RefreshToken | Token,
-        callback?: (err?: any, result?: boolean) => void,
-    ): Promise<boolean> {
+    async revokeToken(token: RefreshToken | Token, callback?: (err?: any, result?: boolean) => void): Promise<boolean> {
         let accessToken;
         if ('accessToken' in token) {
             accessToken = token['accessToken'];
@@ -109,7 +100,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         }
         return true;
     }
-/*
+    /*
     getUserFromClient(
         client: Client,
         callback?: (err?: any, result?: (User | "" | 0 | false | null | undefined)) => void,
@@ -120,7 +111,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
  */
 
     // OPTIONAL METHODS
-/*
+    /*
     generateRefreshToken(
         client: Client,
         user: User, scope: string | string[],
@@ -133,7 +124,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         user: User,
         client: Client,
         scope: string | string[],
-        callback?: (err?: any, result?: (string | "" | 0 | false | null | undefined)) => void,
+        callback?: (err?: any, result?: string | '' | 0 | false | null | undefined) => void,
     ): Promise<string | string[] | Falsey> {
         try {
             let array: string[];
@@ -141,7 +132,8 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
                 array = [];
             } else if (typeof scope === 'string') {
                 array = [scope as string];
-            } else  { // if (scope instanceof Array) { // or also can be undefined
+            } else {
+                // if (scope instanceof Array) { // or also can be undefined
                 array = scope;
             }
             const result = await this.validateScopeInteractor.execute(user as any, client, array);
