@@ -13,7 +13,6 @@ export * from './single-data-source.repository';
 export * from './void.repository';
 export * from './cache.repository';
 export * from './interactor/delete.interactor';
-export * from './interactor/delete-all.interactor';
 export * from './interactor/get.interactor';
 export * from './interactor/get-all.interactor';
 export * from './interactor/put.interactor';

@@ -28,8 +28,4 @@ export class MockDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
     public async delete(_query: Query): Promise<void> {
         return;
     }
-
-    public async deleteAll(_query: Query): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
-    }
 }

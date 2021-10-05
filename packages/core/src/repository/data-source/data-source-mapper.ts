@@ -46,12 +46,6 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
     public delete(query: Query): Promise<void> {
         return this.deleteDataSource.delete(query);
     }
-
-    public deleteAll(query: Query): Promise<void> {
-        // tslint:disable-next-line:max-line-length
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
-        return this.deleteDataSource.delete(query);
-    }
 }
 
 /**

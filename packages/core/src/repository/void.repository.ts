@@ -22,10 +22,6 @@ export class VoidRepository<T> implements GetRepository<T>, PutRepository<T>, De
     public async delete(_query: Query, _operation: Operation): Promise<void> {
         throw new MethodNotImplementedError('Called delete on VoidRepository');
     }
-    public async deleteAll(_query: Query, _operation: Operation): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
-        throw new MethodNotImplementedError('Called deleteAll on VoidRepository');
-    }
 }
 
 export class VoidGetRepository<T> implements GetRepository<T> {
@@ -51,10 +47,5 @@ export class VoidDeleteRepository implements DeleteRepository {
 
     public async delete(_query: Query, _operation: Operation): Promise<void> {
         throw new MethodNotImplementedError('Called delete on VoidDeleteRepository');
-    }
-
-    public async deleteAll(_query: Query, _operation: Operation): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Use `delete` instead.');
-        throw new MethodNotImplementedError('Called deleteAll on VoidDeleteRepository');
     }
 }

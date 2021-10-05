@@ -24,11 +24,6 @@ export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
     public async delete(_query: Query): Promise<void> {
         throw new MethodNotImplementedError('Called delete on VoidDataSource');
     }
-
-    public async deleteAll(_query: Query): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated.');
-        throw new MethodNotImplementedError('Called deleteAll on VoidDataSource');
-    }
 }
 
 export class VoidGetDataSource<T> implements GetDataSource<T> {
@@ -56,10 +51,5 @@ export class VoidDeleteDataSource implements DeleteDataSource {
 
     public async delete(_query: Query): Promise<void> {
         throw new MethodNotImplementedError('Called delete on VoidDeleteDataSource');
-    }
-
-    public async deleteAll(_query: Query): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated.');
-        throw new MethodNotImplementedError('Called deleteAll on VoidDeleteDataSource');
     }
 }
