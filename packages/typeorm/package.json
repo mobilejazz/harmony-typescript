@@ -20,6 +20,6 @@
     },
     "peerDependencies": {
         "@mobilejazz/harmony-core": "0.x",
-        "typeorm": "^0.2.37"
+        "typeorm": "^0.2.38"
     }
 }
