@@ -19,12 +19,12 @@ import { SQLQueryParamComposer } from './sql-query-param-composer';
 export type RawSQLData = any;
 
 export interface SQLOrderBy {
-    orderBy(param?: SQLQueryParamFn, dialect?: SQLDialect): string;
+    orderBy(param: SQLQueryParamFn, dialect: SQLDialect): string;
     ascending(): boolean;
 }
 
 export interface SQLWhere {
-    where(param?: SQLQueryParamFn, dialect?: SQLDialect): string;
+    where(param: SQLQueryParamFn, dialect: SQLDialect): string;
 }
 
 class SQLQueryComposition {
