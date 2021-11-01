@@ -2,13 +2,14 @@ import { DeleteError, FailedError, NotFoundError, KeyListQuery, KeyQuery, Query,
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
 import { Logger, SafeStorage, VoidLogger } from '../../helpers';
 
-export class LocalStorageDataSource implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
+export class StorageDataSource implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
     private readonly storage: Storage;
 
     constructor(
+        storage: Storage,
         private readonly logger: Logger = new VoidLogger(),
     ) {
-        this.storage = new SafeStorage(window.localStorage);
+        this.storage = new SafeStorage(storage);
     }
 
     private getItem(key: string): string {
