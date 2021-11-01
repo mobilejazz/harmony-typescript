@@ -8,6 +8,12 @@ export class KeyQuery extends Query {
     }
 }
 
+export class KeyListQuery extends KeyQuery {
+    constructor(public readonly keys: string[]) {
+        super(keys.join(','));
+    }
+}
+
 export class VoidQuery extends Query {}
 
 export class IdQuery<T extends number | string> extends KeyQuery {
