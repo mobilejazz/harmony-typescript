@@ -7,7 +7,7 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
 
     /**
      * @param storage Any instance of `Storage`, usually `localStorage` or `sessionStorage`
-     * @param enableSafeMode Wrap the given `storage` in `SafeStorage`. This prevents errors in incognito and permission-less scenarios. Keep in mind that `SafeStorage` fallbacks to an in-memory implementation, so if you need more control in these scenarios you should handle these issues in a Repository.
+     * @param enableSafeMode Wrap the given `storage` in `SafeStorage`. This prevents errors in incognito and permission-less scenarios. Keep in mind that `SafeStorage` fallbacks to an **in-memory implementation**. If you need more control on how to handle incognito/permission issues then you should set this to `false` and handle these issues in a Repository. More info: https://michalzalecki.com/why-using-localStorage-directly-is-a-bad-idea/
      * @param logger Logger instance, defaults to `VoidLogger` (no logger)
      */
     constructor(
