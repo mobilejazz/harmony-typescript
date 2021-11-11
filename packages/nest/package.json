@@ -19,7 +19,7 @@
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "dependencies": {
-        "@nestjs/common": "^8.0.10",
+        "@nestjs/common": "^8.2.0",
         "bcryptjs": "~2.4.3",
         "oauth2-server": "^3.1.1",
         "reflect-metadata": "^0.1.13"
