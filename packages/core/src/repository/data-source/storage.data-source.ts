@@ -5,11 +5,17 @@ import { Logger, SafeStorage, VoidLogger } from '../../helpers';
 export class StorageDataSource implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
     private readonly storage: Storage;
 
+    /**
+     * @param storage Any instance of `Storage`, usually `localStorage` or `sessionStorage`
+     * @param enableSafeMode Wrap the given `storage` in `SafeStorage`. This prevents errors in incognito and permission-less scenarios. Keep in mind that `SafeStorage` fallbacks to an in-memory implementation, so if you need more control in these scenarios you should handle these issues in a Repository.
+     * @param logger Logger instance, defaults to `VoidLogger` (no logger)
+     */
     constructor(
         storage: Storage,
+        enableSafeMode: boolean,
         private readonly logger: Logger = new VoidLogger(),
     ) {
-        this.storage = new SafeStorage(storage);
+        this.storage = enableSafeMode ? new SafeStorage(storage) : storage;
     }
 
     private getItem(key: string): string {
