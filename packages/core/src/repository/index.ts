@@ -1,6 +1,6 @@
 export * from './data-source/data-source';
 export * from './data-source/data-source-mapper';
-export * from './data-source/local-storage.data-source';
+export * from './data-source/storage.data-source';
 export * from './data-source/void.data-source';
 export * from './data-source/in-memory.data-source';
 export * from './errors';
