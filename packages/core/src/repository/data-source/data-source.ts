@@ -9,8 +9,8 @@ export interface GetDataSource<T> extends DataSource {
 }
 
 export interface PutDataSource<T> extends DataSource {
-    put(value: T, query: Query): Promise<T>;
-    putAll(values: T[], query: Query): Promise<T[]>;
+    put(value: T | undefined, query: Query): Promise<T>;
+    putAll(values: T[] | undefined, query: Query): Promise<T[]>;
 }
 
 export interface DeleteDataSource extends DataSource {

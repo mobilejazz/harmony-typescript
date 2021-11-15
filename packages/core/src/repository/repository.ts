@@ -10,8 +10,8 @@ export interface GetRepository<T> extends Repository {
 }
 
 export interface PutRepository<T> extends Repository {
-    put(value: T, query: Query, operation: Operation): Promise<T>;
-    putAll(values: T[], query: Query, operation: Operation): Promise<T[]>;
+    put(value: T | undefined, query: Query, operation: Operation): Promise<T>;
+    putAll(values: T[] | undefined, query: Query, operation: Operation): Promise<T[]>;
 }
 
 export interface DeleteRepository extends Repository {
