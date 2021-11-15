@@ -4,15 +4,15 @@ import { Query } from '..';
 export interface DataSource {}
 
 export interface GetDataSource<T> extends DataSource {
-    get(query: Query): Promise<T>;
-    getAll(query: Query): Promise<T[]>;
+    get: (query: Query) => Promise<T>;
+    getAll: (query: Query) => Promise<T[]>;
 }
 
 export interface PutDataSource<T> extends DataSource {
-    put(value: T | undefined, query: Query): Promise<T>;
-    putAll(values: T[] | undefined, query: Query): Promise<T[]>;
+    put: (value: T | undefined, query: Query) => Promise<T>;
+    putAll: (values: T[] | undefined, query: Query) => Promise<T[]>;
 }
 
 export interface DeleteDataSource extends DataSource {
-    delete(query: Query): Promise<void>;
+    delete: (query: Query) => Promise<void>;
 }

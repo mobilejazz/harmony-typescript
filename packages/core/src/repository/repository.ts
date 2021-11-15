@@ -5,15 +5,15 @@ import { Query } from './query/query';
 export interface Repository {}
 
 export interface GetRepository<T> extends Repository {
-    get(query: Query, operation: Operation): Promise<T>;
-    getAll(query: Query, operation: Operation): Promise<T[]>;
+    get: (query: Query, operation: Operation) => Promise<T>;
+    getAll: (query: Query, operation: Operation) => Promise<T[]>;
 }
 
 export interface PutRepository<T> extends Repository {
-    put(value: T | undefined, query: Query, operation: Operation): Promise<T>;
-    putAll(values: T[] | undefined, query: Query, operation: Operation): Promise<T[]>;
+    put: (value: T | undefined, query: Query, operation: Operation) => Promise<T>;
+    putAll: (values: T[] | undefined, query: Query, operation: Operation) => Promise<T[]>;
 }
 
 export interface DeleteRepository extends Repository {
-    delete(query: Query, operation: Operation): Promise<void>;
+    delete: (query: Query, operation: Operation) => Promise<void>;
 }
