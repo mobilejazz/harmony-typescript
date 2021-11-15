@@ -9,7 +9,6 @@
         "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": false,
         "removeComments": true,
-        "noImplicitAny": true,
         "noLib": false,
         "module": "commonjs",
         "experimentalDecorators": true,
