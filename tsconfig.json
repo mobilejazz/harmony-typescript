@@ -16,7 +16,6 @@
         "sourceMap": false,
         "allowJs": false,
         "strict": true,
-        "strictNullChecks": false,
         "target": "es5",
         "lib": ["es2017", "dom"],
         "typeRoots": ["node_modules/@types"]
