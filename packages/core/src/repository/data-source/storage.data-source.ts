@@ -67,20 +67,28 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
             const keys = this.getKeys(query);
             return keys.map((key) => this.getItem(key));
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
     public async put(value: string | undefined, query: Query): Promise<string> {
+        if (typeof value === 'undefined') {
+            throw new InvalidArgumentError(`StorageDataSource: value can't be undefined`);
+        }
+
         if (query instanceof KeyQuery) {
             this.setItem(query.key, value);
             return this.getItem(query.key);
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
     public async putAll(values: string[] | undefined, query: Query): Promise<string[]> {
+        if (typeof values === 'undefined') {
+            throw new InvalidArgumentError(`StorageDataSource: values can't be undefined`);
+        }
+
         if (query instanceof KeyQuery || query instanceof KeyListQuery) {
             const keys = this.getKeys(query);
 
@@ -95,7 +103,7 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
                 return this.getItem(key);
             });
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
@@ -113,7 +121,7 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
 
             return;
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 }
