@@ -13,11 +13,11 @@ export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
         throw new MethodNotImplementedError('Called getAll on VoidDataSource');
     }
 
-    public async put(_value: T, _query: Query): Promise<T> {
+    public async put(_value: T | undefined, _query: Query): Promise<T> {
         throw new MethodNotImplementedError('Called put on VoidDataSource');
     }
 
-    public async putAll(_values: T[], _query: Query): Promise<T[]> {
+    public async putAll(_values: T[] | undefined, _query: Query): Promise<T[]> {
         throw new MethodNotImplementedError('Called putAll on VoidDataSource');
     }
 
@@ -37,11 +37,11 @@ export class VoidGetDataSource<T> implements GetDataSource<T> {
 }
 
 export class VoidPutDataSource<T> implements PutDataSource<T> {
-    public async put(_value: T, _query: Query): Promise<T> {
+    public async put(_value: T | undefined, _query: Query): Promise<T> {
         throw new MethodNotImplementedError('Called put on VoidPutDataSource');
     }
 
-    public async putAll(_values: T[], _query: Query): Promise<T[]> {
+    public async putAll(_values: T[] | undefined, _query: Query): Promise<T[]> {
         throw new MethodNotImplementedError('Called putAll on VoidPutDataSource');
     }
 }

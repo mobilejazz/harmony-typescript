@@ -256,7 +256,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             });
     }
 
-    async put(value: RawSQLData, query: Query): Promise<RawSQLData> {
+    async put(value: RawSQLData | undefined, query: Query): Promise<RawSQLData> {
         const id = RawSQLDataSource.getId(value, query);
         return this.sqlInterface
             .transaction((sqlInterface: SQLInterface) => {
@@ -268,7 +268,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             });
     }
 
-    async putAll(values: RawSQLData[], query: Query): Promise<RawSQLData[]> {
+    async putAll(values: RawSQLData[] | undefined, query: Query): Promise<RawSQLData[]> {
         if (query instanceof IdsQuery) {
             if (values.length !== query.ids.length) {
                 // tslint:disable-next-line:max-line-length

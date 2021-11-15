@@ -49,7 +49,7 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
         }
     }
 
-    public async put(value: T, query: Query): Promise<T> {
+    public async put(value: T | undefined, query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
             this.objects[query.key] = value;
             return value;
@@ -58,7 +58,7 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
         }
     }
 
-    public async putAll(values: T[], query: Query): Promise<T[]> {
+    public async putAll(values: T[] | undefined, query: Query): Promise<T[]> {
         if (query instanceof KeyQuery) {
             this.arrays[query.key] = values;
             return values;

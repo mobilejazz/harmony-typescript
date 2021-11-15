@@ -10,9 +10,7 @@ export class SafeStorage implements Storage {
     private readonly isSupported: boolean;
     private inMemoryStorage: Record<string, string> = {};
 
-    constructor (
-        private readonly storage: Storage,
-    ) {
+    constructor(private readonly storage: Storage) {
         try {
             const testKey = 'gjsLwbKbR3rk7xqTKWt3iVHA9hoJHsyVcC9M6wNF';
             this.storage.setItem(testKey, testKey);
