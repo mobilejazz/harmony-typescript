@@ -257,6 +257,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     async put(value: RawSQLData | undefined, query: Query): Promise<RawSQLData> {
+        if (typeof value === 'undefined') {
+            throw new InvalidArgumentError(`RawSQLDataSource: value can't be undefined`);
+        }
+
         const id = RawSQLDataSource.getId(value, query);
         return this.sqlInterface
             .transaction((sqlInterface: SQLInterface) => {
@@ -269,6 +273,10 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     }
 
     async putAll(values: RawSQLData[] | undefined, query: Query): Promise<RawSQLData[]> {
+        if (typeof values === 'undefined') {
+            throw new InvalidArgumentError(`RawSQLDataSource: values can't be undefined`);
+        }
+
         if (query instanceof IdsQuery) {
             if (values.length !== query.ids.length) {
                 // tslint:disable-next-line:max-line-length
