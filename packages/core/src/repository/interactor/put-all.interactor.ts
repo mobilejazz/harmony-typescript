@@ -4,7 +4,7 @@ export class PutAllInteractor<T> {
     constructor(private readonly repository: PutRepository<T>) {}
 
     public execute(
-        values: T[],
+        values: T[] | undefined,
         query: Query = new VoidQuery(),
         operation: Operation = new DefaultOperation(),
     ): Promise<T[]> {
