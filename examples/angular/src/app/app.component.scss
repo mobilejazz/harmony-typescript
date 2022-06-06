@@ -1,0 +1,18 @@
+.layout {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+
+  &__header {
+    background-color: #ff6600;
+    padding: 4px 8px;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__content {
+
+  }
+}
