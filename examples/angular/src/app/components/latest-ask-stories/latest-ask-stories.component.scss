@@ -1,0 +1,13 @@
+.story {
+  padding: 8px;
+  border: 1px solid #eee;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+
+  &:hover {
+    background-color: #ffe6d5;
+  }
+}

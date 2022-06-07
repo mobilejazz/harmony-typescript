@@ -21,6 +21,7 @@
         "validate": "npm run lint && npm test",
         "publish": "npm run build && lerna publish --contents dist --force-publish",
         "test": "jest",
+        "test:watch": "jest --watch",
         "prepare": "husky install"
     },
     "dependencies": {
