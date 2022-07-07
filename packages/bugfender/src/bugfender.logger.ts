@@ -1,12 +1,13 @@
 import { AbstractLogger, LogLevel, UnknownLogLevelError } from '@mobilejazz/harmony-core';
 import { BugfenderClass } from '@bugfender/sdk';
+import { DeviceKeyValue } from '@bugfender/sdk/lib/types/device';
 
 export class BugfenderLogger extends AbstractLogger {
     constructor(protected bugfender: BugfenderClass) {
         super();
     }
 
-    public logKeyValue(key: string, value: any): void {
+    public logKeyValue(key: string, value: DeviceKeyValue): void {
         if (value === null) {
             this.bugfender.removeDeviceKey(key);
         } else {
