@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { JsonDeserializerMapper, ParameterType, UrlBuilder } from '@mobilejazz/harmony-core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -59,77 +59,50 @@ export class HttpRequestBuilder<T> {
         });
     }
 
-    private mapResponse(responseItem: unknown): T {
+    private mapItem(responseItem: unknown): T {
         const mapper = new JsonDeserializerMapper<unknown, T>(this.responseConstructor);
         return mapper.map(responseItem);
     }
 
-    public get(): Observable<T> {
-        return this.http.get<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers }).pipe(
-            map((response) => {
-                if (!response.body) {
-                    return null;
-                }
-                if (!this.responseConstructor) {
-                    return response.body;
-                }
-                if (response.body instanceof Array) {
-                    return response.body.map((responseItem: unknown) => {
-                        return this.mapResponse(responseItem);
-                    });
-                }
-                return this.mapResponse(response.body);
-            }),
-        );
+    private mapResponse(res: HttpResponse<T>): T | T[] | undefined {
+        if (!res.body) {
+            return undefined;
+        }
+
+        if (!this.responseConstructor) {
+            return res.body;
+        }
+
+        if (Array.isArray(res.body)) {
+            return res.body.map((item: unknown) => {
+                return this.mapItem(item);
+            });
+        }
+
+        return this.mapItem(res.body);
     }
 
-    public post(): Observable<T> {
+    public get(): Observable<T | T[] | undefined> {
+        return this.http
+            .get<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers })
+            .pipe(map((res) => this.mapResponse(res)));
+    }
+
+    public post(): Observable<T | T[] | undefined> {
         return this.http
             .post<T>(this.urlBuilder.getUrl(), this.body, { observe: 'response', headers: this.headers })
-            .pipe(
-                map((response) => {
-                    if (!response.body) {
-                        return null;
-                    }
-                    if (!this.responseConstructor) {
-                        return response.body;
-                    }
-                    if (response.body instanceof Array) {
-                        return response.body.map((responseItem: unknown) => {
-                            return this.mapResponse(responseItem);
-                        });
-                    }
-                    return this.mapResponse(response.body);
-                }),
-            );
+            .pipe(map((res) => this.mapResponse(res)));
     }
 
-    public put(): Observable<T> {
+    public put(): Observable<T | T[] | undefined> {
         return this.http
             .put<T>(this.urlBuilder.getUrl(), this.body, { observe: 'response', headers: this.headers })
-            .pipe(
-                map((response) => {
-                    if (!response.body) {
-                        return null;
-                    }
-                    if (!this.responseConstructor) {
-                        return response.body;
-                    }
-                    if (response.body instanceof Array) {
-                        return response.body.map((responseItem: unknown) => {
-                            return this.mapResponse(responseItem);
-                        });
-                    }
-                    return this.mapResponse(response.body);
-                }),
-            );
+            .pipe(map((res) => this.mapResponse(res)));
     }
 
     public delete(): Observable<void> {
-        return this.http.delete<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers }).pipe(
-            map(() => {
-                return;
-            }),
-        );
+        return this.http
+            .delete<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers })
+            .pipe(map(() => { return; }));
     }
 }
