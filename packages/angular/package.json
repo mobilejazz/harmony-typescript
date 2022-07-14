@@ -19,7 +19,7 @@
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "peerDependencies": {
-        "@angular/common": "10.x",
+        "@angular/common": ">=12",
         "@mobilejazz/harmony-core": "0.x"
     }
 }
