@@ -1,3 +1,4 @@
+import { Repository as TypeORMRepository, In, FindManyOptions } from 'typeorm';
 import {
     DeleteDataSource,
     ObjectQuery,
@@ -13,8 +14,8 @@ import {
     NotFoundError,
     Logger,
     DeviceConsoleLogger,
+    InvalidArgumentError,
 } from '@mobilejazz/harmony-core';
-import { Repository as TypeORMRepository, In } from 'typeorm';
 
 export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
@@ -22,10 +23,11 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
-    async get(query: Query): Promise<T> {
+    public async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
-            return this.repository.findOne(query.id).then((value: any) => {
-                if (value === undefined) {
+            const id: string | number = query.id;
+            return this.repository.findOne(id).then((value) => {
+                if (typeof value === 'undefined') {
                     throw new NotFoundError();
                 } else {
                     return value;
@@ -37,7 +39,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                     where: this.buildArrayQuery(query.value),
                     relations: query.relations,
                 })
-                .then((value: any) => {
+                .then((value) => {
                     if (value === undefined) {
                         throw new NotFoundError();
                     } else {
@@ -45,7 +47,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                     }
                 });
         } else if (query instanceof ObjectQuery) {
-            return this.repository.findOne({ where: this.buildArrayQuery(query.value) }).then((value: any) => {
+            return this.repository.findOne({ where: this.buildArrayQuery(query.value) }).then((value) => {
                 if (value === undefined) {
                     throw new NotFoundError();
                 } else {
@@ -57,7 +59,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
-    async getAll(query: Query): Promise<T[]> {
+    public async getAll(query: Query): Promise<T[]> {
         if (query instanceof VoidQuery) {
             return this.repository.find();
         } else if (query instanceof IdsQuery) {
@@ -74,25 +76,34 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
-    async put(value: T, query: Query): Promise<T> {
+    public async put(value: T | undefined, query: Query): Promise<T> {
         if (query instanceof VoidQuery) {
-            return this.repository.save(value);
+            if (typeof value !== 'undefined') {
+                return this.repository.save(value);
+            } else {
+                throw new InvalidArgumentError();
+            }
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
-    async putAll(values: T[], query: Query): Promise<T[]> {
+    public async putAll(values: T[] | undefined, query: Query): Promise<T[]> {
         if (query instanceof VoidQuery) {
-            return await Promise.all(values.map((value) => this.repository.save(value)));
+            if (typeof values !== 'undefined') {
+                return await Promise.all(values.map((value) => this.repository.save(value)));
+            } else {
+                throw new InvalidArgumentError();
+            }
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
-    async delete(query: Query): Promise<void> {
+    public async delete(query: Query): Promise<void> {
         if (query instanceof IdQuery) {
-            const entity = await this.repository.findOne(query.id);
+            const id: string | number = query.id;
+            const entity = await this.repository.findOne(id);
             return this.remove(entity);
         } else if (query instanceof IdsQuery) {
             const entities = await this.findAllEntitiesByIds(query.ids);
@@ -102,40 +113,51 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
-    async deleteAll(query: Query): Promise<void> {
-        this.logger.warning('[DEPRECATION] `deleteAll` will be deprecated. Calling `delete` instead.');
-        return this.delete(query);
-    }
-
-    private buildArrayQuery(conditions: any): any {
+    private buildArrayQuery(conditions: Record<string, unknown>): Record<string, unknown> {
         const obj = Object.assign(conditions);
+
         for (const key in conditions) {
             if (Object.prototype.hasOwnProperty.call(conditions, key)) {
                 // If one of the condition is an array put the In() prefix operator
-                if (Array.isArray(conditions[key])) {
-                    obj[key] = In(conditions[key]);
+                const value = conditions[key];
+
+                if (Array.isArray(value)) {
+                    obj[key] = In(value);
                 }
             }
         }
+
         return obj;
     }
 
     private async findAllEntitiesByIds<K>(ids: K[]): Promise<T[]> {
         const primaryColumns = this.repository.metadata.primaryColumns;
+
         if (!primaryColumns || primaryColumns.length !== 1) {
             throw Error('Entity has multiple primary keys');
         }
+
         const primaryColumnName = primaryColumns[0].propertyName;
-        const conditions: any = {};
-        conditions[primaryColumnName] = In(ids);
-        return await this.repository.find({ where: conditions });
+        const options: FindManyOptions<T> = {
+            where: {
+                [primaryColumnName]: In(ids)
+            }
+        };
+
+        return await this.repository.find(options);
     }
 
-    private async remove(entityOrEntities: any): Promise<void> {
+    private async remove(entityOrEntities: T | T[] | undefined): Promise<void> {
         if (!entityOrEntities) {
             throw new DeleteError('No entity found');
         }
-        await this.repository.remove(entityOrEntities);
-        return;
+
+        // Type narrowing to by-pass method overloading TS error
+        // See: https://stackoverflow.com/q/66349734/379923
+        if (Array.isArray(entityOrEntities)) {
+            await this.repository.remove(entityOrEntities);
+        } else {
+            await this.repository.remove(entityOrEntities);
+        }
     }
 }
