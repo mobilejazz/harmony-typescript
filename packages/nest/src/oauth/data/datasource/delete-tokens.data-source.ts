@@ -15,11 +15,11 @@ import { OAuthUserIdQuery } from './query/oauth-user-id.query';
 export class DeleteTokensDataSource implements DeleteDataSource {
     constructor(private readonly sqlDialect: SQLDialect, private readonly sqlInterface: SQLInterface) {}
 
-    async delete(_query: Query): Promise<void> {
+    public async delete(_query: Query): Promise<void> {
         throw new QueryNotSupportedError('Use deleteAll on DeleteUserTokensDataSource');
     }
 
-    async deleteAll(query: Query): Promise<void> {
+    public async deleteAll(query: Query): Promise<void> {
         if (query instanceof OAuthUserIdQuery) {
             const sqlQuery = `
                 delete from ${this.sqlDialect.getTableName(OAuthTokenTableName)} t

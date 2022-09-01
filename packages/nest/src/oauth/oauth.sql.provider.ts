@@ -37,22 +37,23 @@ import { OAuthTokenEntityToRawSqlMapper } from './data/datasource/mappers/oauth-
 import { OAuthUserInfoModel } from './domain/oauth-user-info.model';
 import { OAuthUserInfoRawSqlToEntityMapper } from './data/datasource/mappers/oauth-user-info.raw-sql-to-entity.mapper';
 import { OAuthUserInfoEntityToModelMapper } from './domain/mappers/oauth-user-info.entity-to-model.mapper';
-import { OAuthUserInfoModelToEntityMapper } from './domain/mappers/oauth-user-info.model-to-entity.mapper';
 import { OAuthUserInfoEntityToRawSqlMapper } from './data/datasource/mappers/oauth-user-info.entity-to-raw-sql.mapper';
 import { OAuthUserInfoEntity } from './data/entity/oauth-user-info.entity';
 import { GetOAuthRefreshTokenInteractor } from './domain/interactors/get-oauth-refresh-token.interactor';
 import {
     DataSourceMapper,
-    DeleteAllInteractor,
-    GetInteractor,
-    PutInteractor,
-    RawSQLDataSource,
-    RepositoryMapper,
-    SingleDataSourceRepository,
-    SQLInterface,
-    SQLDialect,
+    DeleteInteractor,
     DeleteRepository,
+    GetInteractor,
+    GetRepository,
+    GetRepositoryMapper,
+    PutInteractor,
+    PutRepository,
+    RawSQLDataSource,
     SingleDeleteDataSourceRepository,
+    SingleGetDataSourceRepository,
+    SQLDialect,
+    SQLInterface,
 } from '@mobilejazz/harmony-core';
 import { OAuthTokenScopeRawSqlToEntityMapper } from './data/datasource/mappers/oauth-token-scope.raw-sql-to-entity.mapper';
 import { OAuthTokenScopeEntityToRawSqlMapper } from './data/datasource/mappers/oauth-token-scope.entity-to-raw-sql.mapper';
@@ -64,12 +65,19 @@ import { ValidateScopeInteractor } from './domain/interactors/validate-scope.int
 import { InvalidateClientTokensInteractor } from './domain/interactors/invalidate-client-tokens.interactor';
 import { InvalidateUserTokensInteractor } from './domain/interactors/invalidate-user-tokens.interactor';
 import { DeleteTokensDataSource } from './data/datasource/delete-tokens.data-source';
+import { OAuthUserInfoRepository } from './data/repository/oauth-user-info.repository';
 
 export class OAuthSQLProvider implements OAuthProvider {
     constructor(private readonly sqlDialect: SQLDialect, private readonly sqlInterface: SQLInterface) {}
 
     public clientModel(): OAuth2BaseModel {
-        return new OAuth2BaseModel(this.getClient(), this.putToken(), this.getToken(), null, null);
+        return new OAuth2BaseModel(
+            this.getClient(),
+            this.putToken(),
+            this.getToken(),
+            undefined,
+            undefined,
+        );
     }
     public userModel(
         getUser: GetOAuthUserInteractor,
@@ -90,15 +98,15 @@ export class OAuthSQLProvider implements OAuthProvider {
     }
 
     public invalidateClientTokensInteractor(): InvalidateClientTokensInteractor {
-        return new InvalidateClientTokensInteractor(new DeleteAllInteractor(this.deleteTokensRepository()));
+        return new InvalidateClientTokensInteractor(new DeleteInteractor(this.deleteTokensRepository()));
     }
 
     public invalidateUserTokensInteractor(): InvalidateUserTokensInteractor {
-        return new InvalidateUserTokensInteractor(new DeleteAllInteractor(this.deleteTokensRepository()));
+        return new InvalidateUserTokensInteractor(new DeleteInteractor(this.deleteTokensRepository()));
     }
 
     private deleteToken(): DeleteOAuthTokenInteractor {
-        return new DeleteOAuthTokenInteractor(new DeleteAllInteractor(this.tokenRepository()));
+        return new DeleteOAuthTokenInteractor(new DeleteInteractor(this.tokenRepository()));
     }
 
     private getClient(): GetOAuthClientInteractor {
@@ -116,14 +124,14 @@ export class OAuthSQLProvider implements OAuthProvider {
     private getUserInfo(): GetOAuthUserInfoInteractor {
         return new GetOAuthUserInfoInteractor(
             new GetInteractor(this.tokenRepository()),
-            new GetInteractor(this.userInfoRepository()),
+            new GetInteractor(this.userInfoGetRepository()),
         );
     }
 
     private putToken(): PutOAuthTokenInteractor {
         return new PutOAuthTokenInteractor(
             new PutInteractor(this.tokenRepository()),
-            new PutInteractor(this.userInfoRepository()),
+            new PutInteractor(this.userInfoPutRepository()),
         );
     }
 
@@ -210,25 +218,32 @@ export class OAuthSQLProvider implements OAuthProvider {
         );
     }
 
-    private userInfoRepository(): RepositoryMapper<OAuthUserInfoEntity, OAuthUserInfoModel> {
+    private userInfoDataSource(): DataSourceMapper<RawSQLDataSource, OAuthUserInfoEntity> {
         const rawDataSource = new RawSQLDataSource(this.sqlDialect, this.sqlInterface, OAuthUserInfoTableName, [
             OAuthUserInfoColumnTokenId,
             OAuthUserInfoColumnUserId,
         ]);
-        const dataSource = new DataSourceMapper(
+
+        return new DataSourceMapper(
             rawDataSource,
             rawDataSource,
             rawDataSource,
             new OAuthUserInfoRawSqlToEntityMapper(),
             new OAuthUserInfoEntityToRawSqlMapper(),
         );
-        const baseRepository = new SingleDataSourceRepository(dataSource, dataSource, dataSource);
-        return new RepositoryMapper(
-            baseRepository,
-            baseRepository,
-            baseRepository,
+    }
+
+    private userInfoGetRepository(): GetRepository<OAuthUserInfoModel> {
+        return new GetRepositoryMapper(
+            new SingleGetDataSourceRepository(this.userInfoDataSource()),
             new OAuthUserInfoEntityToModelMapper(),
-            new OAuthUserInfoModelToEntityMapper(),
+        );
+    }
+
+    private userInfoPutRepository(): PutRepository<OAuthUserInfoModel> {
+        return new OAuthUserInfoRepository(
+            this.userInfoDataSource(),
+            new OAuthUserInfoEntityToModelMapper(),
         );
     }
 }

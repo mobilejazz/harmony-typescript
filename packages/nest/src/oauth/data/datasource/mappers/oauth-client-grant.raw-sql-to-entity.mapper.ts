@@ -11,11 +11,11 @@ import {
 export class OAuthClientGrantRawSqlToEntityMapper implements Mapper<RawSQLData, OAuthClientGrantEntity> {
     map(from: RawSQLData): OAuthClientGrantEntity {
         return new OAuthClientGrantEntity(
-            from[OAuthColumnId],
-            from[OAuthColumnCreatedAt],
-            from[OAuthColumnUpdatedAt],
-            from[OAuthClientGrantColumnGrantName],
-            from[OAuthClientGrantColumnClientId],
+            from[OAuthColumnId] as number,
+            from[OAuthColumnCreatedAt] as Date,
+            from[OAuthColumnUpdatedAt] as Date,
+            from[OAuthClientGrantColumnGrantName] as string,
+            from[OAuthClientGrantColumnClientId] as number,
         );
     }
 }
