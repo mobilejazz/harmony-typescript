@@ -1,4 +1,5 @@
-import { Repository as TypeORMRepository, In, FindManyOptions } from 'typeorm';
+import type { Repository as TypeORMRepository, FindManyOptions, ObjectLiteral, FindOptionsWhere } from 'typeorm';
+import { In } from 'typeorm';
 import {
     DeleteDataSource,
     ObjectQuery,
@@ -15,19 +16,20 @@ import {
     Logger,
     DeviceConsoleLogger,
     InvalidArgumentError,
+    BaseColumnId,
 } from '@mobilejazz/harmony-core';
 
-export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class TypeOrmDataSource<T extends ObjectLiteral> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
     constructor(
         private readonly repository: TypeORMRepository<T>,
+        private readonly idColumn = BaseColumnId,
         private readonly logger: Logger = new DeviceConsoleLogger(),
     ) {}
 
     public async get(query: Query): Promise<T> {
         if (query instanceof IdQuery) {
-            const id: string | number = query.id;
-            return this.repository.findOne(id).then((value) => {
-                if (typeof value === 'undefined') {
+            return this.repository.findOneBy(this.getIdWhere(query)).then((value) => {
+                if (this.isEmptyValue(value)) {
                     throw new NotFoundError();
                 } else {
                     return value;
@@ -40,7 +42,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                     relations: query.relations,
                 })
                 .then((value) => {
-                    if (value === undefined) {
+                    if (this.isEmptyValue(value)) {
                         throw new NotFoundError();
                     } else {
                         return value;
@@ -48,7 +50,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
                 });
         } else if (query instanceof ObjectQuery) {
             return this.repository.findOne({ where: this.buildArrayQuery(query.value) }).then((value) => {
-                if (value === undefined) {
+                if (this.isEmptyValue(value)) {
                     throw new NotFoundError();
                 } else {
                     return value;
@@ -102,8 +104,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
 
     public async delete(query: Query): Promise<void> {
         if (query instanceof IdQuery) {
-            const id: string | number = query.id;
-            const entity = await this.repository.findOne(id);
+            const entity = await this.repository.findOneBy(this.getIdWhere(query));
             return this.remove(entity);
         } else if (query instanceof IdsQuery) {
             const entities = await this.findAllEntitiesByIds(query.ids);
@@ -113,7 +114,7 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
     }
 
-    private buildArrayQuery(conditions: Record<string, unknown>): Record<string, unknown> {
+    private buildArrayQuery(conditions: Record<string, unknown>): FindOptionsWhere<T> {
         const obj = Object.assign(conditions);
 
         for (const key in conditions) {
@@ -138,16 +139,34 @@ export class TypeOrmDataSource<T> implements GetDataSource<T>, PutDataSource<T>,
         }
 
         const primaryColumnName = primaryColumns[0].propertyName;
-        const options: FindManyOptions<T> = {
-            where: {
-                [primaryColumnName]: In(ids)
-            }
-        };
+        const where = this.toWhereType({
+            [primaryColumnName]: In(ids)
+        });
 
-        return await this.repository.find(options);
+        return await this.repository.find({ where });
     }
 
-    private async remove(entityOrEntities: T | T[] | undefined): Promise<void> {
+    /**
+     * Map `IdQuery` to TypeORM where object
+     */
+    private getIdWhere(query: IdQuery<string | number>): FindOptionsWhere<T> {
+        return this.toWhereType({ [this.idColumn]: query.id });
+    }
+
+    /**
+     * Utility method to appease TypeScript type checker
+     */
+    private toWhereType(where: Record<string, unknown>): FindOptionsWhere<T> {
+        // We use `as …`, otherwise we get a type error when using variable accessor, e.g: `{ [this.idColumn]: 42 }`
+        // Hardcoded properties work OK though. E.g. `{ id: 42 }`
+        return where as FindOptionsWhere<T>;
+    }
+
+    private isEmptyValue(value: T | undefined | null): value is (undefined | null) {
+        return typeof value === 'undefined' || value === null;
+    }
+
+    private async remove(entityOrEntities: T | T[] | undefined | null): Promise<void> {
         if (!entityOrEntities) {
             throw new DeleteError('No entity found');
         }
