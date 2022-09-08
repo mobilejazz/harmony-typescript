@@ -59,8 +59,8 @@ export class HttpRequestBuilder<T> {
         });
     }
 
-    private mapItem(responseItem: unknown): T {
-        const mapper = new JsonDeserializerMapper<unknown, T>(this.responseConstructor);
+    private mapItem(responseItem: string | Record<string, unknown>): T {
+        const mapper = new JsonDeserializerMapper(this.responseConstructor);
         return mapper.map(responseItem);
     }
 
@@ -74,7 +74,7 @@ export class HttpRequestBuilder<T> {
         }
 
         if (Array.isArray(res.body)) {
-            return res.body.map((item: unknown) => {
+            return res.body.map((item) => {
                 return this.mapItem(item);
             });
         }
