@@ -85,24 +85,28 @@ export class JsonSerializerMapper<From> implements Mapper<From, string> {
 /**
  * JsonDeserializerMapper
  */
-export class JsonDeserializerMapper<From, To> implements Mapper<From, To> {
+export class JsonDeserializerMapper<From extends (string | Record<string, unknown>), To> implements Mapper<From, To> {
     constructor(private toType: new () => To) {}
+
     public map(from: From): To {
         try {
             if (typeof from === 'string') {
-                from = JSON.parse(from);
+                return this.deserialize(JSON.parse(from));
+            } else {
+                return this.deserialize(from);
             }
-            return this.deserialize(from);
         } catch (e) {
             throw new FailedError('JsonDeserializerMapper failed to map an object)');
         }
     }
-    private deserialize(from: From): To {
+
+    private deserialize(from: Record<string, unknown>): To {
         const output = new this.toType();
-        const properties = Object.keys(from);
-        properties.forEach((property) => {
-            output[property] = from[property];
+
+        Object.entries(from).forEach(([key, value]) => {
+            output[key] = value;
         });
+
         return output;
     }
 }
