@@ -1,4 +1,4 @@
-import type { Repository as TypeORMRepository, FindManyOptions, ObjectLiteral, FindOptionsWhere } from 'typeorm';
+import type { Repository as TypeORMRepository, ObjectLiteral, FindOptionsWhere } from 'typeorm';
 import { In } from 'typeorm';
 import {
     DeleteDataSource,

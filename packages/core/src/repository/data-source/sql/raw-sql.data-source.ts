@@ -214,7 +214,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         )}) ${this.sqlDialect.getInsertionIdQueryStatement(this.idColumn)}`;
     }
 
-    private insertSQLQueryParams(value: RawSQLData): any[] {
+    private insertSQLQueryParams(value: RawSQLData): unknown[] {
         return this.tableColumns.filter((column) => value[column] !== undefined).map((column) => value[column]);
     }
 
