@@ -3,7 +3,7 @@ import {
     DeleteDataSource,
     GetDataSource,
     IdsQuery,
-    KeyQuery,
+    KeyQuery, NotFoundError,
     PutDataSource,
     Query,
     QueryNotSupportedError,
@@ -18,7 +18,10 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
 
     public async get(query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
-            return this.objects[query.key];
+            if (query.key in this.objects) {
+                return this.objects[query.key];
+            }
+            throw new NotFoundError();
         } else {
             throw new QueryNotSupportedError();
         }
