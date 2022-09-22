@@ -1,4 +1,4 @@
-import { GetDataSource, Query, QueryNotSupportedError } from '@mobilejazz/harmony-core';
+import { GetDataSource, MethodNotImplementedError, Query, QueryNotSupportedError } from '@mobilejazz/harmony-core';
 
 import { HackerNewsStoryEntity } from '../entities/hacker-news-item.entity';
 import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from '../mappers/hacker-news-story.mapper';
@@ -14,14 +14,13 @@ export class HackerNewsStoryNetworkDataSource implements GetDataSource<HackerNew
   public async get(query: Query): Promise<HackerNewsStoryEntity> {
     if (query instanceof GetHackerNewsStoryQuery) {
       const story = await this.hackerNews.getStory(query.id);
-
       return this.mapper.map(story);
     }
 
     throw new QueryNotSupportedError();
   }
 
-  public async getAll(query: Query): Promise<HackerNewsStoryEntity[]> {
-    throw new QueryNotSupportedError();
+  public getAll(query: Query): Promise<HackerNewsStoryEntity[]> {
+    throw new MethodNotImplementedError();
   }
 }

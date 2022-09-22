@@ -47,7 +47,7 @@ export class ObjectsQuery<T> extends Query {
 }
 
 export class ObjectRelationsQuery<T> extends ObjectQuery<T> {
-    constructor(public readonly value: T, public relations: string[] = []) {
+    constructor(value: T, public readonly relations: string[] = []) {
         super(value);
     }
 }
@@ -67,13 +67,13 @@ export class PaginationPageQuery extends PaginationQuery {
 }
 
 export class DictionaryQuery<T> extends Query {
-    constructor(public dictionary: Dictionary<T>) {
+    constructor(public readonly dictionary: Dictionary<T>) {
         super();
     }
 }
 
 export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
-    constructor(public dictionary: Dictionary<T>, public relations: string[] = []) {
+    constructor(dictionary: Dictionary<T>, public relations: string[] = []) {
         super(dictionary);
     }
 }

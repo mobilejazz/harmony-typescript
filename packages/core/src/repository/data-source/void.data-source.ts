@@ -9,7 +9,11 @@ export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
         throw new MethodNotImplementedError('Called get on VoidDataSource');
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(_query: Query): Promise<T[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         throw new MethodNotImplementedError('Called getAll on VoidDataSource');
     }
 
@@ -17,7 +21,11 @@ export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
         throw new MethodNotImplementedError('Called put on VoidDataSource');
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(_values: T[], _query: Query): Promise<T[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         throw new MethodNotImplementedError('Called putAll on VoidDataSource');
     }
 

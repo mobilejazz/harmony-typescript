@@ -57,7 +57,11 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
         }
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query): Promise<string[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         if (query instanceof KeyQuery || query instanceof KeyListQuery) {
             const keys = this.getKeys(query);
             return keys.map((key) => this.getItem(key));
@@ -75,7 +79,11 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
         }
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: string[], query: Query): Promise<string[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         if (query instanceof KeyQuery || query instanceof KeyListQuery) {
             const keys = this.getKeys(query);
 

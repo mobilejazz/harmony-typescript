@@ -1,8 +1,7 @@
-import { CacheRepository, DefaultObjectValidator, GetAllInteractor, GetInteractor, GetRepository, InMemoryDataSource, RepositoryMapper, SingleGetDataSourceRepository, VoidDataSource } from '@mobilejazz/harmony-core';
+import { CacheRepository, DefaultObjectValidator, GetInteractor, GetRepository, InMemoryDataSource, RepositoryMapper, SingleGetDataSourceRepository, VoidDataSource } from '@mobilejazz/harmony-core';
 
 import { HackerNewsStoryNetworkDataSource } from 'src/data/data-sources/hacker-news-story.network.data-source';
 import { HackerNewsStoryEntity } from 'src/data/entities/hacker-news-item.entity';
-import { HackerNewsStoriesNetworkDataSource } from '../data/data-sources/hacker-news-stories.network.data-source';
 import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from '../data/mappers/hacker-news-story.mapper';
 import { HackerNewsFetchService, HackerNewsService } from '../data/service/hacker-news.service';
 import { GetHackerNewsLatestAskStoriesInteractor } from './interactors/get-hacker-news-latest-ask-stories.interactor';
@@ -10,6 +9,7 @@ import { GetHackerNewsStoryInteractor } from './interactors/get-hacker-news-stor
 import { HackerNewsStoryEntityToHackerNewsStoryMapper, HackerNewsStoryToHackerNewsStoryEntityMapper } from './mappers/hacker-news-story.mapper';
 import { HackerNewsStory } from './models/hacker-news-story.model';
 import { CacheDecoratorFactory } from './utils';
+import { HackerNewsStoryIdsNetworkDataSource } from "../data/data-sources/hacker-news-story-ids.network.data-source";
 
 // Caching via decorator
 const Cached = CacheDecoratorFactory(new Map());
@@ -23,9 +23,9 @@ export class AppDefaultProvider implements AppProvider {
   private readonly hackerNewsService: HackerNewsService = new HackerNewsFetchService();
 
   @Cached()
-  private getHackerNewsStoriesRepository(): GetRepository<number> {
+  private getHackerNewsStoryIdsRepository(): GetRepository<number[]> {
     return new SingleGetDataSourceRepository(
-      new HackerNewsStoriesNetworkDataSource(this.hackerNewsService)
+      new HackerNewsStoryIdsNetworkDataSource(this.hackerNewsService)
     );
   }
 
@@ -57,7 +57,7 @@ export class AppDefaultProvider implements AppProvider {
   public getHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor {
     return new GetHackerNewsLatestAskStoriesInteractor(
       this.getHackerNewsStory(),
-      new GetAllInteractor(this.getHackerNewsStoriesRepository()),
+      new GetInteractor(this.getHackerNewsStoryIdsRepository()),
     );
   }
 

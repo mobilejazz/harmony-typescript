@@ -28,7 +28,11 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         return this.toOutMapper.map(result);
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         const results: In[] = await this.getRepository.getAll(query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
@@ -39,7 +43,11 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         return this.toOutMapper.map(result);
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         const mapped: In[] = values ? values.map((v) => (v ? this.toInMapper.map(v) : undefined)) : undefined;
         const results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
@@ -64,7 +72,11 @@ export class GetRepositoryMapper<In, Out> implements GetRepository<Out> {
         return this.toOutMapper.map(result);
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         const results: In[] = await this.getRepository.getAll(query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
@@ -90,7 +102,11 @@ export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
         return this.toOutMapper.map(result);
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         const mapped: In[] = values ? values.map((v) => this.toInMapper.map(v)) : undefined;
         const results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));

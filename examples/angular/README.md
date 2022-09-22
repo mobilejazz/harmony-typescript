@@ -28,6 +28,7 @@
 - Ensure that [NVM](https://github.com/nvm-sh/nvm) is installed
 - `nvm install`: Install the required Node.js version
 - `nvm use`: Ensure correct Node.js version is in use
+- Be sure that `core` and `angular` packages are compiled following [Harmony compilation instructions](../../README-DEV.md)
 - `npm ci`: Install the dependencies
 
 ## Development server
