@@ -19,16 +19,20 @@
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "dependencies": {
-        "@nestjs/common": "^8.2.0",
         "bcryptjs": "~2.4.3",
         "oauth2-server": "^3.1.1",
-        "reflect-metadata": "^0.1.13",
-        "@types/oauth2-server": "^3.0.13"
+        "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
-        "@types/bcryptjs": "~2.4.2"
+        "@types/bcryptjs": "~2.4.2",
+        "@types/oauth2-server": "^3.0.13"
     },
     "peerDependencies": {
-        "@mobilejazz/harmony-core": "file:../core"
+        "@mobilejazz/harmony-core": "0.x",
+        "@mobilejazz/harmony-typeorm": "0.x",
+        "@nestjs/common": "^9.0.0",
+        "@nestjs/swagger": "^6.0.0",
+        "@nestjs/typeorm": "^9.0.0",
+        "nestjs-i18n": "^9.0.0"
     }
 }

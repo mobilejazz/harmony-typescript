@@ -1,7 +1,5 @@
-import { Request, Response } from 'oauth2-server';
+import OAuth2Server, { Request, Response } from 'oauth2-server';
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-
-import OAuth2Server = require('oauth2-server');
 
 export class AuthControllerInteractor {
     constructor(private readonly oauthServer: OAuth2Server) {}
