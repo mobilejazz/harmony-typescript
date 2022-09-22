@@ -19,7 +19,7 @@
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "peerDependencies": {
-        "@bugfender/sdk": "1.x",
+        "@bugfender/sdk": "2.x",
         "@mobilejazz/harmony-core": "0.x"
     }
 }
