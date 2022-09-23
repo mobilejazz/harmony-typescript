@@ -15,6 +15,7 @@
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
+        "watch": "tsc --watch",
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
