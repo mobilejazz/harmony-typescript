@@ -20,6 +20,6 @@
     },
     "peerDependencies": {
         "@bugfender/sdk": "2.x",
-        "@mobilejazz/harmony-core": "0.x"
+        "@mobilejazz/harmony-core": "*"
     }
 }

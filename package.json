@@ -1,6 +1,7 @@
 {
     "name": "mobilejazz-harmony-typescript",
     "version": "0.0.0",
+    "private": true,
     "description": "Mobile Jazz Harmony framework for TypeScript",
     "author": "Mobile Jazz",
     "license": "Apache-2.0",
@@ -12,6 +13,10 @@
         "node": "16.x",
         "npm": "8.x"
     },
+    "workspaces": [
+        "examples/*",
+        "packages/*"
+    ],
     "scripts": {
         "check-deps": "npm outdated && lerna exec -- npm outdated && npm audit && lerna exec -- npm audit",
         "prebuild": "npm run validate && npm run format",
@@ -25,8 +30,7 @@
         "prepare": "husky install"
     },
     "dependencies": {
-        "@bugfender/sdk": "^2.1.0",
-        "typeorm": "^0.3.9"
+        "@bugfender/sdk": "^2.1.0"
     },
     "devDependencies": {
         "@types/jest": "^28.1.8",

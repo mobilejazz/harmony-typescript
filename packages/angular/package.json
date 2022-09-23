@@ -20,6 +20,6 @@
     },
     "peerDependencies": {
         "@angular/common": ">=12",
-        "@mobilejazz/harmony-core": "0.x"
+        "@mobilejazz/harmony-core": "*"
     }
 }

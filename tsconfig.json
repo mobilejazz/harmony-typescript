@@ -12,7 +12,7 @@
         "noLib": false,
         "module": "commonjs",
         "experimentalDecorators": true,
-        "sourceMap": false,
+        "sourceMap": true,
         "allowJs": false,
         "strict": true,
         "target": "es5",
