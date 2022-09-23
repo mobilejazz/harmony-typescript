@@ -20,14 +20,10 @@ export class PutOAuthTokenInteractor {
         scope?: string[],
     ): Promise<OAuthTokenModel> {
         // Store the token
-        const token = await this.putToken.execute(undefined, new SaveTokenQuery(
-            clientId,
-            accessToken,
-            accessTokenExpiresAt,
-            refreshToken,
-            refreshTokenExpiresAt,
-            scope,
-        ));
+        const token = await this.putToken.execute(
+            undefined,
+            new SaveTokenQuery(clientId, accessToken, accessTokenExpiresAt, refreshToken, refreshTokenExpiresAt, scope),
+        );
 
         // If `userId`, store the relation
         if (userId) {

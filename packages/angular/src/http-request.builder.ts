@@ -101,8 +101,10 @@ export class HttpRequestBuilder<T> {
     }
 
     public delete(): Observable<void> {
-        return this.http
-            .delete<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers })
-            .pipe(map(() => { return; }));
+        return this.http.delete<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers }).pipe(
+            map(() => {
+                return;
+            }),
+        );
     }
 }

@@ -66,7 +66,11 @@ export class OAuthClientRepository
         );
     }
 
-    public async put(value: OAuthClientModel | undefined, query: Query, _operation: Operation): Promise<OAuthClientModel> {
+    public async put(
+        value: OAuthClientModel | undefined,
+        query: Query,
+        _operation: Operation,
+    ): Promise<OAuthClientModel> {
         if (!value) {
             throw new InvalidArgumentError(`Missing "value", please provide an "OAuthClientModel"`);
         }
@@ -80,7 +84,9 @@ export class OAuthClientRepository
 
             // Adding new grants
             const grantEntities = await this.putClientGrantsDataSource.putAll(
-                value.grants.map((el) => new OAuthClientGrantEntity(undefined, undefined, undefined, el, client.id as number)),
+                value.grants.map(
+                    (el) => new OAuthClientGrantEntity(undefined, undefined, undefined, el, client.id as number),
+                ),
                 new VoidQuery(),
             );
 
@@ -99,7 +105,11 @@ export class OAuthClientRepository
         );
     }
 
-    public async putAll(_values: OAuthClientModel[] | undefined, _query: Query, _operation: Operation): Promise<OAuthClientModel[]> {
+    public async putAll(
+        _values: OAuthClientModel[] | undefined,
+        _query: Query,
+        _operation: Operation,
+    ): Promise<OAuthClientModel[]> {
         throw new MethodNotImplementedError();
     }
 

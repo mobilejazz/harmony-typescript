@@ -19,7 +19,9 @@ import {
     BaseColumnId,
 } from '@mobilejazz/harmony-core';
 
-export class TypeOrmDataSource<T extends ObjectLiteral> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class TypeOrmDataSource<T extends ObjectLiteral>
+    implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource
+{
     constructor(
         private readonly repository: TypeORMRepository<T>,
         private readonly idColumn = BaseColumnId,
@@ -140,7 +142,7 @@ export class TypeOrmDataSource<T extends ObjectLiteral> implements GetDataSource
 
         const primaryColumnName = primaryColumns[0].propertyName;
         const where = this.toWhereType({
-            [primaryColumnName]: In(ids)
+            [primaryColumnName]: In(ids),
         });
 
         return await this.repository.find({ where });
@@ -162,7 +164,7 @@ export class TypeOrmDataSource<T extends ObjectLiteral> implements GetDataSource
         return where as FindOptionsWhere<T>;
     }
 
-    private isEmptyValue(value: T | undefined | null): value is (undefined | null) {
+    private isEmptyValue(value: T | undefined | null): value is undefined | null {
         return typeof value === 'undefined' || value === null;
     }
 

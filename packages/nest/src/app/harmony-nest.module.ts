@@ -32,9 +32,7 @@ export class HarmonyNestModule {
                         path: params.i18n.path,
                         watch: true,
                     },
-                    resolvers: [
-                        AcceptLanguageResolver,
-                    ],
+                    resolvers: [AcceptLanguageResolver],
                 }),
                 OAuthModule.forRoot(params.oAuth),
             ],

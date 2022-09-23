@@ -27,7 +27,10 @@ export class AuthControllerInteractor {
 
                 if (typeof oauthResponse.body?.error_description === 'string') {
                     message = oauthResponse.body.error_description;
-                } else if (oauthResponse.body?.error_description?.error && oauthResponse.body?.error_description?.message) {
+                } else if (
+                    oauthResponse.body?.error_description?.error &&
+                    oauthResponse.body?.error_description?.message
+                ) {
                     error = oauthResponse.body.error_description.error;
                     message = oauthResponse.body.error_description.message;
                 }

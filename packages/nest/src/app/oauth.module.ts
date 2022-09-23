@@ -3,10 +3,19 @@ import { SQLDialect, SQLInterface } from '@mobilejazz/harmony-core';
 import OAuth2Server = require('oauth2-server');
 
 import { DatabaseModule } from './database.module';
-import { AuthControllerInteractor, GetOAuthUserInteractor, LoginOAuthUserInteractor, OAuth2GuardInteractor, OAuthSQLProvider, ValidateScopeInteractor } from '../oauth';
+import {
+    AuthControllerInteractor,
+    GetOAuthUserInteractor,
+    LoginOAuthUserInteractor,
+    OAuth2GuardInteractor,
+    OAuthSQLProvider,
+    ValidateScopeInteractor,
+} from '../oauth';
 
 // See: https://stackoverflow.com/a/52183279/379923
-interface Type<T> extends Function { new (...args: unknown[]): T; }
+interface Type<T> extends Function {
+    new (...args: unknown[]): T;
+}
 
 export interface OAuthModuleParams {
     getUser: Type<GetOAuthUserInteractor>;

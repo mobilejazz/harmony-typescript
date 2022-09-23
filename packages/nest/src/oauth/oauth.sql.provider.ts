@@ -71,13 +71,7 @@ export class OAuthSQLProvider implements OAuthProvider {
     constructor(private readonly sqlDialect: SQLDialect, private readonly sqlInterface: SQLInterface) {}
 
     public clientModel(): OAuth2BaseModel {
-        return new OAuth2BaseModel(
-            this.getClient(),
-            this.putToken(),
-            this.getToken(),
-            undefined,
-            undefined,
-        );
+        return new OAuth2BaseModel(this.getClient(), this.putToken(), this.getToken(), undefined, undefined);
     }
     public userModel(
         getUser: GetOAuthUserInteractor,
@@ -241,9 +235,6 @@ export class OAuthSQLProvider implements OAuthProvider {
     }
 
     private userInfoPutRepository(): PutRepository<OAuthUserInfoModel> {
-        return new OAuthUserInfoRepository(
-            this.userInfoDataSource(),
-            new OAuthUserInfoEntityToModelMapper(),
-        );
+        return new OAuthUserInfoRepository(this.userInfoDataSource(), new OAuthUserInfoEntityToModelMapper());
     }
 }

@@ -96,10 +96,7 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         }
     }
 
-    public async revokeToken(
-        token: RefreshToken | Token,
-        callback?: Callback<boolean>,
-    ): Promise<boolean> {
+    public async revokeToken(token: RefreshToken | Token, callback?: Callback<boolean>): Promise<boolean> {
         let accessToken;
 
         if ('accessToken' in token) {

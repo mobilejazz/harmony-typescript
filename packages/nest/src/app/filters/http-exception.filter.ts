@@ -9,7 +9,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     constructor(
         private readonly toHttpExceptionMapper: Mapper<Error, HttpException>,
         private readonly i18n: I18nService,
-    ) { }
+    ) {}
 
     public async catch(exception: unknown, host: ArgumentsHost): Promise<void> {
         const ctx = host.switchToHttp();
@@ -40,9 +40,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 errorName = httpResponse['error'];
             }
 
-            if (Array.isArray(httpResponse['message']) && httpResponse['message'].length > 0 && typeof (httpResponse['message'][0]) === 'string') {
+            if (
+                Array.isArray(httpResponse['message']) &&
+                httpResponse['message'].length > 0 &&
+                typeof httpResponse['message'][0] === 'string'
+            ) {
                 errorMessage = httpResponse['message'].join('. ').concat('.');
-            } else if (typeof (httpResponse['message']) === 'string') {
+            } else if (typeof httpResponse['message'] === 'string') {
                 errorMessage = httpResponse['message'];
             }
 

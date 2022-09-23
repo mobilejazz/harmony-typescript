@@ -35,7 +35,11 @@ export class OAuthTokenRepository
         private readonly deleteTokenScopeDataSource: DeleteDataSource,
     ) {}
 
-    private tokenEntityToModel(token: OAuthTokenEntity, client: OAuthClientModel, scope: OAuthTokenScopeEntity[]): OAuthTokenModel {
+    private tokenEntityToModel(
+        token: OAuthTokenEntity,
+        client: OAuthClientModel,
+        scope: OAuthTokenScopeEntity[],
+    ): OAuthTokenModel {
         // Cast to concrete types, since this comes from the DB we're sure these are not `undefined`
         return new OAuthTokenModel(
             token.id as number,
@@ -64,7 +68,11 @@ export class OAuthTokenRepository
         throw new MethodNotImplementedError();
     }
 
-    public async put(_value: OAuthTokenModel | undefined, query: Query, operation: Operation): Promise<OAuthTokenModel> {
+    public async put(
+        _value: OAuthTokenModel | undefined,
+        query: Query,
+        operation: Operation,
+    ): Promise<OAuthTokenModel> {
         if (query instanceof SaveTokenQuery) {
             if (!query.clientId) {
                 throw new InvalidArgumentError(`Missing client ID in 'CreateTokenQuery'`);
@@ -93,7 +101,9 @@ export class OAuthTokenRepository
 
                 // Add new grants
                 scope = await this.putTokenScopeDataSource.putAll(
-                    (query.scope as string[]).map((s) => new OAuthTokenScopeEntity(undefined, undefined, undefined, s, token.id as number)),
+                    (query.scope as string[]).map(
+                        (s) => new OAuthTokenScopeEntity(undefined, undefined, undefined, s, token.id as number),
+                    ),
                     new VoidQuery(),
                 );
             }
@@ -104,7 +114,11 @@ export class OAuthTokenRepository
         throw new QueryNotSupportedError();
     }
 
-    public async putAll(_values: OAuthTokenModel[] | undefined, _query: Query, _operation: Operation): Promise<OAuthTokenModel[]> {
+    public async putAll(
+        _values: OAuthTokenModel[] | undefined,
+        _query: Query,
+        _operation: Operation,
+    ): Promise<OAuthTokenModel[]> {
         throw new MethodNotImplementedError();
     }
 

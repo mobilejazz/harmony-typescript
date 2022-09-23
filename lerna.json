@@ -1,8 +1,5 @@
 {
     "version": "0.10.0",
     "useWorkspaces": true,
-    "packages": [
-        "examples/*",
-        "packages/*"
-    ]
+    "packages": ["examples/*", "packages/*"]
 }

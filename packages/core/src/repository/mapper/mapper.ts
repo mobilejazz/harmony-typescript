@@ -85,7 +85,7 @@ export class JsonSerializerMapper<From> implements Mapper<From, string> {
 /**
  * JsonDeserializerMapper
  */
-export class JsonDeserializerMapper<From extends (string | Record<string, unknown>), To> implements Mapper<From, To> {
+export class JsonDeserializerMapper<From extends string | Record<string, unknown>, To> implements Mapper<From, To> {
     constructor(private toType: new () => To) {}
 
     public map(from: From): To {

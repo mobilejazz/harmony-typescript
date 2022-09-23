@@ -159,11 +159,7 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
         }
     }
 
-    public async verifyScope(
-        token: Token,
-        scope: string | string[],
-        callback?: Callback<boolean>,
-    ): Promise<boolean> {
+    public async verifyScope(token: Token, scope: string | string[], callback?: Callback<boolean>): Promise<boolean> {
         // console.log('WARNING: Scope Verification not implemented! Always returning true!');
         if (callback) {
             callback(null, true);
@@ -172,10 +168,7 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
         return true;
     }
 
-    public async getUserFromClient(
-        client: Client,
-        callback?: Callback<User | Falsey>,
-    ): Promise<User | Falsey> {
+    public async getUserFromClient(client: Client, callback?: Callback<User | Falsey>): Promise<User | Falsey> {
         // No user associated when using client_credentials
         if (callback) {
             callback(null, {});
