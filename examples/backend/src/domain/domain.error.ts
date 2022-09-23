@@ -1,4 +1,4 @@
 export enum DomainError {
-  UNKNOWN = 20000,
-  INVALID_EMAIL = 20001,
+    UNKNOWN = 20000,
+    INVALID_EMAIL = 20001,
 }

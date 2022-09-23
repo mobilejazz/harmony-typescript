@@ -10,27 +10,27 @@ import { AppProviderModule } from 'src/domain/app.provider.module';
 import { AuthModule } from './features/auth/auth.module';
 
 @Module({
-  imports: [
-    // Setup Harmony modules
-    HarmonyNestModule.forRoot({
-      database: {
-        dataSource,
-      },
-      i18n: {
-        fallback: 'en',
-        fallbacks: { 'en-*': 'en' },
-        path: join(__dirname, '/../assets/i18n/'),
-      },
-      oAuth: {
-        getUser: GetBasicUserInteractor,
-        validateScope: ValidateUserScopeInteractor,
-        loginUser: LoginUserInteractor,
-      },
-    }),
+    imports: [
+        // Setup Harmony modules
+        HarmonyNestModule.forRoot({
+            database: {
+                dataSource,
+            },
+            i18n: {
+                fallback: 'en',
+                fallbacks: { 'en-*': 'en' },
+                path: join(__dirname, '/../assets/i18n/'),
+            },
+            oAuth: {
+                getUser: GetBasicUserInteractor,
+                validateScope: ValidateUserScopeInteractor,
+                loginUser: LoginUserInteractor,
+            },
+        }),
 
-    // App Modules
-    AppProviderModule,
-    AuthModule,
-  ],
+        // App Modules
+        AppProviderModule,
+        AuthModule,
+    ],
 })
 export class AppModule {}

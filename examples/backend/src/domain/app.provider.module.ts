@@ -8,34 +8,35 @@ import { ValidateUserScopeInteractor } from './interactors/user-auth/validate-us
 
 @Global()
 @Module({
-  providers: [
-    {
-      provide: AppProvider,
-      inject: ['SQLDialect', 'SQLInterface'],
-      useFactory: (dialect: SQLDialect, db: SQLInterface) =>
-        new AppDefaultProvider(dialect, db),
-    },
-    {
-      provide: GetBasicUserInteractor,
-      inject: [AppProvider],
-      useFactory: (provider: AppProvider) => provider.getGetBasicUser(),
-    },
-    {
-      provide: LoginUserInteractor,
-      inject: [AppProvider],
-      useFactory: (provider: AppProvider) => provider.getLoginUser(),
-    },
-    {
-      provide: ValidateUserScopeInteractor,
-      inject: [AppProvider],
-      useFactory: (provider: AppProvider) => provider.getValidateUserScope(),
-    },
-  ],
-  exports: [
-    AppProvider,
-    GetBasicUserInteractor,
-    LoginUserInteractor,
-    ValidateUserScopeInteractor,
-  ],
+    providers: [
+        {
+            provide: AppProvider,
+            inject: ['SQLDialect', 'SQLInterface'],
+            useFactory: (dialect: SQLDialect, db: SQLInterface) =>
+                new AppDefaultProvider(dialect, db),
+        },
+        {
+            provide: GetBasicUserInteractor,
+            inject: [AppProvider],
+            useFactory: (provider: AppProvider) => provider.getGetBasicUser(),
+        },
+        {
+            provide: LoginUserInteractor,
+            inject: [AppProvider],
+            useFactory: (provider: AppProvider) => provider.getLoginUser(),
+        },
+        {
+            provide: ValidateUserScopeInteractor,
+            inject: [AppProvider],
+            useFactory: (provider: AppProvider) =>
+                provider.getValidateUserScope(),
+        },
+    ],
+    exports: [
+        AppProvider,
+        GetBasicUserInteractor,
+        LoginUserInteractor,
+        ValidateUserScopeInteractor,
+    ],
 })
 export class AppProviderModule {}
