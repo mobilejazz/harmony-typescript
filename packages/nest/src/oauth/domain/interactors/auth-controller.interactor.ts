@@ -13,30 +13,32 @@ export class AuthControllerInteractor {
             oauthRequest.headers['content-type'] = 'application/x-www-form-urlencoded';
         }
 
-        await this.oauthServer.token(oauthRequest, oauthResponse);
+        try {
+            await this.oauthServer.token(oauthRequest, oauthResponse);
+        } finally {
+            Object.entries(oauthResponse.headers ?? {}).forEach(([key, value]) => {
+                response.setHeader(key, value);
+            });
 
-        Object.entries(oauthResponse.headers ?? {}).forEach(([key, value]) => {
-            response.setHeader(key, value);
-        });
+            if (oauthResponse.status && oauthResponse.status >= 400) {
+                // If error, always return `Forbidden`
+                let error = oauthResponse.body?.error ? oauthResponse.body.error : 'Forbidden';
+                let message = 'Forbidden access';
 
-        if (oauthResponse.status && oauthResponse.status >= 400) {
-            // If error, always returning Forbidden
-            let error = oauthResponse.body?.error ? oauthResponse.body.error : 'Forbidden';
-            let message = 'Forbidden access';
+                if (typeof oauthResponse.body?.error_description === 'string') {
+                    message = oauthResponse.body.error_description;
+                } else if (oauthResponse.body?.error_description?.error && oauthResponse.body?.error_description?.message) {
+                    error = oauthResponse.body.error_description.error;
+                    message = oauthResponse.body.error_description.message;
+                }
 
-            if (typeof oauthResponse.body?.error_description === 'string') {
-                message = oauthResponse.body.error_description;
-            } else if (oauthResponse.body?.error_description?.error && oauthResponse.body?.error_description?.message) {
-                error = oauthResponse.body.error_description.error;
-                message = oauthResponse.body.error_description.message;
+                response.status(403);
+                response.send({ error, message });
+            } else {
+                // Otherwise, returning the corresponding status
+                response.status(oauthResponse.status as number);
+                response.send(oauthResponse.body);
             }
-
-            response.status(403);
-            response.send({ error, message });
-        } else {
-            // Otherwise, returning the corresponding status
-            response.status(oauthResponse.status as number);
-            response.send(oauthResponse.body);
         }
     }
 }
