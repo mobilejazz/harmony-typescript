@@ -20,7 +20,7 @@
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "dependencies": {
-        "@types/mysql": "^2.15.19",
+        "@types/mysql": "^2.15.21",
         "class-transformer": "^0.4.0"
     }
 }
