@@ -5,16 +5,16 @@ import {
 } from '@mobilejazz/harmony-nest';
 import { UnauthorizedException } from '@nestjs/common';
 
-import { OauthUserInfoModel } from '../../models/oauth-user-info.model';
+import { OAuthUserInfoModel } from '../../models/oauth-user-info.model';
 import { UserEmailQuery } from '../../../data/queries/user.query';
 
 export class LoginUserInteractor implements LoginOAuthUserInteractor {
-    constructor(private readonly getUser: GetInteractor<OauthUserInfoModel>) {}
+    constructor(private readonly getUser: GetInteractor<OAuthUserInfoModel>) {}
 
     public async execute(
         username: string,
         password: string,
-    ): Promise<OauthUserInfoModel> {
+    ): Promise<OAuthUserInfoModel> {
         try {
             const email = username.toLowerCase();
             const user = await this.getUser.execute(new UserEmailQuery(email));

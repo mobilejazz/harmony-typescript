@@ -2,7 +2,7 @@ import { OAuthUser } from '@mobilejazz/harmony-nest';
 
 import { UserRole } from '../../data/entities/user.entity';
 
-export class OauthUserInfoModel implements OAuthUser {
+export class OAuthUserInfoModel implements OAuthUser {
     constructor(
         readonly id: number,
         readonly passwordSalt: string,

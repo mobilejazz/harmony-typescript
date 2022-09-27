@@ -15,9 +15,9 @@ import {
 
 import { OauthUserInfoMysqlDataSource } from 'src/data/data-sources/mysql/oauth-user-info.mysql.data-source';
 import { UserMysqlDataSource } from 'src/data/data-sources/mysql/user.mysql.data-source';
-import { GetBasicUserInteractor } from './interactors/user-auth/get-basic-user.interactor';
-import { LoginUserInteractor } from './interactors/user-auth/login-user.interactor';
-import { ValidateUserScopeInteractor } from './interactors/user-auth/validate-user-scope.interactor';
+import { GetBasicUserInteractor } from './interactors/auth/get-basic-user.interactor';
+import { LoginUserInteractor } from './interactors/auth/login-user.interactor';
+import { ValidateUserScopeInteractor } from './interactors/auth/validate-user-scope.interactor';
 import {
     OauthUserInfoEntityToModelMapper,
     UserEntityToModelMapper,

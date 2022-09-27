@@ -2,9 +2,9 @@ import { SQLDialect, SQLInterface } from '@mobilejazz/harmony-core';
 import { Global, Module } from '@nestjs/common';
 
 import { AppDefaultProvider, AppProvider } from 'src/domain/app.provider';
-import { GetBasicUserInteractor } from './interactors/user-auth/get-basic-user.interactor';
-import { LoginUserInteractor } from './interactors/user-auth/login-user.interactor';
-import { ValidateUserScopeInteractor } from './interactors/user-auth/validate-user-scope.interactor';
+import { GetBasicUserInteractor } from './interactors/auth/get-basic-user.interactor';
+import { LoginUserInteractor } from './interactors/auth/login-user.interactor';
+import { ValidateUserScopeInteractor } from './interactors/auth/validate-user-scope.interactor';
 
 @Global()
 @Module({

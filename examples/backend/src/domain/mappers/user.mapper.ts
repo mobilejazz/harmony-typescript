@@ -2,14 +2,14 @@ import { Mapper } from '@mobilejazz/harmony-core';
 
 import { OauthUserInfoEntity } from 'src/data/entities/oauth-user-info.entity';
 import { UserEntity } from 'src/data/entities/user.entity';
-import { OauthUserInfoModel } from '../models/oauth-user-info.model';
+import { OAuthUserInfoModel } from '../models/oauth-user-info.model';
 import { UserModel } from '../models/user.model';
 
 export class OauthUserInfoEntityToModelMapper
-    implements Mapper<OauthUserInfoEntity, OauthUserInfoModel>
+    implements Mapper<OauthUserInfoEntity, OAuthUserInfoModel>
 {
-    public map(from: OauthUserInfoEntity): OauthUserInfoModel {
-        return new OauthUserInfoModel(
+    public map(from: OauthUserInfoEntity): OAuthUserInfoModel {
+        return new OAuthUserInfoModel(
             from.id,
             from.passwordSalt,
             from.passwordHashAlgorithm,
