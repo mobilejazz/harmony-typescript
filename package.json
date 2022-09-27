@@ -18,6 +18,7 @@
         "packages/*"
     ],
     "scripts": {
+        "bootstrap": "lerna bootstrap --use-workspaces --hoist --force-local",
         "check-deps": "npm outdated && lerna exec -- npm outdated && npm audit && lerna exec -- npm audit",
         "prebuild": "npm run validate && npm run format",
         "build": "lerna run build",
@@ -27,7 +28,8 @@
         "publish": "npm run build && lerna publish --contents dist --force-publish",
         "test": "jest",
         "test:watch": "jest --watch",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "setup": "npm ci && npm run bootstrap && npm run build"
     },
     "dependencies": {
         "@bugfender/sdk": "^2.1.0"
