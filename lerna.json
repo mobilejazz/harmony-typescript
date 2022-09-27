@@ -1,5 +1,6 @@
 {
     "version": "0.10.0",
+    "useNx": true,
     "useWorkspaces": true,
     "packages": ["examples/*", "packages/*"]
 }
