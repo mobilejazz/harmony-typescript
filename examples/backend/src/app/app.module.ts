@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { join } from 'path';
-import { HarmonyNestModule } from '@mobilejazz/harmony-nest';
+import { HarmonyModule } from '@mobilejazz/harmony-nest';
 
 import dataSource from '../config/database.data-source';
 import { GetBasicUserInteractor } from '../domain/interactors/user-auth/get-basic-user.interactor';
@@ -12,7 +12,7 @@ import { AuthModule } from './features/auth/auth.module';
 @Module({
     imports: [
         // Setup Harmony modules
-        HarmonyNestModule.forRoot({
+        HarmonyModule.forRoot({
             database: {
                 dataSource,
             },

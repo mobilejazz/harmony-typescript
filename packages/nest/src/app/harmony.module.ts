@@ -18,7 +18,7 @@ interface HarmonyNestModuleParams {
 }
 
 @Module({})
-export class HarmonyNestModule {
+export class HarmonyModule {
     static forRoot(params: HarmonyNestModuleParams): DynamicModule {
         const imports: ModuleMetadata['imports'] = [];
 
@@ -50,7 +50,7 @@ export class HarmonyNestModule {
 
         return {
             global: true,
-            module: HarmonyNestModule,
+            module: HarmonyModule,
             imports,
         };
     }
