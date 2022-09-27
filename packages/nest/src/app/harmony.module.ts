@@ -23,9 +23,7 @@ export class HarmonyModule {
         const imports: ModuleMetadata['imports'] = [];
 
         if (params.database) {
-            imports.push(
-                DatabaseModule.forRoot(params.database)
-            );
+            imports.push(DatabaseModule.forRoot(params.database));
         }
 
         if (params.i18n) {
@@ -38,14 +36,12 @@ export class HarmonyModule {
                         watch: true,
                     },
                     resolvers: [AcceptLanguageResolver],
-                })
+                }),
             );
         }
 
         if (params.oAuth) {
-            imports.push(
-                OAuthModule.forRoot(params.oAuth)
-            );
+            imports.push(OAuthModule.forRoot(params.oAuth));
         }
 
         return {

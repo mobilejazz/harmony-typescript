@@ -1,7 +1,7 @@
 import { FactoryProvider, InjectionToken, Provider, Type } from '@nestjs/common';
 
 export function createNestProviders(provider: InjectionToken, interactors: Type[]): Provider[] {
-    return interactors.map<FactoryProvider>(interactor => {
+    return interactors.map<FactoryProvider>((interactor) => {
         const method = `get${interactor.name.replace('Interactor', '')}`;
 
         return {
