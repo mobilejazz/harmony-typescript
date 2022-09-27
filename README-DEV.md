@@ -8,7 +8,7 @@ This mono-repository contains the TypeScript packages of Mobile Jazz Harmony _fr
 -   `nvm install`: install the NodeJS version required by Harmony TS
 -   `nvm use`: ensure we're using the proper NodeJS version
 -   `npm run setup`:
-    -   install root dependencies
+    -   install dependencies
     -   bootstrap: replace internal modules as symlinks and deduplicate packages installing them on root `node_modules`
     -   build packages
 
