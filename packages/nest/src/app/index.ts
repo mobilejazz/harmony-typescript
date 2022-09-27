@@ -3,3 +3,4 @@ export { ErrorToHttpExceptionMapper } from './filters/error-to-http-exception.ma
 export { HarmonyModule } from './harmony.module';
 export { HttpExceptionFilter } from './filters/http-exception.filter';
 export { OAuthModule } from './oauth.module';
+export * from './utilities';
