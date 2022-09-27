@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 
 import { DatabaseModule, DatabaseModuleParams } from './database.module';
@@ -12,19 +12,24 @@ interface I18nModuleParams {
 }
 
 interface HarmonyNestModuleParams {
-    database: DatabaseModuleParams;
-    i18n: I18nModuleParams;
-    oAuth: OAuthModuleParams;
+    database?: DatabaseModuleParams;
+    i18n?: I18nModuleParams;
+    oAuth?: OAuthModuleParams;
 }
 
 @Module({})
 export class HarmonyNestModule {
     static forRoot(params: HarmonyNestModuleParams): DynamicModule {
-        return {
-            global: true,
-            module: HarmonyNestModule,
-            imports: [
-                DatabaseModule.forRoot(params.database),
+        const imports: ModuleMetadata['imports'] = [];
+
+        if (params.database) {
+            imports.push(
+                DatabaseModule.forRoot(params.database)
+            );
+        }
+
+        if (params.i18n) {
+            imports.push(
                 I18nModule.forRoot({
                     fallbackLanguage: params.i18n.fallback,
                     fallbacks: params.i18n.fallbacks,
@@ -33,9 +38,20 @@ export class HarmonyNestModule {
                         watch: true,
                     },
                     resolvers: [AcceptLanguageResolver],
-                }),
-                OAuthModule.forRoot(params.oAuth),
-            ],
+                })
+            );
+        }
+
+        if (params.oAuth) {
+            imports.push(
+                OAuthModule.forRoot(params.oAuth)
+            );
+        }
+
+        return {
+            global: true,
+            module: HarmonyNestModule,
+            imports,
         };
     }
 }
