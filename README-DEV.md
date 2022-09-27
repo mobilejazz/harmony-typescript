@@ -9,6 +9,7 @@ This mono-repository contains the TypeScript packages of Mobile Jazz Harmony _fr
 -   `nvm use`: ensure we're using the proper NodeJS version
 -   `npm ci`: install root dependencies
 -   `npx lerna bootstrap --use-workspaces --hoist --force-local`: replace internal modules as symlinks (required to apply changes to the library)
+-   `npm run build`: build packages
 
 Anytime you're working in the project ensure you `nvm use` to stay on the correct NodeJS version.
 
