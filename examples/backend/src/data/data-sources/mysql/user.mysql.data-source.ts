@@ -64,16 +64,4 @@ export class UserMysqlDataSource extends RawSQLDataSource {
 
         return super.get(query);
     }
-
-    public async getAll(query: Query): Promise<RawSQLData[]> {
-        return super.getAll(query);
-    }
-
-    public async put(value: RawSQLData, query: Query): Promise<RawSQLData> {
-        return super.put(value, query);
-    }
-
-    public async delete(query: Query): Promise<void> {
-        return super.delete(query);
-    }
 }
