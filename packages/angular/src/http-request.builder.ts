@@ -1,9 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { JsonDeserializerMapper, ParameterType, UrlBuilder } from '@mobilejazz/harmony-core';
+import { JsonDeserializerMapper, ParameterType, Type, UrlBuilder } from '@mobilejazz/harmony-core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-type Constructor<T> = new () => T;
 
 // Request builder
 export class HttpRequestBuilder<T> {
@@ -11,7 +9,7 @@ export class HttpRequestBuilder<T> {
 
     private body: string | FormData = '';
     private headers: HttpHeaders = new HttpHeaders();
-    private responseConstructor!: Constructor<T>;
+    private responseConstructor!: Type<T>;
 
     constructor(endpoint: string, private http: HttpClient) {
         this.urlBuilder = new UrlBuilder(endpoint);
@@ -47,7 +45,7 @@ export class HttpRequestBuilder<T> {
         return this;
     }
 
-    public setResponseConstructor(responseConstructor: Constructor<T>): HttpRequestBuilder<T> {
+    public setResponseConstructor(responseConstructor: Type<T>): HttpRequestBuilder<T> {
         this.responseConstructor = responseConstructor;
         return this;
     }
