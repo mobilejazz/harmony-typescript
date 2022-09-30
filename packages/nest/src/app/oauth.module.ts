@@ -26,8 +26,6 @@ export class OAuthModule {
             module: OAuthModule,
             imports: [
                 DatabaseModule,
-                // OauthUserInfoModule,
-                // forwardRef(() => UserModule),
             ],
             providers: [
                 {

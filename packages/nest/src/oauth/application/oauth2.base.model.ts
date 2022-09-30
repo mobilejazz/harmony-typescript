@@ -160,7 +160,6 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
     }
 
     public async verifyScope(token: Token, scope: string | string[], callback?: Callback<boolean>): Promise<boolean> {
-        // console.log('WARNING: Scope Verification not implemented! Always returning true!');
         if (callback) {
             callback(null, true);
         }
@@ -176,28 +175,4 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
 
         return client;
     }
-
-    // OPTIONAL METHODS
-    /*
-    generateAccessToken(
-        client: Client,
-        user: User,
-        scope: string | string[],
-        callback?: (err?: any, result?: string) => void,
-    ): Promise<string> {
-        console.log('generateAccessToken.client: ', client);
-        console.log('generateAccessToken.user: ', user);
-        console.log('generateAccessToken.scope: ', scope);
-        return undefined;
-    }
-
-    async validateScope(
-        user: User,
-        client: Client,
-        scope: string | string[],
-        callback?: (err?: any, result?: (string | "" | 0 | false | null | undefined)) => void,
-    ): Promise<string | string[] | Falsey> {
-        return undefined;
-    }
- */
 }
