@@ -14,7 +14,7 @@ export class ValidateUserScopeInteractor implements ValidateScopeInteractor {
         user: OAuthUserInfoModel,
         client: OAuthClient,
         scope: string[],
-    ): Promise<string[]> {
+    ): Promise<TokenScope[]> {
         if (client.id === ClientWebApp) {
             if (user.id) {
                 return [TokenScope.USER, TokenScope.APP];
