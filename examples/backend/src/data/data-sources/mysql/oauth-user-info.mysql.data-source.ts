@@ -2,6 +2,7 @@ import {
     BaseColumnId,
     GetDataSource,
     IdQuery,
+    MethodNotImplementedError,
     NotFoundError,
     Query,
     QueryNotSupportedError,
@@ -57,12 +58,12 @@ export class OauthUserInfoMysqlDataSource
                         rows[0][UserTableColumnRoleId] as UserRole,
                     );
                 });
-        } else {
-            throw new QueryNotSupportedError();
         }
+
+        throw new QueryNotSupportedError();
     }
 
     public async getAll(query: Query): Promise<OauthUserInfoEntity[]> {
-        throw new QueryNotSupportedError();
+        throw new MethodNotImplementedError();
     }
 }
