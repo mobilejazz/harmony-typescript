@@ -58,9 +58,9 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     private static getId(data: RawSQLData, queryOrId: Query): number {
         if (queryOrId instanceof IdQuery) {
             return queryOrId.id;
-        } else {
-            return data[BaseColumnId] as number;
         }
+
+        return data[BaseColumnId] as number;
     }
 
     protected getColumnsQuery(): string {
