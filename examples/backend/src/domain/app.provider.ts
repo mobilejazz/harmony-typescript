@@ -9,8 +9,8 @@ import {
     SQLInterface,
 } from '@mobilejazz/harmony-core';
 import {
-    UserSqlToEntityMapper,
-    UserEntityToSqlMapper,
+    UserRawSQLDataToUserEntityMapper,
+    UserEntityToUserRawSQLDataMapper,
 } from 'src/data/data-sources/mysql/mappers/user-sql.mapper';
 
 import { OauthUserInfoMysqlDataSource } from 'src/data/data-sources/mysql/oauth-user-info.mysql.data-source';
@@ -46,8 +46,8 @@ export class AppDefaultProvider implements AppProvider {
             rawDataSource,
             rawDataSource,
             rawDataSource,
-            new UserSqlToEntityMapper(),
-            new UserEntityToSqlMapper(),
+            new UserRawSQLDataToUserEntityMapper(),
+            new UserEntityToUserRawSQLDataMapper(),
         );
 
         const singleRepo = new SingleDataSourceRepository(
