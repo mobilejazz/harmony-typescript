@@ -113,27 +113,6 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         return true;
     }
 
-    /*
-    getUserFromClient(
-        client: Client,
-        callback?: (err?: any, result?: (User | "" | 0 | false | null | undefined)) => void,
-    ): Promise<User | Falsey> {
-        console.log('getUserFromClient.client: ', client);
-        return undefined;
-    }
-    */
-
-    // OPTIONAL METHODS
-    /*
-    generateRefreshToken(
-        client: Client,
-        user: User, scope: string | string[],
-        callback?: (err?: any, result?: string) => void,
-    ): Promise<string> {
-        return undefined;
-    }
-    */
-
     public async validateScope(
         user: OAuthUser,
         client: Client,
@@ -148,7 +127,6 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
             } else if (typeof scope === 'string') {
                 array = [scope as string];
             } else {
-                // if (scope instanceof Array) { // or also can be undefined
                 array = scope;
             }
 
