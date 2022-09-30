@@ -13,7 +13,9 @@ import {
     UserTableColumnRoleId,
 } from '../database.constants';
 
-export class UserRawSQLDataToUserEntityMapper implements Mapper<RawSQLData, UserEntity> {
+export class UserRawSQLDataToUserEntityMapper
+    implements Mapper<RawSQLData, UserEntity>
+{
     public map(from: RawSQLData): UserEntity {
         return new UserEntity(
             from[BaseColumnId] as number,
@@ -27,7 +29,9 @@ export class UserRawSQLDataToUserEntityMapper implements Mapper<RawSQLData, User
     }
 }
 
-export class UserEntityToUserRawSQLDataMapper implements Mapper<UserEntity, RawSQLData> {
+export class UserEntityToUserRawSQLDataMapper
+    implements Mapper<UserEntity, RawSQLData>
+{
     public map(from: UserEntity): RawSQLData {
         return {
             [BaseColumnId]: from.id,
