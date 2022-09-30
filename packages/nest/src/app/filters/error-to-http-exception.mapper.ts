@@ -29,15 +29,11 @@ export class ErrorToHttpExceptionMapper implements Mapper<Error, HttpException> 
             return new ErrorDto(code, error, message);
         };
 
-        if (from instanceof MethodNotImplementedError) {
-            return new NotImplementedException(getBody(from.code, from.name, from.message));
-        }
-
-        if (from instanceof OperationNotSupportedError) {
-            return new NotImplementedException(getBody(from.code, from.name, from.message));
-        }
-
-        if (from instanceof QueryNotSupportedError) {
+        if (
+            from instanceof MethodNotImplementedError ||
+            from instanceof OperationNotSupportedError ||
+            from instanceof QueryNotSupportedError
+        ) {
             return new NotImplementedException(getBody(from.code, from.name, from.message));
         }
 
@@ -45,15 +41,11 @@ export class ErrorToHttpExceptionMapper implements Mapper<Error, HttpException> 
             return new NotFoundException(getBody(from.code, from.name, from.message));
         }
 
-        if (from instanceof NotValidError) {
-            return new BadRequestException(getBody(from.code, from.name, from.message));
-        }
-
-        if (from instanceof InvalidArgumentError) {
-            return new BadRequestException(getBody(from.code, from.name, from.message));
-        }
-
-        if (from instanceof FailedError) {
+        if (
+            from instanceof NotValidError ||
+            from instanceof InvalidArgumentError ||
+            from instanceof FailedError
+        ) {
             return new BadRequestException(getBody(from.code, from.name, from.message));
         }
 
