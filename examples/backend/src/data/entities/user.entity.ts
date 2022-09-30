@@ -20,10 +20,10 @@ export class UserEntity extends BaseEntity {
         id: number,
         createdAt: Date,
         updatedAt: Date,
-        readonly email: string,
-        readonly firstName: string,
-        readonly lastName: string,
-        readonly role: UserRole,
+        public readonly email: string,
+        public readonly firstName: string,
+        public readonly lastName: string,
+        public readonly role: UserRole,
     ) {
         super(id, createdAt, updatedAt);
     }

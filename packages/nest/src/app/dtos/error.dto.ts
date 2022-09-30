@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ErrorDto {
     @ApiProperty()
-    code: number;
+    public readonly code: number;
 
     @ApiProperty()
-    error: string;
+    public readonly error: string;
 
     @ApiProperty()
-    message: string;
+    public readonly message: string;
 
     constructor(code: number, error: string, message: string) {
         this.code = code;

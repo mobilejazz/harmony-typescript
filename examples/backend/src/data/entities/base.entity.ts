@@ -1,7 +1,7 @@
 export class BaseEntity {
     constructor(
-        readonly id: number,
-        readonly createdAt: Date,
-        readonly updatedAt: Date,
+        public readonly id: number,
+        public readonly createdAt: Date,
+        public readonly updatedAt: Date,
     ) {}
 }

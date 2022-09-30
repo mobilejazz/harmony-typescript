@@ -9,22 +9,22 @@ export class UserModel implements OAuthUser {
     @IsOptional()
     @IsNumber()
     @Expose({ name: 'id' })
-    id: number;
+    public readonly id: number;
 
     @ApiProperty({ name: 'email' })
     @IsString()
     @Expose({ name: 'email' })
-    email: string;
+    public readonly email: string;
 
     @ApiProperty({ name: 'first_name' })
     @IsString()
     @Expose({ name: 'first_name' })
-    firstName: string;
+    public readonly firstName: string;
 
     @ApiProperty({ name: 'last_name' })
     @IsString()
     @Expose({ name: 'last_name' })
-    lastName: string;
+    public readonly lastName: string;
 
     @ApiProperty({
         name: 'role',
@@ -33,7 +33,7 @@ export class UserModel implements OAuthUser {
     })
     @IsEnum(UserRole)
     @Expose({ name: 'role' })
-    role: UserRole;
+    public readonly role: UserRole;
 
     constructor(
         id: number,
