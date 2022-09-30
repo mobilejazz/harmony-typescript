@@ -6,7 +6,7 @@ enum UserRole {
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace UserRole {
-    export const all = [UserRole.ADMIN];
+    export const ALL = [UserRole.ADMIN];
 
     export function description() {
         return '[1: admin]';

@@ -28,7 +28,7 @@ export class UserModel implements OAuthUser {
 
     @ApiProperty({
         name: 'role',
-        enum: UserRole.all,
+        enum: UserRole.ALL,
         description: UserRole.description(),
     })
     @IsEnum(UserRole)
