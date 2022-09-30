@@ -41,11 +41,7 @@ export class ErrorToHttpExceptionMapper implements Mapper<Error, HttpException> 
             return new NotFoundException(getBody(from.code, from.name, from.message));
         }
 
-        if (
-            from instanceof NotValidError ||
-            from instanceof InvalidArgumentError ||
-            from instanceof FailedError
-        ) {
+        if (from instanceof NotValidError || from instanceof InvalidArgumentError || from instanceof FailedError) {
             return new BadRequestException(getBody(from.code, from.name, from.message));
         }
 

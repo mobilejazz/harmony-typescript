@@ -24,9 +24,7 @@ export class OAuthModule {
         return {
             global: true,
             module: OAuthModule,
-            imports: [
-                DatabaseModule,
-            ],
+            imports: [DatabaseModule],
             providers: [
                 {
                     provide: OAuth2Server,
