@@ -3,7 +3,7 @@ type CacheDecorator = {
     cache: Map<string, unknown>;
 };
 
-export function CacheDecoratorFactory(): CacheDecorator {
+export function createCacheDecorator(): CacheDecorator {
     const cache = new Map<string, unknown>();
     const decorator = function CacheDecorator() {
         return function (_: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
