@@ -41,6 +41,7 @@ import { OAuthUserInfoEntityToRawSqlMapper } from './data/datasource/mappers/oau
 import { OAuthUserInfoEntity } from './data/entity/oauth-user-info.entity';
 import { GetOAuthRefreshTokenInteractor } from './domain/interactors/get-oauth-refresh-token.interactor';
 import {
+    createCacheDecorator,
     DataSourceMapper,
     DeleteInteractor,
     DeleteRepository,
@@ -66,6 +67,8 @@ import { InvalidateClientTokensInteractor } from './domain/interactors/invalidat
 import { InvalidateUserTokensInteractor } from './domain/interactors/invalidate-user-tokens.interactor';
 import { DeleteTokensDataSource } from './data/datasource/delete-tokens.data-source';
 import { OAuthUserInfoRepository } from './data/repository/oauth-user-info.repository';
+
+const Cached = createCacheDecorator();
 
 export class OAuthSQLProvider implements OAuthProvider {
     constructor(private readonly sqlDialect: SQLDialect, private readonly sqlInterface: SQLInterface) {}
@@ -212,6 +215,7 @@ export class OAuthSQLProvider implements OAuthProvider {
         );
     }
 
+    @Cached()
     private userInfoDataSource(): DataSourceMapper<RawSQLDataSource, OAuthUserInfoEntity> {
         const rawDataSource = new RawSQLDataSource(this.sqlDialect, this.sqlInterface, OAuthUserInfoTableName, [
             OAuthUserInfoColumnTokenId,
