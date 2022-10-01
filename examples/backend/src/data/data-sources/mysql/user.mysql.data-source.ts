@@ -21,8 +21,8 @@ import { BasicUserInfoQuery } from '../../queries/user.query';
 
 export class UserMysqlDataSource extends RawSQLDataSource {
     constructor(
-        dialect: SQLDialect,
-        db: SQLInterface,
+        readonly dialect: SQLDialect,
+        readonly db: SQLInterface,
         readonly softDeletedEnabled: boolean,
     ) {
         super(
