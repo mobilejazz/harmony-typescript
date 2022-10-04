@@ -1,8 +1,9 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException, Type } from '@nestjs/common';
 import { Mapper } from '@mobilejazz/harmony-core';
 import { Request, Response } from 'express';
 import { getI18nContextFromRequest, I18nService } from 'nestjs-i18n';
 import { ErrorDto } from '../dtos/error.dto';
+import { ErrorToHttpExceptionMapper } from './error-to-http-exception.mapper';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -10,6 +11,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
         private readonly toHttpExceptionMapper: Mapper<Error, HttpException>,
         private readonly i18n: I18nService,
     ) {}
+
+    public static create(i18n: I18nService): HttpExceptionFilter {
+        return new HttpExceptionFilter(new ErrorToHttpExceptionMapper(), i18n);
+    }
 
     public async catch(exception: unknown, host: ArgumentsHost): Promise<void> {
         const ctx = host.switchToHttp();
