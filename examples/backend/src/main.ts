@@ -10,7 +10,7 @@ async function bootstrap() {
 
     // Handle Errors
     app.useGlobalFilters(
-        HttpExceptionFilter.create(await app.resolve(I18nService))
+        HttpExceptionFilter.create(await app.resolve(I18nService)),
     );
 
     if (Environment.current() !== EnvironmentType.Production) {
