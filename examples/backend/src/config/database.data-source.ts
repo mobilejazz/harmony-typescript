@@ -17,7 +17,7 @@ const dataSource = new DataSource({
     host: isDev ? 'localhost' : DOCKER_DB_NAME,
     port: 3306,
     username: 'root',
-    password: isDev ? 'test1234' : secrets.get('db-root-password'),
+    password: isDev ? '^tNf`g3~@7RT$fs~uZ4U' : secrets.get('db-root-password'),
     database: 'harmonyexample',
     entities: isTS ? ['src/**/**.entity.ts'] : ['dist/**/**.entity.js'],
     synchronize: false,
