@@ -10,7 +10,7 @@ export class OAuthUserInfoModel implements OAuthUser {
         readonly role: UserRole,
     ) {}
 
-    public oauthId(): string {
+    public getOAuthID(): string {
         return this.id.toString();
     }
 }

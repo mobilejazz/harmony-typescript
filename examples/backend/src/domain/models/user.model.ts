@@ -59,7 +59,7 @@ export class UserModel implements OAuthUser {
         );
     }
 
-    public oauthId(): string {
+    public getOAuthID(): string {
         return this.id.toString();
     }
 }

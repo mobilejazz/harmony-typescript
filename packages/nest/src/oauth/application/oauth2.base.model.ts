@@ -85,10 +85,10 @@ export class OAuth2BaseModel implements ClientCredentialsModel {
             scope = token.scope;
         }
 
-        if (typeof user.oauthId === 'function') {
+        if (typeof user.getOAuthID === 'function') {
             // Can't enforce to implement OAuthUser,
             // Also, user can be undefined if doing a client_credentials grant type
-            userId = user.oauthId();
+            userId = user.getOAuthID();
         }
 
         await this.putTokenInteractor.execute(
