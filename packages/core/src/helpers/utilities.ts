@@ -1,12 +1,20 @@
-type CacheDecorator = {
-    (): ((target: unknown, propertyKey: string, descriptor: PropertyDescriptor) => void);
-    cache: Map<string, unknown>;
-};
+type MethodDecorator = (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) => void;
+type CacheDecorator = () => MethodDecorator;
 
+/**
+ * Creates a `CacheDecorator`
+ *
+ * We don't expose directly `CacheDecorator` as we want to have a different
+ * cache per class when this is used. Otherwise different classes would share
+ * the same cache.
+ *
+ * @returns a `CacheDecorator` with unique cache
+ */
 export function createCacheDecorator(): CacheDecorator {
     const cache = new Map<string, unknown>();
-    const decorator = function CacheDecorator() {
-        return function (_: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
+
+    return function CacheDecorator(): MethodDecorator {
+        return function (_target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
             const method = descriptor.value;
 
             descriptor.value = function () {
@@ -18,11 +26,6 @@ export function createCacheDecorator(): CacheDecorator {
             };
         }
     }
-
-    // Expose the `Map` cache
-    decorator.cache = cache;
-
-    return decorator;
 }
 
 export class UnreachableCaseError extends Error {
