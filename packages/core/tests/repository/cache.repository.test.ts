@@ -36,113 +36,138 @@ describe('CacheRepository', () => {
     });
 
     describe('get', () => {
-        it('On not supported Operation Throw Error', () => {
-            expect.assertions(1);
-            return expect(repository.get(getDefaultKeyQuery(), getNotSupportedOperation())).rejects.toThrow(OperationNotSupportedError);
+        it('should throw an error when a non-supported operation is given', () => {
+            const keyQuery = getDefaultKeyQuery();
+            const notSupportedOperation = getNotSupportedOperation();
+
+            const result = repository.get(keyQuery, notSupportedOperation);
+
+            expect(result).rejects.toThrow(OperationNotSupportedError);
         });
 
-        it('On not existing Key return undefined', () => {
-            expect.assertions(1);
-            return expect(repository.get(getNotExistingKeyQuery(), getDefaultOperation())).resolves.toEqual(undefined);
+        it('should return undefined when the key is not found', async () => {
+            const nonExistingKeyQuery = getMissingKeyQuery()
+            const operation = getDefaultOperation();
+
+            const result = await repository.get(nonExistingKeyQuery, operation);
+
+            expect(result).toBe(undefined);
         });
 
-        it('On existing Key return the Value', () => {
-            expect.assertions(1);
+        it('should return the expected value when an existing is given', async () => {
             const query = getDefaultKeyQuery();
             const operation = getDefaultOperation();
             const book = getDefaultBook();
-            repository.put(book, query, operation);
 
-            return expect(repository.get(query, operation)).resolves.toEqual(book);
+            await repository.put(book, query, operation);
+            const result = await repository.get(query, operation);
+
+            expect(result).toBe(book);
         });
 
-        it('On existing Key on Main DataSource return the Value', () => {
-            expect.assertions(1);
+        it('should return the expected value when the key exists in the main datasource', async () => {
             const query = getDefaultKeyQuery();
             const operation = getMainOperation();
             const book = getDefaultBook();
-            repository.put(book, query, operation);
 
-            return expect(repository.get(query, operation)).resolves.toEqual(book);
+            await repository.put(book, query, operation);
+            const result = await repository.get(query, operation);
+
+            expect(result).toBe(book);
         });
 
-        it('On existing Key on Cache DataSource return the Value', () => {
-            expect.assertions(1);
+        it('should return the expected value when the key is already cached', async () => {
             const query = getDefaultKeyQuery();
             const operation = getCacheOperation();
             const book = getDefaultBook();
-            repository.put(book, query, operation);
 
-            return expect(repository.get(query, operation)).resolves.toEqual(book);
+            await repository.put(book, query, operation);
+            const result = await repository.get(query, operation);
+
+            expect(result).toBe(book);
         });
     });
 
     describe('put', () => {
-        it('On not supported Operation Throw Error', () => {
-            expect.assertions(1);
-            return expect(repository.put(getDefaultBook(), getDefaultKeyQuery(), getNotSupportedOperation()))
-                .rejects
-                .toThrow(OperationNotSupportedError);
-        });
-
-        it('On put return the same value', () => {
-            expect.assertions(1);
+        it('should throw an error when a non-supported operation is given', async () => {
             const book = getDefaultBook();
+            const keyQuery = getDefaultKeyQuery();
+            const notSupportedOperation = getNotSupportedOperation();
 
-            return expect(repository.put(book, getDefaultKeyQuery(), getDefaultOperation())).resolves.toEqual(book);
+            const result = repository.put(book, keyQuery, notSupportedOperation);
+
+            expect(result).rejects.toThrowError(OperationNotSupportedError);
         });
 
-        it('On existing key overwrite value', () => {
-            expect.assertions(1);
+        it('should return the given value when this is inserted', async () => {
+            const book = getDefaultBook();
+            const keyQuery = getDefaultKeyQuery();
+            const operation = getDefaultOperation();
+
+            const result = await repository.put(book, keyQuery, operation);
+
+            expect(result).toBe(book);
+        });
+
+        it('should override the value when an already existing key is given', async () => {
             const query = getDefaultKeyQuery();
             const operation = getDefaultOperation();
             const bookOne = getDefaultBook();
             const bookTwo = getRandomBook();
-            repository.put(bookOne, query, operation);
-            repository.put(bookTwo, query, operation);
 
-            return expect(repository.get(query, operation)).resolves.toEqual(bookTwo);
+            await repository.put(bookOne, query, operation);
+            await repository.put(bookTwo, query, operation);
+            const result = await repository.get(query, operation);
+
+            expect(result).toBe(bookTwo);
         });
 
-        it('On MainSync Error not update Cache DataSource', async () => {
-            expect.assertions(2);
+        it('should not update the cache when the MainSyncOperation fails', async () => {
+            const book = getDefaultBook();
+            const query = getNotSupportedQuery();
+            const operation = getMainSyncOperation();
 
-            await expect(repository.put(getDefaultBook(), getNotSupportedQuery(), getMainSyncOperation()))
-                .rejects
-                .toThrow(QueryNotSupportedError);
-            await expect(repository.get(getDefaultKeyQuery(), getCacheOperation())).rejects.toThrow(NotFoundError);
+            const syncResult = repository.put(book, query, operation)
+            const cacheResult = repository.get(getDefaultKeyQuery(), getCacheOperation());
+
+            await expect(syncResult).rejects.toThrowError(QueryNotSupportedError);
+            await expect(cacheResult).rejects.toThrowError(NotFoundError);
         });
     });
 
     describe('delete', () => {
-        it('On not supported Operation Throw Error', () => {
-            expect.assertions(1);
-            return expect(repository.delete(getDefaultKeyQuery(), getNotSupportedOperation()))
-                .rejects
-                .toThrow(OperationNotSupportedError);
+        it('should throw an error when a non-supported operation is given', () => {
+            const keyQuery = getDefaultKeyQuery();
+            const notSupportedOperation = getNotSupportedOperation();
+
+            const result = repository.delete(keyQuery, notSupportedOperation);
+
+            expect(result).rejects.toThrowError(OperationNotSupportedError);
         });
 
-        it('On not existing Key do nothing', () => {
-            expect.assertions(1);
+        it('should return a value for a given key when the delete was performed on another key', async () => {
             const operation = getDefaultOperation();
             const queryExisting = getDefaultKeyQuery();
-            const queryNotExisting = getNotExistingKeyQuery();
+            const queryNotExisting = getMissingKeyQuery();
             const book = getDefaultBook();
-            repository.put(book, queryExisting, operation);
-            repository.delete(queryNotExisting, operation);
 
-            return expect(repository.get(queryExisting, operation)).resolves.toEqual(book);
+            await repository.put(book, queryExisting, operation);
+            await repository.delete(queryNotExisting, operation);
+            const result = await repository.get(queryExisting, operation);
+
+            expect(result).toBe(book);
         });
 
-        it('On existing key delete value', () => {
-            expect.assertions(1);
+        it('should return undefined when a value is deleted', async () => {
             const operation = getDefaultOperation();
             const query = getDefaultKeyQuery();
             const book = getDefaultBook();
-            repository.put(book, query, operation);
-            repository.delete(query, operation);
 
-            return expect(repository.get(query, operation)).resolves.toEqual(undefined);
+            await repository.put(book, query, operation);
+            await repository.delete(query, operation);
+            const result = await repository.get(query, operation);
+
+            expect(result).toBe(undefined);
         });
     });
 });
@@ -178,8 +203,8 @@ function getDefaultKeyQuery(): KeyQuery {
     return new KeyQuery('bookOne');
 }
 
-function getNotExistingKeyQuery(): KeyQuery {
-    return new KeyQuery('some key that not exist');
+function getMissingKeyQuery(): KeyQuery {
+    return new KeyQuery('Key that does not exist');
 }
 
 function getNotSupportedQuery(): Query {
