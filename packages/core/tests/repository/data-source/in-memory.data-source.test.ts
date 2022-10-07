@@ -11,56 +11,62 @@ describe('InMemoryDataSource', () => {
     const notAllowedQuery = new ObjectQuery(myObject);
 
     describe('get', () => {
-        it('get with a non-existing key should throw an error', async () => {
+        it('should throw an error when a non-existing key is given', async () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
-            await expect(cacheDataSource.get(keyQuery)).rejects.toThrowError(NotFoundError);
+            const result = cacheDataSource.get(keyQuery);
+            await expect(result).rejects.toThrowError(NotFoundError);
         });
 
-        it('get with key query should return the key', async () => {
+        it('should return the expected value for an existing key', async () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
             await cacheDataSource.put(myObject, keyQuery);
-            const response = await cacheDataSource.get(keyQuery);
-            expect(response).toBe(myObject);
+            const result = await cacheDataSource.get(keyQuery);
+            expect(result).toBe(myObject);
         });
 
-        it('get with different query should throw an error', () => {
+        it('should throw an error with a different query than KeyQuery', () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
-            expect(cacheDataSource.get(notAllowedQuery)).rejects.toThrow(QueryNotSupportedError);
+            const result = cacheDataSource.get(notAllowedQuery);
+            expect(result).rejects.toThrow(QueryNotSupportedError);
         });
     });
 
     describe('put', () => {
-        it('put should store the object', async () => {
+        it('should store an object when it`s given with a proper key', async () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
             await cacheDataSource.put(myObject, keyQuery);
-            const response = await cacheDataSource.get(keyQuery);
-            expect(response).toBe(myObject);
+            const result = await cacheDataSource.get(keyQuery);
+            expect(result).toBe(myObject);
         });
 
-        it('put with different query should throw an error', () => {
+        it('should throw an error when the query is not a KeyQuery', () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
-            expect(cacheDataSource.put(myObject, notAllowedQuery)).rejects.toThrow(QueryNotSupportedError);
+            const result = cacheDataSource.put(myObject, notAllowedQuery);
+            expect(result).rejects.toThrow(QueryNotSupportedError);
         });
     });
 
     describe('delete', () => {
-        it('delete should empty the value of the stored object for a given key', async () => {
+        it('should empty the value of the stored object when an existing key is given', async () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
             await cacheDataSource.put(myObject, keyQuery);
             await cacheDataSource.delete(keyQuery);
-            await expect(cacheDataSource.get(keyQuery)).rejects.toThrowError(NotFoundError);
+            const result = cacheDataSource.get(keyQuery)
+            await expect(result).rejects.toThrow(NotFoundError);
         });
 
-        it('delete with not existing key should work', async () => {
+        it('should do nothing when the key does not exists', async () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
             await cacheDataSource.put(myObject, keyQuery);
-            await expect(cacheDataSource.delete(anotherKeyQuery)).toBeTruthy();
+            const result = cacheDataSource.delete(anotherKeyQuery);
+            await expect(result).toBeTruthy();
         });
 
-        it('delete with not admitted query should throw an error', async () => {
+        it('should throw an error when the query is not a KeyQuery', async () => {
             const cacheDataSource = new InMemoryDataSource<SimplestClass>();
             await cacheDataSource.put(myObject, keyQuery);
-            await expect(cacheDataSource.delete(notAllowedQuery)).rejects.toThrowError(QueryNotSupportedError);
+            const result = cacheDataSource.delete(notAllowedQuery);
+            await expect(result).rejects.toThrow(QueryNotSupportedError);
         });
     });
 });
