@@ -148,7 +148,7 @@ export class PaginationPageMapper<From, To> implements Mapper<PaginationPage<Fro
  */
 export class ArrayMapper<From, To> implements Mapper<From[], To[]> {
     constructor(private readonly mapper: Mapper<From, To>) {}
-    map(from: From[]): To[] {
+    public map(from: From[]): To[] {
         return from.map(value => this.mapper.map(value));
     }
 }
