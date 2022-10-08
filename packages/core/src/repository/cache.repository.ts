@@ -174,7 +174,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         }
     }
 
-    public async put(value: T, query: Query, operation: Operation): Promise<T> {
+    public async put(value: T | undefined, query: Query, operation: Operation): Promise<T> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.put(value, query, new MainSyncOperation());
@@ -198,8 +198,9 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
     /**
      * @deprecated please use put with an array type instead
      */
-    public async putAll(values: T[], query: Query, operation: Operation): Promise<T[]> {
+    public async putAll(values: T[] | undefined, query: Query, operation: Operation): Promise<T[]> {
         console.warn('putAll is deprecated. Please use put instead');
+
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.putAll(values, query, new MainSyncOperation());

@@ -1,5 +1,3 @@
-import { Dictionary } from '../../data';
-
 export class Query {}
 
 export class KeyQuery extends Query {
@@ -67,13 +65,13 @@ export class PaginationPageQuery extends PaginationQuery {
 }
 
 export class DictionaryQuery<T> extends Query {
-    constructor(public readonly dictionary: Dictionary<T>) {
+    constructor(public dictionary: Record<string, T>) {
         super();
     }
 }
 
 export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
-    constructor(dictionary: Dictionary<T>, public relations: string[] = []) {
+    constructor(public dictionary: Record<string, T>, public relations: string[] = []) {
         super(dictionary);
     }
 }

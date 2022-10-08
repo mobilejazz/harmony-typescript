@@ -24,14 +24,14 @@ export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepos
         return this.getDataSource.getAll(query);
     }
 
-    public put(value: T, query: Query, _operation: Operation): Promise<T> {
+    public put(value: T | undefined, query: Query, _operation: Operation): Promise<T> {
         return this.putDataSource.put(value, query);
     }
 
     /**
      * @deprecated please use put with an array type instead
      */
-    public putAll(values: T[], query: Query, _operation: Operation): Promise<T[]> {
+    public putAll(values: T[] | undefined, query: Query, _operation: Operation): Promise<T[]> {
         console.warn('putAll is deprecated. Please use put instead');
         return this.putDataSource.putAll(values, query);
     }
@@ -60,14 +60,14 @@ export class SingleGetDataSourceRepository<T> implements GetRepository<T> {
 export class SinglePutDataSourceRepository<T> implements PutRepository<T> {
     constructor(private readonly putDataSource: PutDataSource<T>) {}
 
-    public put(value: T, query: Query, _operation: Operation): Promise<T> {
+    public put(value: T | undefined, query: Query, _operation: Operation): Promise<T> {
         return this.putDataSource.put(value, query);
     }
 
     /**
      * @deprecated please use put with an array type instead
      */
-    public putAll(values: T[], query: Query, _operation: Operation): Promise<T[]> {
+    public putAll(values: T[] | undefined, query: Query, _operation: Operation): Promise<T[]> {
         console.warn('putAll is deprecated. Please use put instead');
         return this.putDataSource.putAll(values, query);
     }

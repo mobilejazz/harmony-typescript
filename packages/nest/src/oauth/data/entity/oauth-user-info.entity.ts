@@ -1,8 +1,8 @@
 export class OAuthUserInfoEntity {
     constructor(
-        readonly id: number,
-        readonly createdAt: Date,
-        readonly updatedAt: Date,
+        readonly id: number | undefined,
+        readonly createdAt: Date | undefined,
+        readonly updatedAt: Date | undefined,
         readonly tokenId: number,
         readonly userId: string,
     ) {}

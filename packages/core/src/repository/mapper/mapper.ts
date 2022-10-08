@@ -1,9 +1,10 @@
 import { plainToClass } from 'class-transformer';
 import { FailedError, MethodNotImplementedError } from '../errors';
 import { PaginationOffsetLimit, PaginationPage } from '../../data';
+import { Type } from '../../helpers';
 
 export interface Mapper<From, To> {
-    map(from: From, toType?: new () => To): To;
+    map(from: From, toType?: Type<To>): To;
 }
 
 /**
@@ -63,7 +64,7 @@ export class ObjectMapper<From, To> implements Mapper<From, To> {
  * ClassTransformerMapper use class-transformer library to map objects. Otherwise, throws an error.
  */
 export class ClassTransformerMapper<From, To> implements Mapper<From, To> {
-    constructor(private toType: new () => To) {}
+    constructor(private toType: Type<To>) {}
     public map(from: From): To {
         try {
             return plainToClass(this.toType, from);
@@ -85,24 +86,28 @@ export class JsonSerializerMapper<From> implements Mapper<From, string> {
 /**
  * JsonDeserializerMapper
  */
-export class JsonDeserializerMapper<From, To> implements Mapper<From, To> {
-    constructor(private toType: new () => To) {}
+export class JsonDeserializerMapper<From extends string | Record<string, unknown>, To> implements Mapper<From, To> {
+    constructor(private toType: Type<To>) {}
+
     public map(from: From): To {
         try {
             if (typeof from === 'string') {
-                from = JSON.parse(from);
+                return this.deserialize(JSON.parse(from));
+            } else {
+                return this.deserialize(from);
             }
-            return this.deserialize(from as From);
         } catch (e) {
             throw new FailedError('JsonDeserializerMapper failed to map an object)');
         }
     }
-    private deserialize(from: From): To {
+
+    private deserialize(from: Record<string, unknown>): To {
         const output = new this.toType();
-        const properties: string[] = Object.keys(from);
-        properties.forEach((property: string) => {
-            output[property] = from[property];
+
+        Object.entries(from).forEach(([key, value]) => {
+            output[key] = value;
         });
+
         return output;
     }
 }
