@@ -1,6 +1,7 @@
 {
     "name": "mobilejazz-harmony-typescript",
     "version": "0.0.0",
+    "private": true,
     "description": "Mobile Jazz Harmony framework for TypeScript",
     "author": "Mobile Jazz",
     "license": "Apache-2.0",
@@ -12,7 +13,12 @@
         "node": "16.x",
         "npm": "8.x"
     },
+    "workspaces": [
+        "examples/*",
+        "packages/*"
+    ],
     "scripts": {
+        "bootstrap": "lerna bootstrap --use-workspaces --hoist --force-local",
         "check-deps": "npm outdated && lerna exec -- npm outdated && npm audit && lerna exec -- npm audit",
         "prebuild": "npm run validate && npm run format",
         "build": "lerna run build",
@@ -22,23 +28,24 @@
         "publish": "npm run build && lerna publish --contents dist --force-publish",
         "test": "jest",
         "test:watch": "jest --watch",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "setup": "npm ci && npm run bootstrap && npm run build"
     },
     "dependencies": {
-        "@bugfender/sdk": "^1.6.0",
-        "typeorm": "^0.2.45"
+        "@bugfender/sdk": "^2.1.0"
     },
     "devDependencies": {
-        "@types/jest": "^27.5.2",
-        "@types/node": "16.11.59",
-        "@typescript-eslint/eslint-plugin": "5.37.0",
-        "eslint": "8.23.1",
+        "@types/jest": "^28.1.8",
+        "@types/node": "16.x",
+        "@typescript-eslint/eslint-plugin": "^5.37.0",
+        "eslint": "^8.23.0",
         "eslint-config-prettier": "^8.5.0",
-        "husky": "^7.0.4",
-        "jest": "^27.5.1",
-        "lerna": "^4.0.0",
-        "prettier": "2.4.1",
-        "ts-jest": "^27.1.5",
-        "typescript": "4.8.3"
+        "husky": "^8.0.1",
+        "jest": "^28.1.3",
+        "lerna": "^5.5.0",
+        "nx": "^14.7.13",
+        "prettier": "2.7.1",
+        "ts-jest": "^28.0.8",
+        "typescript": "^4.8.2"
     }
 }

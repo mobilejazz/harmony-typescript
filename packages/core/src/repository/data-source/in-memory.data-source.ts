@@ -3,6 +3,7 @@ import {
     DeleteDataSource,
     GetDataSource,
     IdsQuery,
+    InvalidArgumentError,
     KeyQuery,
     PutDataSource,
     Query,
@@ -11,8 +12,8 @@ import {
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
 export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
-    private objects: any = {};
-    private arrays: any = {};
+    private objects: Record<string, T> = {};
+    private arrays: Record<string, T[]> = {};
 
     constructor(private readonly logger: Logger = new DeviceConsoleLogger()) {}
 
@@ -49,7 +50,11 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
         }
     }
 
-    public async put(value: T, query: Query): Promise<T> {
+    public async put(value: T | undefined, query: Query): Promise<T> {
+        if (typeof value === 'undefined') {
+            throw new InvalidArgumentError(`InMemoryDataSource: value can't be undefined`);
+        }
+
         if (query instanceof KeyQuery) {
             this.objects[query.key] = value;
             return value;
@@ -58,7 +63,11 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
         }
     }
 
-    public async putAll(values: T[], query: Query): Promise<T[]> {
+    public async putAll(values: T[] | undefined, query: Query): Promise<T[]> {
+        if (typeof values === 'undefined') {
+            throw new InvalidArgumentError(`InMemoryDataSource: values can't be undefined`);
+        }
+
         if (query instanceof KeyQuery) {
             this.arrays[query.key] = values;
             return values;

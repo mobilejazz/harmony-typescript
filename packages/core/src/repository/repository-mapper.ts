@@ -14,35 +14,35 @@ import { DeviceConsoleLogger, Logger } from '../helpers';
  * @param toInMapper Mapper to map domain objects to data objects
  */
 export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutRepository<Out>, DeleteRepository {
+    private readonly getMapper: GetRepositoryMapper<In, Out>;
+    private readonly putMapper: PutRepositoryMapper<In, Out>;
+
     constructor(
-        private readonly getRepository: GetRepository<In>,
-        private readonly putRepository: PutRepository<In>,
+        getRepository: GetRepository<In>,
+        putRepository: PutRepository<In>,
         private readonly deleteRepository: DeleteRepository,
-        private readonly toOutMapper: Mapper<In, Out>,
-        private readonly toInMapper: Mapper<Out, In>,
+        toOutMapper: Mapper<In, Out>,
+        toInMapper: Mapper<Out, In>,
         private readonly logger: Logger = new DeviceConsoleLogger(),
-    ) {}
-
-    public async get(query: Query, operation: Operation): Promise<Out> {
-        const result: In = await this.getRepository.get(query, operation);
-        return this.toOutMapper.map(result);
+    ) {
+        this.getMapper = new GetRepositoryMapper(getRepository, toOutMapper);
+        this.putMapper = new PutRepositoryMapper(putRepository, toOutMapper, toInMapper);
     }
 
-    public async getAll(query: Query, operation: Operation): Promise<Out[]> {
-        const results: In[] = await this.getRepository.getAll(query, operation);
-        return results.map((r: In) => this.toOutMapper.map(r));
+    public get(query: Query, operation: Operation): Promise<Out> {
+        return this.getMapper.get(query, operation);
     }
 
-    public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        const mapped: In = value ? this.toInMapper.map(value) : undefined;
-        const result: In = await this.putRepository.put(mapped, query, operation);
-        return this.toOutMapper.map(result);
+    public getAll(query: Query, operation: Operation): Promise<Out[]> {
+        return this.getMapper.getAll(query, operation);
     }
 
-    public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
-        const mapped: In[] = values ? values.map((v) => (v ? this.toInMapper.map(v) : undefined)) : undefined;
-        const results: In[] = await this.putRepository.putAll(mapped, query, operation);
-        return results.map((r: In) => this.toOutMapper.map(r));
+    public put(value: Out | undefined, query: Query, operation: Operation): Promise<Out> {
+        return this.putMapper.put(value, query, operation);
+    }
+
+    public async putAll(values: Out[] | undefined, query: Query, operation: Operation): Promise<Out[]> {
+        return this.putMapper.putAll(values, query, operation);
     }
 
     public async delete(query: Query, operation: Operation): Promise<void> {
@@ -84,14 +84,14 @@ export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
         private toInMapper: Mapper<Out, In>,
     ) {}
 
-    public async put(value: Out, query: Query, operation: Operation): Promise<Out> {
-        const mapped: In = value ? this.toInMapper.map(value) : undefined;
+    public async put(value: Out | undefined, query: Query, operation: Operation): Promise<Out> {
+        const mapped: In | undefined = value ? this.toInMapper.map(value) : undefined;
         const result: In = await this.putRepository.put(mapped, query, operation);
         return this.toOutMapper.map(result);
     }
 
-    public async putAll(values: Out[], query: Query, operation: Operation): Promise<Out[]> {
-        const mapped: In[] = values ? values.map((v) => this.toInMapper.map(v)) : undefined;
+    public async putAll(values: Out[] | undefined, query: Query, operation: Operation): Promise<Out[]> {
+        const mapped: In[] | undefined = values ? values.map((v) => this.toInMapper.map(v)) : undefined;
         const results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }

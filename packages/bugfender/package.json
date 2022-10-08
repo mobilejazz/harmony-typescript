@@ -15,11 +15,15 @@
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
+        "watch": "tsc --watch",
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
+    "dependencies": {
+        "@bugfender/common": "^1.0.0-alpha.5"
+    },
     "peerDependencies": {
-        "@bugfender/sdk": "1.x",
-        "@mobilejazz/harmony-core": "0.x"
+        "@bugfender/sdk": "2.x",
+        "@mobilejazz/harmony-core": "*"
     }
 }

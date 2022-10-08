@@ -8,11 +8,12 @@ export class PostgresSQLDialect implements SQLDialect {
         }
         throw new InvalidArgumentError('idx != null && idx != undefined && idx != 0');
     }
-    getInsertionId(result: any): number {
+    getInsertionId(result: unknown, idColumn: string): number {
         if (result instanceof Array && result.length > 0) {
-            return result[0].id;
+            return result[0][idColumn];
         }
-        return undefined;
+
+        throw new FailedError(`Insertion ID not available`);
     }
     getInsertionIdQueryStatement(idColumn: string): string {
         return `returning ${idColumn}`;

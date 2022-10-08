@@ -15,7 +15,7 @@ export class UnknownLogLevelError extends Error {
 }
 
 export interface Logger {
-    logKeyValue(key: string, value: any): void;
+    logKeyValue(key: string, value: unknown): void;
 
     log(level: LogLevel, message: string): void;
     log(level: LogLevel, tag: string, message: string): void;
@@ -40,7 +40,7 @@ export interface Logger {
 }
 
 export abstract class AbstractLogger implements Logger {
-    abstract logKeyValue(key: string, value: any): void;
+    abstract logKeyValue(key: string, value: unknown): void;
 
     abstract log(level: LogLevel, message: string): void;
     abstract log(level: LogLevel, tag: string, message: string): void;

@@ -1,13 +1,13 @@
+import type { MysqlError, OkPacket } from 'mysql';
 import { SQLDialect } from './sql.dialect';
-import { MysqlError } from 'mysql';
 import { FailedError, ForbiddenError } from '../repository';
 
 export class MySQLDialect implements SQLDialect {
     getParameterSymbol(_idx?: number): string {
         return '?';
     }
-    getInsertionId(result: any): number {
-        return result.insertId;
+    getInsertionId(result: unknown, _idColumn: string): number {
+        return (result as OkPacket).insertId;
     }
     getInsertionIdQueryStatement(_idColumn: string): string {
         return '';
