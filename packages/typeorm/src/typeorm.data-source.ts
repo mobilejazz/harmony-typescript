@@ -1,13 +1,10 @@
 import type { Repository as TypeORMRepository, ObjectLiteral, FindOptionsWhere } from 'typeorm';
 import { In } from 'typeorm';
 import {
-    DeleteDataSource,
     ObjectQuery,
     ObjectRelationsQuery,
-    GetDataSource,
     IdQuery,
     IdsQuery,
-    PutDataSource,
     Query,
     QueryNotSupportedError,
     VoidQuery,
@@ -17,11 +14,10 @@ import {
     DeviceConsoleLogger,
     InvalidArgumentError,
     BaseColumnId,
+    DataSource,
 } from '@mobilejazz/harmony-core';
 
-export class TypeOrmDataSource<T extends ObjectLiteral>
-    implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource
-{
+export class TypeOrmDataSource<T extends ObjectLiteral> implements DataSource<T> {
     constructor(
         private readonly repository: TypeORMRepository<T>,
         private readonly idColumn = BaseColumnId,

@@ -1,18 +1,17 @@
 import { Query } from '..';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface DataSource {}
-
-export interface GetDataSource<T> extends DataSource {
+export interface GetDataSource<T> {
     get: (query: Query) => Promise<T>;
     getAll: (query: Query) => Promise<T[]>;
 }
 
-export interface PutDataSource<T> extends DataSource {
+export interface PutDataSource<T> {
     put: (value: T | undefined, query: Query) => Promise<T>;
     putAll: (values: T[] | undefined, query: Query) => Promise<T[]>;
 }
 
-export interface DeleteDataSource extends DataSource {
+export interface DeleteDataSource {
     delete: (query: Query) => Promise<void>;
 }
+
+export type DataSource<T> = GetDataSource<T> & PutDataSource<T> & DeleteDataSource;

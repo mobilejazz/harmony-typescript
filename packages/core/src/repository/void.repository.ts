@@ -1,10 +1,10 @@
 import { MethodNotImplementedError } from './errors';
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { DeleteRepository, GetRepository, PutRepository, Repository } from './repository';
 import { DeviceConsoleLogger, Logger } from '../helpers';
 
-export class VoidRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
+export class VoidRepository<T> implements Repository<T> {
     constructor(private readonly logger: Logger = new DeviceConsoleLogger()) {}
 
     public async get(_query: Query, _operation: Operation): Promise<T> {

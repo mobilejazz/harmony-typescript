@@ -8,10 +8,10 @@ import {
     QueryNotSupportedError,
     InvalidArgumentError,
 } from '..';
-import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { DataSource } from './data-source';
 import { Logger, SafeStorage, VoidLogger } from '../../helpers';
 
-export class StorageDataSource implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
+export class StorageDataSource implements DataSource<string> {
     private readonly storage: Storage;
 
     /**
