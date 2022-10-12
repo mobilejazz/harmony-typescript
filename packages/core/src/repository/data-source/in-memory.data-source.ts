@@ -4,6 +4,7 @@ import {
     IdsQuery,
     InvalidArgumentError,
     KeyQuery,
+    NotFoundError,
     Query,
     QueryNotSupportedError,
 } from '..';
@@ -17,7 +18,10 @@ export class InMemoryDataSource<T> implements DataSource<T> {
 
     public async get(query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
-            return this.objects[query.key];
+            if (query.key in this.objects) {
+                return this.objects[query.key];
+            }
+            throw new NotFoundError();
         } else {
             throw new QueryNotSupportedError();
         }
