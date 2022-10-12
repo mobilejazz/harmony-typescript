@@ -1,5 +1,7 @@
 import { OAuth2BaseModel, OAuthClient } from './oauth2.base.model';
-import { Client, Falsey, PasswordModel, RefreshToken, RefreshTokenModel, Token, User } from 'oauth2-server';
+import { Callback, Client, Falsey, PasswordModel, RefreshToken, RefreshTokenModel, Token, User } from 'oauth2-server';
+import { ForbiddenException } from '@nestjs/common';
+
 import { GetOAuthClientInteractor } from '../domain/interactors/get-oauth-client.interactor';
 import { PutOAuthTokenInteractor } from '../domain/interactors/put-oauth-token.interactor';
 import { GetOAuthTokenInteractor } from '../domain/interactors/get-oauth-token.interactor';
@@ -9,7 +11,7 @@ import { GetOAuthUserInteractor } from '../domain/interactors/get-oauth-user.int
 import { GetOAuthRefreshTokenInteractor } from '../domain/interactors/get-oauth-refresh-token.interactor';
 import { DeleteOAuthTokenInteractor } from '../domain/interactors/delete-oauth-token.interactor';
 import { ValidateScopeInteractor } from '../domain/interactors/validate-scope.interactor';
-import { ForbiddenException } from '@nestjs/common';
+import { OAuthUser } from '../domain/oauth-user.model';
 
 class OAuthRefreshToken implements RefreshToken {
     constructor(
@@ -26,8 +28,8 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         getClientInteractor: GetOAuthClientInteractor,
         putTokenInteractor: PutOAuthTokenInteractor,
         getTokenInteractor: GetOAuthTokenInteractor,
-        getUserInfoInteractor: GetOAuthUserInfoInteractor,
-        getUserInteractor: GetOAuthUserInteractor,
+        protected readonly getUserInfoInteractor: GetOAuthUserInfoInteractor,
+        protected readonly getUserInteractor: GetOAuthUserInteractor,
         protected readonly loginUserInteractor: LoginOAuthUserInteractor,
         protected readonly getRefreshTokenInteractor: GetOAuthRefreshTokenInteractor,
         protected readonly deleteTokenInteractor: DeleteOAuthTokenInteractor,
@@ -36,28 +38,31 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
         super(getClientInteractor, putTokenInteractor, getTokenInteractor, getUserInfoInteractor, getUserInteractor);
     }
 
-    async getUser(
+    public async getUser(
         username: string,
         password: string,
-        callback?: (err?: any, result?: User | '' | 0 | false | null | undefined) => void,
+        callback?: Callback<User | Falsey>,
     ): Promise<User | Falsey> {
         try {
             const user = await this.loginUserInteractor.execute(username, password);
+
             if (callback) {
                 callback(null, user);
             }
+
             return user;
         } catch (err) {
             if (callback) {
                 callback(false, null);
             }
+
             return false;
         }
     }
 
-    async getRefreshToken(
+    public async getRefreshToken(
         refreshToken: string,
-        callback?: (err?: any, result?: RefreshToken) => void,
+        callback?: Callback<RefreshToken>,
     ): Promise<RefreshToken | Falsey> {
         try {
             const token = await this.getRefreshTokenInteractor.execute(refreshToken);
@@ -76,75 +81,69 @@ export class OAuth2UserModel extends OAuth2BaseModel implements PasswordModel, R
                 token.scope,
                 user,
             );
+
             if (callback) {
                 callback(null, final);
             }
+
             return final;
         } catch (err) {
             if (callback) {
                 callback(new ForbiddenException('Invalid refresh token'), undefined);
             }
+
             return null;
         }
     }
 
-    async revokeToken(token: RefreshToken | Token, callback?: (err?: any, result?: boolean) => void): Promise<boolean> {
+    public async revokeToken(token: RefreshToken | Token, callback?: Callback<boolean>): Promise<boolean> {
         let accessToken;
+
         if ('accessToken' in token) {
             accessToken = token['accessToken'];
         }
+
         const refreshToken = token.refreshToken;
         await this.deleteTokenInteractor.execute(accessToken, refreshToken);
+
         if (callback) {
             callback(null, true);
         }
+
         return true;
     }
-    /*
-    getUserFromClient(
-        client: Client,
-        callback?: (err?: any, result?: (User | "" | 0 | false | null | undefined)) => void,
-    ): Promise<User | Falsey> {
-        console.log('getUserFromClient.client: ', client);
-        return undefined;
-    }
- */
 
-    // OPTIONAL METHODS
-    /*
-    generateRefreshToken(
-        client: Client,
-        user: User, scope: string | string[],
-        callback?: (err?: any, result?: string) => void,
-    ): Promise<string> {
-        return undefined;
-    }
-*/
-    async validateScope(
-        user: User,
+    public async validateScope(
+        user: OAuthUser,
         client: Client,
         scope: string | string[],
-        callback?: (err?: any, result?: string | '' | 0 | false | null | undefined) => void,
+        callback?: Callback<string | Falsey>,
     ): Promise<string | string[] | Falsey> {
         try {
             let array: string[];
+
             if (!scope) {
                 array = [];
             } else if (typeof scope === 'string') {
                 array = [scope as string];
             } else {
-                // if (scope instanceof Array) { // or also can be undefined
                 array = scope;
             }
-            const result = await this.validateScopeInteractor.execute(user as any, client, array);
+
+            const result = await this.validateScopeInteractor.execute(user, client, array);
+
             if (callback) {
-                callback(null, result as any);
+                // The callback type doesn't match the return type, this is a library issue
+                // We tell TS that it's a `string` so it doesn't fail. In reality could be `string | string[]`.
+                callback(null, result as unknown as string);
             }
+
             return result;
         } catch (err) {
             if (callback) {
                 callback(err, null);
             }
+
             return null;
         }
     }

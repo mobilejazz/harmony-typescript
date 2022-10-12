@@ -1,8 +1,8 @@
-import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { DataSource } from './data-source';
 import { Query } from '..';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
-export class MockDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class MockDataSource<T> implements DataSource<T> {
     constructor(
         private readonly one: T,
         private readonly many: T[],
@@ -17,11 +17,11 @@ export class MockDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
         return this.many;
     }
 
-    public async put(_value: T, _query: Query): Promise<T> {
+    public async put(_value: T | undefined, _query: Query): Promise<T> {
         return this.one;
     }
 
-    public async putAll(_values: T[], _query: Query): Promise<T[]> {
+    public async putAll(_values: T[] | undefined, _query: Query): Promise<T[]> {
         return this.many;
     }
 

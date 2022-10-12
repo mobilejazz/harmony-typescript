@@ -1,10 +1,10 @@
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/data-source';
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { DeleteRepository, GetRepository, PutRepository, Repository } from './repository';
 import { DeviceConsoleLogger, Logger } from '../helpers';
 
-export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
+export class SingleDataSourceRepository<T> implements Repository<T> {
     constructor(
         private readonly getDataSource: GetDataSource<T>,
         private readonly putDataSource: PutDataSource<T>,
@@ -20,11 +20,11 @@ export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepos
         return this.getDataSource.getAll(query);
     }
 
-    public put(value: T, query: Query, _operation: Operation): Promise<T> {
+    public put(value: T | undefined, query: Query, _operation: Operation): Promise<T> {
         return this.putDataSource.put(value, query);
     }
 
-    public putAll(values: T[], query: Query, _operation: Operation): Promise<T[]> {
+    public putAll(values: T[] | undefined, query: Query, _operation: Operation): Promise<T[]> {
         return this.putDataSource.putAll(values, query);
     }
 
@@ -48,11 +48,11 @@ export class SingleGetDataSourceRepository<T> implements GetRepository<T> {
 export class SinglePutDataSourceRepository<T> implements PutRepository<T> {
     constructor(private readonly putDataSource: PutDataSource<T>) {}
 
-    public put(value: T, query: Query, _operation: Operation): Promise<T> {
+    public put(value: T | undefined, query: Query, _operation: Operation): Promise<T> {
         return this.putDataSource.put(value, query);
     }
 
-    public putAll(values: T[], query: Query, _operation: Operation): Promise<T[]> {
+    public putAll(values: T[] | undefined, query: Query, _operation: Operation): Promise<T[]> {
         return this.putDataSource.putAll(values, query);
     }
 }

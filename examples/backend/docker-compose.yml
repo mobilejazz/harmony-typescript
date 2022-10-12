@@ -1,0 +1,35 @@
+version: '3.5'
+services:
+    mariadb:
+        image: mariadb:10.8.3
+        container_name: mariadb-database
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
+            MYSQL_DATABASE: 'harmonyexample'
+        command: --log_bin
+        secrets:
+            - db-root-password
+            - app-client
+            - app-client-secret
+        volumes:
+            - ./volumes/mariadb/data:/var/lib/mysql
+            - ./volumes/mariadb/backup:/backup
+            - ./config/mariadb/init:/docker-entrypoint-initdb.d
+            - ./config/mariadb/conf.d:/etc/mysql/conf.d
+        ports:
+            - '3306:3306'
+    mailhog:
+        image: mailhog/mailhog:v1.0.1
+        container_name: mailhog
+        restart: unless-stopped
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+secrets:
+    db-root-password:
+        file: ./secrets/DB_ROOT_PASSWORD
+    app-client-secret:
+        file: ./secrets/APP_CLIENT_SECRET
+    app-client:
+        file: ./secrets/APP_CLIENT_ID

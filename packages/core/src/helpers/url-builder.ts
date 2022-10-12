@@ -1,4 +1,3 @@
-import { Dictionary } from '../data';
 import { ParameterType } from '../data/parameter-type';
 
 export class UrlBuilder {
@@ -8,17 +7,17 @@ export class UrlBuilder {
         return this.url;
     }
 
-    public setUrlParameters(urlParameters: Dictionary<ParameterType>): UrlBuilder {
+    public setUrlParameters(urlParameters: Record<string, ParameterType>): UrlBuilder {
         this.url = this.prepareUrlParameters(this.url, urlParameters);
         return this;
     }
 
-    public setQueryParameters(queryParameters: Dictionary<ParameterType>): UrlBuilder {
+    public setQueryParameters(queryParameters: Record<string, ParameterType>): UrlBuilder {
         this.url = this.prepareQueryParameters(this.url, queryParameters);
         return this;
     }
 
-    private prepareUrlParameters(url: string, urlParameters: Dictionary<ParameterType>): string {
+    private prepareUrlParameters(url: string, urlParameters: Record<string, ParameterType>): string {
         for (const property in urlParameters) {
             if (Object.prototype.hasOwnProperty.call(urlParameters, property) && url.indexOf(`:${property}`) > -1) {
                 url = url.replace(`:${property}`, urlParameters[property].toString());
@@ -29,7 +28,7 @@ export class UrlBuilder {
         return url;
     }
 
-    private prepareQueryParameters(url: string, queryParameters: Dictionary<ParameterType>): string {
+    private prepareQueryParameters(url: string, queryParameters: Record<string, ParameterType>): string {
         let firstProperty = true;
 
         for (const property in queryParameters) {

@@ -1,13 +1,13 @@
 import { SQLDialect } from '../../../data';
 
-export type SQLQueryParamFn = (param: any) => string;
+export type SQLQueryParamFn = (param: unknown) => string;
 
 /**
  * Class that stores the list of parameters for a query and returns
  * the parameter symbol to be used in an SQL statement when adding a new one.
  */
 export class SQLQueryParamComposer {
-    private params: any[] = [];
+    private params: unknown[] = [];
 
     /**
      * Constructor
@@ -20,7 +20,7 @@ export class SQLQueryParamComposer {
      * in an SQL statement (ex: ?, $1, ..).
      * @param param The parameter to be added
      */
-    public readonly push: SQLQueryParamFn = (param: any) => {
+    public readonly push: SQLQueryParamFn = (param: unknown) => {
         this.params.push(param);
         return this.dialect.getParameterSymbol(this.params.length);
     };
@@ -35,7 +35,7 @@ export class SQLQueryParamComposer {
     /**
      * Returns the list of params
      */
-    public getParams(): any[] {
+    public getParams(): unknown[] {
         return this.params;
     }
 }

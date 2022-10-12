@@ -3,6 +3,7 @@ import { SQLDialect, SQLInterface } from '../../../data';
 import { QueryNotSupportedError } from '../../errors';
 import { BaseColumnDeletedAt, Query, SQLQueryParamComposer, SQLWherePaginationQuery } from '../..';
 import { SQLWhereQuery } from './sql.query';
+import { RawSQLData } from './raw-sql.data-source';
 
 export class SQLRowCounterDataSource implements GetDataSource<number> {
     constructor(
@@ -40,7 +41,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
                 sql = `select count(*) from (${sql}) as t`;
             }
             return this.sqlInterface
-                .query(sql, params.getParams())
+                .query<RawSQLData[]>(sql, params.getParams())
                 .then((result) => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch((e) => {
                     throw this.sqlDialect.mapError(e);
@@ -51,7 +52,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
                 sql = `${sql} where ${this.deleteAtColumn} is null`;
             }
             return this.sqlInterface
-                .query(sql)
+                .query<RawSQLData[]>(sql)
                 .then((result) => Number(result[0][this.sqlDialect.getCountName()]))
                 .catch((e) => {
                     throw this.sqlDialect.mapError(e);

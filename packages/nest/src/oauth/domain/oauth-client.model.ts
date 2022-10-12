@@ -1,8 +1,8 @@
 export class OAuthClientModel {
     constructor(
-        readonly id: number | undefined,
-        readonly createdAt: Date | undefined,
-        readonly updatedAt: Date | undefined,
+        readonly id: number,
+        readonly createdAt: Date,
+        readonly updatedAt: Date,
         readonly clientId: string,
         readonly clientSecret: string,
         readonly grants: string[],

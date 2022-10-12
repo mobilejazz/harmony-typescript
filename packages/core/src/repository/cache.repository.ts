@@ -3,7 +3,7 @@ import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/da
 import { NotFoundError, NotValidError, OperationNotSupportedError } from './errors';
 import { DefaultOperation, Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { Repository } from './repository';
 
 export class MainOperation implements Operation {}
 export class MainSyncOperation implements Operation {}
@@ -36,7 +36,7 @@ export class DefaultObjectValidator implements ObjectValidator {
     }
 }
 
-export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
+export class CacheRepository<T> implements Repository<T> {
     constructor(
         private readonly getMain: GetDataSource<T>,
         private readonly putMain: PutDataSource<T>,
@@ -170,7 +170,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         }
     }
 
-    public async put(value: T, query: Query, operation: Operation): Promise<T> {
+    public async put(value: T | undefined, query: Query, operation: Operation): Promise<T> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.put(value, query, new MainSyncOperation());
@@ -191,7 +191,7 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         }
     }
 
-    public async putAll(values: T[], query: Query, operation: Operation): Promise<T[]> {
+    public async putAll(values: T[] | undefined, query: Query, operation: Operation): Promise<T[]> {
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.putAll(values, query, new MainSyncOperation());
