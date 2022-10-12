@@ -15,11 +15,12 @@
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
+        "watch": "tsc --watch",
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "peerDependencies": {
-        "@mobilejazz/harmony-core": "0.x",
-        "typeorm": "^0.2.38"
+        "@mobilejazz/harmony-core": "*",
+        "typeorm": "^0.3.9"
     }
 }

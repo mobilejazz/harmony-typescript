@@ -1,4 +1,13 @@
-import { DeleteError, FailedError, NotFoundError, KeyListQuery, KeyQuery, Query, QueryNotSupportedError, InvalidArgumentError } from '..';
+import {
+    DeleteError,
+    FailedError,
+    NotFoundError,
+    KeyListQuery,
+    KeyQuery,
+    Query,
+    QueryNotSupportedError,
+    InvalidArgumentError,
+} from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
 import { Logger, SafeStorage, VoidLogger } from '../../helpers';
 
@@ -10,11 +19,7 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
      * @param enableSafeMode Wrap the given `storage` in `SafeStorage`. This prevents errors in incognito and permission-less scenarios. Keep in mind that `SafeStorage` fallbacks to an **in-memory implementation**. If you need more control on how to handle incognito/permission issues then you should set this to `false` and handle these issues in a Repository. More info: https://michalzalecki.com/why-using-localStorage-directly-is-a-bad-idea/
      * @param logger Logger instance, defaults to `VoidLogger` (no logger)
      */
-    constructor(
-        storage: Storage,
-        enableSafeMode: boolean,
-        private readonly logger: Logger = new VoidLogger(),
-    ) {
+    constructor(storage: Storage, enableSafeMode: boolean, private readonly logger: Logger = new VoidLogger()) {
         this.storage = enableSafeMode ? new SafeStorage(storage) : storage;
     }
 
@@ -62,25 +67,35 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
             const keys = this.getKeys(query);
             return keys.map((key) => this.getItem(key));
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
-    public async put(value: string, query: Query): Promise<string> {
+    public async put(value: string | undefined, query: Query): Promise<string> {
+        if (typeof value === 'undefined') {
+            throw new InvalidArgumentError(`StorageDataSource: value can't be undefined`);
+        }
+
         if (query instanceof KeyQuery) {
             this.setItem(query.key, value);
             return this.getItem(query.key);
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
-    public async putAll(values: string[], query: Query): Promise<string[]> {
+    public async putAll(values: string[] | undefined, query: Query): Promise<string[]> {
+        if (typeof values === 'undefined') {
+            throw new InvalidArgumentError(`StorageDataSource: values can't be undefined`);
+        }
+
         if (query instanceof KeyQuery || query instanceof KeyListQuery) {
             const keys = this.getKeys(query);
 
             if (values.length !== keys.length) {
-                throw new InvalidArgumentError(`Values lengh (${values.length}) and keys length (${keys.length}) don't match.`);
+                throw new InvalidArgumentError(
+                    `Values lengh (${values.length}) and keys length (${keys.length}) don't match.`,
+                );
             }
 
             return keys.map((key, index) => {
@@ -88,7 +103,7 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
                 return this.getItem(key);
             });
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 
@@ -106,7 +121,7 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
 
             return;
         } else {
-            throw QueryNotSupportedError;
+            throw new QueryNotSupportedError();
         }
     }
 }

@@ -16,11 +16,11 @@ import { SQLOrderByPaginationQuery, SQLOrderByQuery, SQLWherePaginationQuery, SQ
 import { DeviceConsoleLogger, Logger } from '../../../helpers';
 import { SQLQueryParamComposer } from './sql-query-param-composer';
 
-export type RawSQLData = any;
+export type RawSQLData = Record<string, unknown>;
 
 export interface SQLOrderBy {
     orderBy: (param: SQLQueryParamFn, dialect: SQLDialect) => string;
-    ascending(): boolean;
+    ascending: () => boolean;
 }
 
 export interface SQLWhere {
@@ -28,7 +28,7 @@ export interface SQLWhere {
 }
 
 class SQLQueryComposition {
-    constructor(readonly query: string, readonly params: any[]) {}
+    constructor(readonly query: string, readonly params: unknown[]) {}
 }
 
 export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSource<RawSQLData>, DeleteDataSource {
@@ -56,13 +56,11 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
     private tableColumns: string[] = [];
 
     private static getId(data: RawSQLData, queryOrId: Query): number {
-        let id: number;
         if (queryOrId instanceof IdQuery) {
-            id = queryOrId.id;
-        } else {
-            id = data[BaseColumnId];
+            return queryOrId.id;
         }
-        return id;
+
+        return data[BaseColumnId] as number;
     }
 
     protected getColumnsQuery(): string {
@@ -133,7 +131,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
                 sql = `${sql} and ${this.deletedAtColumn} is null`;
             }
             return this.sqlInterface
-                .query(sql, [query.id])
+                .query<RawSQLData[]>(sql, [query.id])
                 .catch((e) => {
                     throw this.sqlDialect.mapError(e);
                 })
@@ -147,7 +145,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         } else {
             const composition = this.getComposition(query, 1, 0);
             return this.sqlInterface
-                .query(composition.query, composition.params)
+                .query<RawSQLData[]>(composition.query, composition.params)
                 .catch((e) => {
                     throw this.sqlDialect.mapError(e);
                 })
@@ -178,7 +176,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             return this.sqlInterface.query(sql, query.ids);
         } else {
             const composition = this.getComposition(query);
-            return this.sqlInterface.query(composition.query, composition.params).catch((e) => {
+            return this.sqlInterface.query<RawSQLData[]>(composition.query, composition.params).catch((e) => {
                 throw this.sqlDialect.mapError(e);
             });
         }
@@ -195,7 +193,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         } = ${this.sqlDialect.getParameterSymbol(paramList.length + 1)}`;
     }
 
-    private updateSQLParams(id: any, value: RawSQLData): any[] {
+    private updateSQLParams(id: number, value: RawSQLData): unknown[] {
         const params = this.tableColumns.filter((column) => value[column] !== undefined).map((column) => value[column]);
         params.push(id);
         return params;
@@ -203,7 +201,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
 
     private insertSQLQuery(value: RawSQLData): string {
         const params: string[] = [];
-        const values: any[] = [];
+        const values: unknown[] = [];
         this.tableColumns
             .filter((column) => value[column] !== undefined)
             .forEach((column, idx) => {
@@ -216,7 +214,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         )}) ${this.sqlDialect.getInsertionIdQueryStatement(this.idColumn)}`;
     }
 
-    private insertSQLQueryParams(value: RawSQLData): any[] {
+    private insertSQLQueryParams(value: RawSQLData): unknown[] {
         return this.tableColumns.filter((column) => value[column] !== undefined).map((column) => value[column]);
     }
 
@@ -241,7 +239,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             )
             .then((result) => {
                 if (isInsertion) {
-                    const rowId = this.sqlDialect.getInsertionId(result);
+                    const rowId = this.sqlDialect.getInsertionId(result, this.idColumn);
                     // After a succesfull insertion, checking if subclasses
                     // might want to perform any further action within the same
                     // transaction scope.
@@ -256,19 +254,25 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
             });
     }
 
-    async put(value: RawSQLData, query: Query): Promise<RawSQLData> {
+    async put(value: RawSQLData | undefined, query: Query): Promise<RawSQLData> {
+        if (typeof value === 'undefined') {
+            throw new InvalidArgumentError(`RawSQLDataSource: value can't be undefined`);
+        }
+
         const id = RawSQLDataSource.getId(value, query);
         return this.sqlInterface
-            .transaction((sqlInterface: SQLInterface) => {
-                return this.executePutQuery(value, id, sqlInterface);
-            })
+            .transaction((sqlInterface: SQLInterface) => this.executePutQuery(value, id, sqlInterface))
             .then((rowId) => this.get(new IdQuery(rowId)))
             .catch((e) => {
                 throw this.sqlDialect.mapError(e);
             });
     }
 
-    async putAll(values: RawSQLData[], query: Query): Promise<RawSQLData[]> {
+    async putAll(values: RawSQLData[] | undefined, query: Query): Promise<RawSQLData[]> {
+        if (typeof values === 'undefined') {
+            throw new InvalidArgumentError(`RawSQLDataSource: values can't be undefined`);
+        }
+
         if (query instanceof IdsQuery) {
             if (values.length !== query.ids.length) {
                 // tslint:disable-next-line:max-line-length
@@ -280,7 +284,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         const insertionIds = await this.sqlInterface.transaction((sqlInterface: SQLInterface) => {
             return Promise.all(
                 values.map((value, idx) => {
-                    let id = value[BaseColumnId];
+                    let id = value[BaseColumnId] as number;
                     if (!id && query instanceof IdsQuery) {
                         id = query.ids[idx];
                     }
@@ -295,7 +299,7 @@ export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSourc
         });
     }
 
-    async delete(query: Query): Promise<void> {
+    public async delete(query: Query): Promise<void> {
         if (this.softDeleteEnabled) {
             if (query instanceof IdQuery) {
                 return (

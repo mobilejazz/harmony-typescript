@@ -13,13 +13,13 @@ import {
 export class OAuthClientRawSqlToEntityMapper implements Mapper<RawSQLData, OAuthClientEntity> {
     public map(from: RawSQLData): OAuthClientEntity {
         return new OAuthClientEntity(
-            from[OAuthColumnId],
-            from[OAuthColumnCreatedAt],
-            from[OAuthColumnUpdatedAt],
-            from[OAuthClientColumnClientId],
-            from[OAuthClientColumnClientSecret],
-            from[OAuthClientColumnAccessTokenLifetime],
-            from[OAuthClientColumnRefreshTokenLifetime],
+            from[OAuthColumnId] as number,
+            from[OAuthColumnCreatedAt] as Date,
+            from[OAuthColumnUpdatedAt] as Date,
+            from[OAuthClientColumnClientId] as string,
+            from[OAuthClientColumnClientSecret] as string,
+            from[OAuthClientColumnAccessTokenLifetime] as number,
+            from[OAuthClientColumnRefreshTokenLifetime] as number,
         );
     }
 }

@@ -11,11 +11,11 @@ import { OAuthTokenScopeEntity } from '../../entity/oauth-token-scope.entity';
 export class OAuthTokenScopeRawSqlToEntityMapper implements Mapper<RawSQLData, OAuthTokenScopeEntity> {
     map(from: RawSQLData): OAuthTokenScopeEntity {
         return new OAuthTokenScopeEntity(
-            from[OAuthColumnId],
-            from[OAuthColumnCreatedAt],
-            from[OAuthColumnUpdatedAt],
-            from[OAuthTokenScopeColumnScope],
-            from[OAuthTokenScopeColumnTokenId],
+            from[OAuthColumnId] as number,
+            from[OAuthColumnCreatedAt] as Date,
+            from[OAuthColumnUpdatedAt] as Date,
+            from[OAuthTokenScopeColumnScope] as string,
+            from[OAuthTokenScopeColumnTokenId] as number,
         );
     }
 }

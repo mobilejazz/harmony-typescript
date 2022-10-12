@@ -15,11 +15,12 @@
     "scripts": {
         "prebuild": "rimraf ./dist",
         "build": "tsc",
+        "watch": "tsc --watch",
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "dependencies": {
-        "@types/mysql": "^2.15.19",
+        "@types/mysql": "^2.15.21",
         "class-transformer": "^0.4.0"
     }
 }
