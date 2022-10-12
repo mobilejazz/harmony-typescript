@@ -45,13 +45,13 @@ describe('CacheRepository', () => {
             expect(result).rejects.toThrow(OperationNotSupportedError);
         });
 
-        it('should return `undefined` when the key is not found', async () => {
+        it('should return `undefined` when the key is not found', () => {
             const nonExistingKeyQuery = getMissingKeyQuery()
             const operation = getDefaultOperation();
 
-            const result = await repository.get(nonExistingKeyQuery, operation);
+            const result = repository.get(nonExistingKeyQuery, operation);
 
-            expect(result).toBe(undefined);
+            expect(result).rejects.toThrow(NotFoundError);
         });
 
         it('should return the expected value when an existing is given', async () => {
@@ -165,9 +165,9 @@ describe('CacheRepository', () => {
             await repository.put(book, query, operation);
 
             await repository.delete(query, operation);
-            const result = await repository.get(query, operation);
+            const result = repository.get(query, operation);
 
-            expect(result).toBe(undefined);
+            expect(result).rejects.toThrowError(NotFoundError);
         });
     });
 });
