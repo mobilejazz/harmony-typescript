@@ -36,7 +36,7 @@ describe('CacheRepository', () => {
     });
 
     describe('get', () => {
-        it('should throw an error when a non-supported operation is given', () => {
+        it('should throw an error when a an unsupported operation is given', () => {
             const keyQuery = getDefaultKeyQuery();
             const notSupportedOperation = getNotSupportedOperation();
 
@@ -45,7 +45,7 @@ describe('CacheRepository', () => {
             expect(result).rejects.toThrow(OperationNotSupportedError);
         });
 
-        it('should return undefined when the key is not found', async () => {
+        it('should return `undefined` when the key is not found', async () => {
             const nonExistingKeyQuery = getMissingKeyQuery()
             const operation = getDefaultOperation();
 
@@ -58,30 +58,30 @@ describe('CacheRepository', () => {
             const query = getDefaultKeyQuery();
             const operation = getDefaultOperation();
             const book = getDefaultBook();
-
             await repository.put(book, query, operation);
+
             const result = await repository.get(query, operation);
 
             expect(result).toBe(book);
         });
 
-        it('should return the expected value when the key exists in the main datasource', async () => {
+        it('should read from the main datasource when using `MainOperation`', async () => {
             const query = getDefaultKeyQuery();
             const operation = getMainOperation();
             const book = getDefaultBook();
-
             await repository.put(book, query, operation);
+
             const result = await repository.get(query, operation);
 
             expect(result).toBe(book);
         });
 
-        it('should return the expected value when the key is already cached', async () => {
+        it('should read from the cache datasource when using `CacheOperation`', async () => {
             const query = getDefaultKeyQuery();
             const operation = getCacheOperation();
             const book = getDefaultBook();
-
             await repository.put(book, query, operation);
+
             const result = await repository.get(query, operation);
 
             expect(result).toBe(book);
@@ -89,7 +89,7 @@ describe('CacheRepository', () => {
     });
 
     describe('put', () => {
-        it('should throw an error when a non-supported operation is given', async () => {
+        it('should throw an error when a an unsupported operation is given', async () => {
             const book = getDefaultBook();
             const keyQuery = getDefaultKeyQuery();
             const notSupportedOperation = getNotSupportedOperation();
@@ -99,7 +99,7 @@ describe('CacheRepository', () => {
             expect(result).rejects.toThrowError(OperationNotSupportedError);
         });
 
-        it('should return the given value when this is inserted', async () => {
+        it('should return the given value on insertion', async () => {
             const book = getDefaultBook();
             const keyQuery = getDefaultKeyQuery();
             const operation = getDefaultOperation();
@@ -114,15 +114,15 @@ describe('CacheRepository', () => {
             const operation = getDefaultOperation();
             const bookOne = getDefaultBook();
             const bookTwo = getRandomBook();
-
             await repository.put(bookOne, query, operation);
+
             await repository.put(bookTwo, query, operation);
             const result = await repository.get(query, operation);
 
             expect(result).toBe(bookTwo);
         });
 
-        it('should not update the cache when the MainSyncOperation fails', async () => {
+        it('should not update the cache when the `MainSyncOperation` fails', async () => {
             const book = getDefaultBook();
             const query = getNotSupportedQuery();
             const operation = getMainSyncOperation();
@@ -136,7 +136,7 @@ describe('CacheRepository', () => {
     });
 
     describe('delete', () => {
-        it('should throw an error when a non-supported operation is given', () => {
+        it('should throw an error when an unsupported operation is given', () => {
             const keyQuery = getDefaultKeyQuery();
             const notSupportedOperation = getNotSupportedOperation();
 
@@ -150,20 +150,20 @@ describe('CacheRepository', () => {
             const queryExisting = getDefaultKeyQuery();
             const queryNotExisting = getMissingKeyQuery();
             const book = getDefaultBook();
-
             await repository.put(book, queryExisting, operation);
+
             await repository.delete(queryNotExisting, operation);
             const result = await repository.get(queryExisting, operation);
 
             expect(result).toBe(book);
         });
 
-        it('should return undefined when a value is deleted', async () => {
+        it('should return `undefined` when a value is deleted', async () => {
             const operation = getDefaultOperation();
             const query = getDefaultKeyQuery();
             const book = getDefaultBook();
-
             await repository.put(book, query, operation);
+
             await repository.delete(query, operation);
             const result = await repository.get(query, operation);
 
