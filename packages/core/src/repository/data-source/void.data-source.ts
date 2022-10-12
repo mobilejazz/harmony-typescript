@@ -1,8 +1,8 @@
-import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { DataSource, DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
 import { MethodNotImplementedError, Query } from '..';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
-export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class VoidDataSource<T> implements DataSource<T> {
     constructor(private readonly logger: Logger = new DeviceConsoleLogger()) {}
 
     public async get(_query: Query): Promise<T> {

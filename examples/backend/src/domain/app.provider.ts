@@ -1,11 +1,9 @@
 import {
     createCacheDecorator,
     DataSourceMapper,
-    DeleteRepository,
     GetInteractor,
-    GetRepository,
     GetRepositoryMapper,
-    PutRepository,
+    Repository,
     RepositoryMapper,
     SingleDataSourceRepository,
     SingleGetDataSourceRepository,
@@ -44,9 +42,7 @@ export class AppDefaultProvider implements AppProvider {
     ) {}
 
     @Cached()
-    private getUserRepository(): GetRepository<UserModel> &
-        PutRepository<UserModel> &
-        DeleteRepository {
+    private getUserRepository(): Repository<UserModel> {
         const rawDataSource = new UserMysqlDataSource(
             this.dialect,
             this.db,

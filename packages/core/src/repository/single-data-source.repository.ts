@@ -1,10 +1,10 @@
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/data-source';
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { DeleteRepository, GetRepository, PutRepository, Repository } from './repository';
 import { DeviceConsoleLogger, Logger } from '../helpers';
 
-export class SingleDataSourceRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
+export class SingleDataSourceRepository<T> implements Repository<T> {
     constructor(
         private readonly getDataSource: GetDataSource<T>,
         private readonly putDataSource: PutDataSource<T>,

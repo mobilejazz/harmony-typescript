@@ -1,8 +1,8 @@
-import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { DataSource } from './data-source';
 import { Query } from '..';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
-export class MockDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class MockDataSource<T> implements DataSource<T> {
     constructor(
         private readonly one: T,
         private readonly many: T[],

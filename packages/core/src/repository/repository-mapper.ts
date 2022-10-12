@@ -1,7 +1,7 @@
 import { Mapper } from './mapper/mapper';
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { DeleteRepository, GetRepository, PutRepository, Repository } from './repository';
 import { DeviceConsoleLogger, Logger } from '../helpers';
 
 /**
@@ -13,7 +13,7 @@ import { DeviceConsoleLogger, Logger } from '../helpers';
  * @param toOutMapper Mapper to map data objects to domain objects
  * @param toInMapper Mapper to map domain objects to data objects
  */
-export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutRepository<Out>, DeleteRepository {
+export class RepositoryMapper<In, Out> implements Repository<Out> {
     private readonly getMapper: GetRepositoryMapper<In, Out>;
     private readonly putMapper: PutRepositoryMapper<In, Out>;
 

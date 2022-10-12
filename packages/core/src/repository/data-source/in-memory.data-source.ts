@@ -1,18 +1,16 @@
 import {
     AllObjectsQuery,
-    DeleteDataSource,
-    GetDataSource,
+    DataSource,
     IdsQuery,
     InvalidArgumentError,
     KeyQuery,
     NotFoundError,
-    PutDataSource,
     Query,
     QueryNotSupportedError,
 } from '..';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
-export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class InMemoryDataSource<T> implements DataSource<T> {
     private objects: Record<string, T> = {};
     private arrays: Record<string, T[]> = {};
 

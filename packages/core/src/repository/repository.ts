@@ -1,19 +1,18 @@
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Repository {}
-
-export interface GetRepository<T> extends Repository {
+export interface GetRepository<T> {
     get: (query: Query, operation: Operation) => Promise<T>;
     getAll: (query: Query, operation: Operation) => Promise<T[]>;
 }
 
-export interface PutRepository<T> extends Repository {
+export interface PutRepository<T> {
     put: (value: T | undefined, query: Query, operation: Operation) => Promise<T>;
     putAll: (values: T[] | undefined, query: Query, operation: Operation) => Promise<T[]>;
 }
 
-export interface DeleteRepository extends Repository {
+export interface DeleteRepository {
     delete: (query: Query, operation: Operation) => Promise<void>;
 }
+
+export type Repository<T> = GetRepository<T> & PutRepository<T> & DeleteRepository;
