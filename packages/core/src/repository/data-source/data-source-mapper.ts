@@ -31,7 +31,11 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
         return this.getMapper.get(query);
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public getAll(query: Query): Promise<Out[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         return this.getMapper.getAll(query);
     }
 
@@ -39,7 +43,11 @@ export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSou
         return this.putMapper.put(value, query);
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public putAll(values: Out[] | undefined, query: Query): Promise<Out[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         return this.putMapper.putAll(values, query);
     }
 

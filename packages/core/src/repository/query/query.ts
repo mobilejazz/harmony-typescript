@@ -45,7 +45,7 @@ export class ObjectsQuery<T> extends Query {
 }
 
 export class ObjectRelationsQuery<T> extends ObjectQuery<T> {
-    constructor(public readonly value: T, public relations: string[] = []) {
+    constructor(value: T, public readonly relations: string[] = []) {
         super(value);
     }
 }

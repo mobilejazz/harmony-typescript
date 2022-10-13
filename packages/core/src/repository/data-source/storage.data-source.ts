@@ -62,7 +62,11 @@ export class StorageDataSource implements DataSource<string> {
         }
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query): Promise<string[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         if (query instanceof KeyQuery || query instanceof KeyListQuery) {
             const keys = this.getKeys(query);
             return keys.map((key) => this.getItem(key));
@@ -84,7 +88,12 @@ export class StorageDataSource implements DataSource<string> {
         }
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: string[] | undefined, query: Query): Promise<string[]> {
+        console.warn('putAll is deprecated. Please use put instead');
+
         if (typeof values === 'undefined') {
             throw new InvalidArgumentError(`StorageDataSource: values can't be undefined`);
         }
