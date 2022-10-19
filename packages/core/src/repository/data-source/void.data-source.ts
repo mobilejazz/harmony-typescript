@@ -1,15 +1,19 @@
-import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { DataSource, DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
 import { MethodNotImplementedError, Query } from '..';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
-export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class VoidDataSource<T> implements DataSource<T> {
     constructor(private readonly logger: Logger = new DeviceConsoleLogger()) {}
 
     public async get(_query: Query): Promise<T> {
         throw new MethodNotImplementedError('Called get on VoidDataSource');
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(_query: Query): Promise<T[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         throw new MethodNotImplementedError('Called getAll on VoidDataSource');
     }
 
@@ -17,7 +21,11 @@ export class VoidDataSource<T> implements GetDataSource<T>, PutDataSource<T>, De
         throw new MethodNotImplementedError('Called put on VoidDataSource');
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(_values: T[] | undefined, _query: Query): Promise<T[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         throw new MethodNotImplementedError('Called putAll on VoidDataSource');
     }
 

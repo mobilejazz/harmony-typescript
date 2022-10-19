@@ -1,4 +1,4 @@
-import { DeleteDataSource, GetDataSource, PutDataSource } from '../data-source';
+import { DataSource } from '../data-source';
 import { InvalidArgumentError, NotFoundError, QueryNotSupportedError } from '../../errors';
 import {
     BaseColumnCreatedAt,
@@ -31,7 +31,7 @@ class SQLQueryComposition {
     constructor(readonly query: string, readonly params: unknown[]) {}
 }
 
-export class RawSQLDataSource implements GetDataSource<RawSQLData>, PutDataSource<RawSQLData>, DeleteDataSource {
+export class RawSQLDataSource implements DataSource<RawSQLData> {
     constructor(
         protected readonly sqlDialect: SQLDialect,
         protected readonly sqlInterface: SQLInterface,

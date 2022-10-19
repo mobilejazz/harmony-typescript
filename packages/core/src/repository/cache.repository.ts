@@ -3,7 +3,7 @@ import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source/da
 import { NotFoundError, NotValidError, OperationNotSupportedError } from './errors';
 import { DefaultOperation, Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { Repository } from './repository';
 
 export class MainOperation implements Operation {}
 export class MainSyncOperation implements Operation {}
@@ -36,7 +36,7 @@ export class DefaultObjectValidator implements ObjectValidator {
     }
 }
 
-export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, DeleteRepository {
+export class CacheRepository<T> implements Repository<T> {
     constructor(
         private readonly getMain: GetDataSource<T>,
         private readonly putMain: PutDataSource<T>,
@@ -109,7 +109,11 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         }
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query, operation: Operation): Promise<T[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.getAll(query, new CacheSyncOperation());
@@ -191,7 +195,12 @@ export class CacheRepository<T> implements GetRepository<T>, PutRepository<T>, D
         }
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: T[] | undefined, query: Query, operation: Operation): Promise<T[]> {
+        console.warn('putAll is deprecated. Please use put instead');
+
         switch (operation.constructor) {
             case DefaultOperation:
                 return this.putAll(values, query, new MainSyncOperation());

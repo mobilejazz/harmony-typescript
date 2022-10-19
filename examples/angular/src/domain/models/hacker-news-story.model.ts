@@ -1,17 +1,16 @@
-
 export class HackerNewsStory {
   public readonly type = 'story';
 
   constructor(
-    public id: number,
-    public title: string,
-    public by: string,
-    public descendants: number,
-    public kids: number[],
-    public score: number,
-    public createdAt: Date,
-    public text?: string,
-    public url?: string,
+    public readonly id: number,
+    public readonly title: string,
+    public readonly by: string,
+    public readonly descendants: number,
+    public readonly kids: number[],
+    public readonly score: number,
+    public readonly createdAt: Date,
+    public readonly text?: string,
+    public readonly url?: string,
   ) { }
 
   public hasURL(): boolean {

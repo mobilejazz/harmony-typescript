@@ -1,7 +1,7 @@
 import { Mapper } from './mapper/mapper';
 import { Operation } from './operation/operation';
 import { Query } from './query/query';
-import { DeleteRepository, GetRepository, PutRepository } from './repository';
+import { DeleteRepository, GetRepository, PutRepository, Repository } from './repository';
 import { DeviceConsoleLogger, Logger } from '../helpers';
 
 /**
@@ -13,7 +13,7 @@ import { DeviceConsoleLogger, Logger } from '../helpers';
  * @param toOutMapper Mapper to map data objects to domain objects
  * @param toInMapper Mapper to map domain objects to data objects
  */
-export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutRepository<Out>, DeleteRepository {
+export class RepositoryMapper<In, Out> implements Repository<Out> {
     private readonly getMapper: GetRepositoryMapper<In, Out>;
     private readonly putMapper: PutRepositoryMapper<In, Out>;
 
@@ -33,7 +33,11 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         return this.getMapper.get(query, operation);
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public getAll(query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         return this.getMapper.getAll(query, operation);
     }
 
@@ -41,7 +45,11 @@ export class RepositoryMapper<In, Out> implements GetRepository<Out>, PutReposit
         return this.putMapper.put(value, query, operation);
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: Out[] | undefined, query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         return this.putMapper.putAll(values, query, operation);
     }
 
@@ -64,7 +72,11 @@ export class GetRepositoryMapper<In, Out> implements GetRepository<Out> {
         return this.toOutMapper.map(result);
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         const results: In[] = await this.getRepository.getAll(query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));
     }
@@ -90,7 +102,11 @@ export class PutRepositoryMapper<In, Out> implements PutRepository<Out> {
         return this.toOutMapper.map(result);
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: Out[] | undefined, query: Query, operation: Operation): Promise<Out[]> {
+        console.warn('putAll is deprecated. Please use put instead');
         const mapped: In[] | undefined = values ? values.map((v) => this.toInMapper.map(v)) : undefined;
         const results: In[] = await this.putRepository.putAll(mapped, query, operation);
         return results.map((r: In) => this.toOutMapper.map(r));

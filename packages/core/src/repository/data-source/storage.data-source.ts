@@ -8,10 +8,10 @@ import {
     QueryNotSupportedError,
     InvalidArgumentError,
 } from '..';
-import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
+import { DataSource } from './data-source';
 import { Logger, SafeStorage, VoidLogger } from '../../helpers';
 
-export class StorageDataSource implements GetDataSource<string>, PutDataSource<string>, DeleteDataSource {
+export class StorageDataSource implements DataSource<string> {
     private readonly storage: Storage;
 
     /**
@@ -62,7 +62,11 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
         }
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query): Promise<string[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         if (query instanceof KeyQuery || query instanceof KeyListQuery) {
             const keys = this.getKeys(query);
             return keys.map((key) => this.getItem(key));
@@ -84,7 +88,12 @@ export class StorageDataSource implements GetDataSource<string>, PutDataSource<s
         }
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: string[] | undefined, query: Query): Promise<string[]> {
+        console.warn('putAll is deprecated. Please use put instead');
+
         if (typeof values === 'undefined') {
             throw new InvalidArgumentError(`StorageDataSource: values can't be undefined`);
         }

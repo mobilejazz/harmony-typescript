@@ -1,17 +1,16 @@
 import {
     AllObjectsQuery,
-    DeleteDataSource,
-    GetDataSource,
+    DataSource,
     IdsQuery,
     InvalidArgumentError,
     KeyQuery,
-    PutDataSource,
+    NotFoundError,
     Query,
     QueryNotSupportedError,
 } from '..';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
-export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+export class InMemoryDataSource<T> implements DataSource<T> {
     private objects: Record<string, T> = {};
     private arrays: Record<string, T[]> = {};
 
@@ -19,13 +18,20 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
 
     public async get(query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
-            return this.objects[query.key];
+            if (query.key in this.objects) {
+                return this.objects[query.key];
+            }
+            throw new NotFoundError();
         } else {
             throw new QueryNotSupportedError();
         }
     }
 
+    /**
+     * @deprecated please use get with an array type instead
+     */
     public async getAll(query: Query): Promise<T[]> {
+        console.warn('getAll is deprecated. Please use get instead');
         if (query instanceof KeyQuery) {
             return this.arrays[query.key];
         } else if (query instanceof AllObjectsQuery) {
@@ -63,7 +69,12 @@ export class InMemoryDataSource<T> implements GetDataSource<T>, PutDataSource<T>
         }
     }
 
+    /**
+     * @deprecated please use put with an array type instead
+     */
     public async putAll(values: T[] | undefined, query: Query): Promise<T[]> {
+        console.warn('putAll is deprecated. Please use put instead');
+
         if (typeof values === 'undefined') {
             throw new InvalidArgumentError(`InMemoryDataSource: values can't be undefined`);
         }
