@@ -18,7 +18,7 @@ const interactors = [
     providers: [
         {
             provide: AppProvider,
-            inject: ['SQLDialect', 'SQLInterface'],
+            inject: [SQLDialect, SQLInterface],
             useFactory: (dialect: SQLDialect, db: SQLInterface) =>
                 new AppDefaultProvider(dialect, db),
         },

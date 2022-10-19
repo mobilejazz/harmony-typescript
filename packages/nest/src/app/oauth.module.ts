@@ -28,7 +28,7 @@ export class OAuthModule {
             providers: [
                 {
                     provide: OAuth2Server,
-                    inject: ['SQLDialect', 'SQLInterface', params.getUser, params.loginUser, params.validateScope],
+                    inject: [SQLDialect, SQLInterface, params.getUser, params.loginUser, params.validateScope],
                     useFactory: (
                         dialect: SQLDialect,
                         sqlInterface: SQLInterface,

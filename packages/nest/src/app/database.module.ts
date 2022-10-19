@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, EntityManager } from 'typeorm';
 import { TypeORMSQLInterface } from '@mobilejazz/harmony-typeorm';
-import { MySQLDialect, PostgresSQLDialect, SQLDialect } from '@mobilejazz/harmony-core';
+import { MySQLDialect, PostgresSQLDialect, SQLDialect, SQLInterface } from '@mobilejazz/harmony-core';
 
 export interface DatabaseModuleParams {
     dataSource: DataSource;
@@ -17,12 +17,12 @@ export class DatabaseModule {
             imports: [TypeOrmModule.forRoot(params.dataSource.options)],
             providers: [
                 {
-                    provide: 'SQLInterface',
+                    provide: SQLInterface,
                     inject: [EntityManager],
                     useFactory: (entityManager: EntityManager) => new TypeORMSQLInterface(entityManager),
                 },
                 {
-                    provide: 'SQLDialect',
+                    provide: SQLDialect,
                     inject: [],
                     useFactory: (): SQLDialect => {
                         switch (params.dataSource.options.type) {
@@ -38,7 +38,7 @@ export class DatabaseModule {
                     },
                 },
             ],
-            exports: ['SQLInterface', 'SQLDialect'],
+            exports: [SQLInterface, SQLDialect],
         };
     }
 }
