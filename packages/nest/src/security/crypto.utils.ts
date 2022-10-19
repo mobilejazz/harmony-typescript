@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto';
 import { compare, hash, hashSync } from 'bcryptjs';
 
 export class CryptoUtils {
-    private static readonly saltIteration = 5;
+    private static readonly saltIteration = 12;
 
     static passwordHashAlgorithm(): string {
         return `bcryptjs::hash_it${this.saltIteration}`;
