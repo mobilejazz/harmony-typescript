@@ -32,6 +32,8 @@
 - `docker-compose -d up`: Start backend services (database, fake mail server…)
 - `npm run start:dev`: to start a dev server.
 - `npm run start:debug`: **or**, for a dev server with debugger capabilities.
-- Once the server is running, navigate to `http://localhost:3000/doc` to check Swagger documentation.
+- Once the server is running:
+  - Navigate to `http://localhost:3000/doc` to check Swagger documentation
+  - **Or**, check `API.http` file documentation
 
 > ⚠️ Swagger UI `/auth/token` is kind of broken (basic auth header is not added). Instead use the `Authorize` button to authorize and get a token.

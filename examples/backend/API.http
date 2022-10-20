@@ -1,0 +1,40 @@
+@host=http://localhost:3000
+@client_auth=Basic d2ViLWFwcDpzZWNyZXQ=
+@username=admin@example.com
+@password=aaa123
+
+###
+# Client Credentials (grant type)
+# @name
+POST /auth/token
+Accept: application/json, text/plain, */*
+Authorization: {{client_auth}}
+Content-Type: application/json
+{
+    "grant_type": "client_credentials"
+}
+
+###
+# Password (grant type)
+# @name password_body
+POST /auth/token
+Accept: application/json, text/plain, */*
+Authorization: {{client_auth}}
+Content-Type: application/json
+{
+    "grant_type": "password",
+    "username": "{{username}}",
+    "password": "{{password}}"
+}
+
+###
+# Refresh Token (grant type)
+# @ref password_body
+POST /auth/token
+Accept: application/json, text/plain, */*
+Authorization: {{client_auth}}
+Content-Type: application/json
+{
+    "grant_type": "refresh_token",
+    "refresh_token": "{{password_body.refresh_token}}"
+}
