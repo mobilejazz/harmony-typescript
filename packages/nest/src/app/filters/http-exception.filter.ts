@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException, Type } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException } from '@nestjs/common';
 import { Mapper } from '@mobilejazz/harmony-core';
 import { Request, Response } from 'express';
 import { getI18nContextFromRequest, I18nService } from 'nestjs-i18n';

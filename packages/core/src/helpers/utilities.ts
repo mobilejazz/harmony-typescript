@@ -24,8 +24,8 @@ export function createCacheDecorator(): CacheDecorator {
 
                 return cache.get(propertyKey);
             };
-        }
-    }
+        };
+    };
 }
 
 export class UnreachableCaseError extends Error {
