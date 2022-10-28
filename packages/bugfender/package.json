@@ -19,7 +19,7 @@
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
-    "dependencies": {
+    "devDependencies": {
         "@bugfender/common": "^1.0.0-alpha.5"
     },
     "peerDependencies": {
