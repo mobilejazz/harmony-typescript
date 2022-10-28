@@ -20,6 +20,7 @@
     "scripts": {
         "bootstrap": "lerna bootstrap --use-workspaces --hoist --force-local",
         "check-deps": "npm outdated && lerna exec -- npm outdated && npm audit && lerna exec -- npm audit",
+        "clean": "lerna clean",
         "prebuild": "npm run validate && npm run format",
         "build": "lerna run build",
         "lint": "lerna run lint",
