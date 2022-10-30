@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { HackerNewsStory } from '../../../domain/models/hacker-news-story.model';
+import { HackerNewsStory } from '../../../business-logic/domain/models/hacker-news-story.model';
 import {
   LatestAskStoriesErrorViewState, LatestAskStoriesLoadedViewState,
   LatestAskStoriesLoadingViewState,
@@ -7,7 +7,7 @@ import {
 } from "./latest-ask-stories.view-state";
 import {
   GetHackerNewsLatestAskStoriesInteractor
-} from "../../../domain/interactors/get-hacker-news-latest-ask-stories.interactor";
+} from "../../../business-logic/domain/interactors/get-hacker-news-latest-ask-stories.interactor";
 import { NavigationService } from "../../services/navigation.service";
 
 @Component({

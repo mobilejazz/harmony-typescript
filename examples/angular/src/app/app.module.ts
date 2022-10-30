@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppProviderModule } from '../domain/app.provider.module';
+import { AppProviderModule } from '../business-logic/domain/app.provider.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LatestAskStoriesComponent } from './story/latest-ask-stories/latest-ask-stories.component';

@@ -1,7 +1,7 @@
 import { CacheRepository, DefaultObjectValidator, GetInteractor, GetRepository, InMemoryDataSource, RepositoryMapper, SingleGetDataSourceRepository, VoidDataSource } from '@mobilejazz/harmony-core';
 
-import { HackerNewsStoryNetworkDataSource } from 'src/data/data-sources/hacker-news-story.network.data-source';
-import { HackerNewsStoryEntity } from 'src/data/entities/hacker-news-item.entity';
+import { HackerNewsStoryNetworkDataSource } from 'src/business-logic/data/data-sources/hacker-news-story.network.data-source';
+import { HackerNewsStoryEntity } from 'src/business-logic/data/entities/hacker-news-item.entity';
 import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from '../data/mappers/hacker-news-story.mapper';
 import { HackerNewsFetchService, HackerNewsService } from '../data/service/hacker-news.service';
 import { GetHackerNewsLatestAskStoriesInteractor } from './interactors/get-hacker-news-latest-ask-stories.interactor';

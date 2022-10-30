@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GetHackerNewsStoryInteractor } from '../../../domain/interactors/get-hacker-news-story.interactor';
+import { GetHackerNewsStoryInteractor } from '../../../business-logic/domain/interactors/get-hacker-news-story.interactor';
 import { NavigationService } from '../../services/navigation.service';
 import { StoryErrorViewState, StoryLoadedViewState, StoryLoadingViewState, StoryViewState } from "./story.view-state";
 
 @Component({
   selector: 'app-show-story',
-  templateUrl: './story.component.html',
-  styleUrls: ['./story.component.scss'],
+  templateUrl: './story.component.html'
 })
 export class ShowStoryComponent implements OnInit {
   public viewState!: StoryViewState;
