@@ -1,0 +1,17 @@
+<p>
+  <button (click)="onActionBack()">&larr; Back</button>
+</p>
+<p *ngIf="viewState.$type === 'error'">
+  There was an error.
+  <button (click)="onActionReload(viewState.storyId)">Reload</button>
+</p>
+<p *ngIf="viewState.$type === 'loading'">
+  Loading…
+</p>
+<ng-container *ngIf="viewState.$type === 'loaded'">
+  <h2>{{viewState.story.title}}</h2>
+  <div *ngIf="viewState.story.hasURL()">
+    <a href="{{viewState.story.url}}">{{viewState.story.url}}</a>
+  </div>
+  <div *ngIf="viewState.story.hasText()" [innerHTML]="viewState.story.text"></div>
+</ng-container>

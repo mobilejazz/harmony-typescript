@@ -1,0 +1,16 @@
+<p *ngIf="viewState.$type === 'error'">
+  There was an error.
+  <button (click)="onActionReload()">Reload</button>
+</p>
+<p *ngIf="viewState.$type === 'loading'">
+  Loading…
+</p>
+<ng-container *ngIf="viewState.$type === 'loaded'">
+  <h2>Latest {{viewState.stories.length}} Ask Stories</h2>
+  <div
+    *ngFor="let story of viewState.stories"
+    class="story"
+    (click)="onActionViewStory(story)">
+    {{ story.title }}
+  </div>
+</ng-container>

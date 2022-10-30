@@ -15,9 +15,10 @@ This mono-repository contains the TypeScript packages of Mobile Jazz Harmony _fr
 Anytime you're working in the project ensure you `nvm use` to stay on the correct NodeJS version.
 
 ## Before publishing a new version
+
 -   Always adapt the examples under `/examples` to match and implement the new changes.
 -   For further instructions about working with the examples, please follow their READMEs.
-    - [Angular Example](./examples/angular/README.md)
+    -   [Angular Example](./examples/angular/README.md)
 
 ## Publish new version
 
