@@ -19,8 +19,13 @@
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
-    "dependencies": {
-        "@types/mysql": "^2.15.21",
-        "class-transformer": "^0.4.0"
+    "devDependencies": {
+        "@types/mysql": "^2.15.21"
+    },
+    "peerDependencies": {
+        "class-transformer": ">=0.2.0"
+    },
+    "optionalDependencies": {
+        "mysql": "2.x"
     }
 }
