@@ -1,25 +1,24 @@
 import { CacheRepository, DefaultObjectValidator, GetInteractor, GetRepository, InMemoryDataSource, RepositoryMapper, SingleGetDataSourceRepository, VoidDataSource } from '@mobilejazz/harmony-core';
-
-import { HackerNewsStoryNetworkDataSource } from 'src/business-logic/data/data-sources/hacker-news-story.network.data-source';
-import { HackerNewsStoryEntity } from 'src/business-logic/data/entities/hacker-news-item.entity';
-import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from '../data/mappers/hacker-news-story.mapper';
-import { HackerNewsFetchService, HackerNewsService } from '../data/service/hacker-news.service';
-import { GetHackerNewsLatestAskStoriesInteractor } from './interactors/get-hacker-news-latest-ask-stories.interactor';
-import { GetHackerNewsStoryInteractor } from './interactors/get-hacker-news-story.interactor';
-import { HackerNewsStoryEntityToHackerNewsStoryMapper, HackerNewsStoryToHackerNewsStoryEntityMapper } from './mappers/hacker-news-story.mapper';
-import { HackerNewsStory } from './models/hacker-news-story.model';
-import { CacheDecoratorFactory } from './utils';
-import { HackerNewsStoryIdsNetworkDataSource } from "../data/data-sources/hacker-news-story-ids.network.data-source";
+import { HackerNewsStoryNetworkDataSource } from 'src/features/hacker-news-story/data/data-sources/hacker-news-story.network.data-source';
+import { HackerNewsStoryEntity } from 'src/features/hacker-news-story/data/entities/hacker-news-item.entity';
+import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from './data/mappers/hacker-news-story.mapper';
+import { HackerNewsFetchService, HackerNewsService } from './data/service/hacker-news.service';
+import { GetHackerNewsLatestAskStoriesInteractor } from './domain/interactors/get-hacker-news-latest-ask-stories.interactor';
+import { GetHackerNewsStoryInteractor } from './domain/interactors/get-hacker-news-story.interactor';
+import { HackerNewsStoryEntityToHackerNewsStoryMapper, HackerNewsStoryToHackerNewsStoryEntityMapper } from './domain/mappers/hacker-news-story.mapper';
+import { HackerNewsStory } from './domain/models/hacker-news-story.model';
+import { HackerNewsStoryIdsNetworkDataSource } from "./data/data-sources/hacker-news-story-ids.network.data-source";
+import {CacheDecoratorFactory} from "@bugfender/sdk/lib/utils";
 
 // Caching via decorator
 const Cached = CacheDecoratorFactory(new Map());
 
-export abstract class AppProvider {
+export abstract class HackerNewsStoryProvider {
   abstract getHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor;
   abstract getHackerNewsStory(): GetHackerNewsStoryInteractor;
 }
 
-export class AppDefaultProvider implements AppProvider {
+export class HackerNewsStoryDefaultProvider implements HackerNewsStoryProvider {
   private readonly hackerNewsService: HackerNewsService = new HackerNewsFetchService();
 
   @Cached()

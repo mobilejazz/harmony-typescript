@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GetHackerNewsStoryInteractor } from '../../../business-logic/domain/interactors/get-hacker-news-story.interactor';
+import { GetHackerNewsStoryInteractor } from '../../../features/hacker-news-story/domain/interactors/get-hacker-news-story.interactor';
 import { NavigationService } from '../../services/navigation.service';
 import { StoryErrorViewState, StoryLoadedViewState, StoryLoadingViewState, StoryViewState } from "./story.view-state";
 

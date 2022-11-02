@@ -1,4 +1,4 @@
-import { HackerNewsStory } from '../../../business-logic/domain/models/hacker-news-story.model';
+import { HackerNewsStory } from '../../../features/hacker-news-story/domain/models/hacker-news-story.model';
 import { ViewState } from '@mobilejazz/harmony-core';
 
 export class StoryLoadingViewState implements ViewState {
