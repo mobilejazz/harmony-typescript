@@ -1,3 +1,3 @@
 export interface ViewState {
-    $type: Lowercase<string>;
+    readonly $type: Lowercase<string>;
 }
