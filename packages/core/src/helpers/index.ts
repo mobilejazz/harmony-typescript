@@ -1,3 +1,4 @@
+export * from './cache-decorator.factory';
 export * from './safe-storage';
 export * from './string.utils';
 export * from './types';

@@ -6,7 +6,9 @@ import { LatestAskStoriesComponent } from './story/latest-ask-stories/latest-ask
 import { ShowStoryComponent } from './story/show-story/story.component';
 import { DefaultNavigationService, NavigationService } from "./services/navigation.service";
 import { Router} from "@angular/router";
-import { HACKER_NEWS_PROVIDERS } from "../features/hacker-news-story/hacker-news-story.provider.module";
+import {
+  HackerNewsStoryProviderModule
+} from "../features/hacker-news-story/hacker-news-story.provider.module";
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { HACKER_NEWS_PROVIDERS } from "../features/hacker-news-story/hacker-news
   imports: [
     AppRoutingModule,
     BrowserModule,
+    // Features
+    HackerNewsStoryProviderModule
   ],
   providers: [
     {
@@ -24,8 +28,6 @@ import { HACKER_NEWS_PROVIDERS } from "../features/hacker-news-story/hacker-news
       deps: [Router],
       useFactory: (router: Router) => new DefaultNavigationService(router),
     },
-    // Features
-    ...HACKER_NEWS_PROVIDERS
   ],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,14 @@
-import { CacheRepository, DefaultObjectValidator, GetInteractor, GetRepository, InMemoryDataSource, RepositoryMapper, SingleGetDataSourceRepository, VoidDataSource } from '@mobilejazz/harmony-core';
+import {
+  CacheDecoratorFactory,
+  CacheRepository,
+  DefaultObjectValidator,
+  GetInteractor,
+  GetRepository,
+  InMemoryDataSource,
+  RepositoryMapper,
+  SingleGetDataSourceRepository,
+  VoidDataSource
+} from '@mobilejazz/harmony-core';
 import { HackerNewsStoryNetworkDataSource } from 'src/features/hacker-news-story/data/data-sources/hacker-news-story.network.data-source';
 import { HackerNewsStoryEntity } from 'src/features/hacker-news-story/data/entities/hacker-news-item.entity';
 import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from './data/mappers/hacker-news-story.mapper';
@@ -8,7 +18,6 @@ import { GetHackerNewsStoryInteractor } from './domain/interactors/get-hacker-ne
 import { HackerNewsStoryEntityToHackerNewsStoryMapper, HackerNewsStoryToHackerNewsStoryEntityMapper } from './domain/mappers/hacker-news-story.mapper';
 import { HackerNewsStory } from './domain/models/hacker-news-story.model';
 import { HackerNewsStoryIdsNetworkDataSource } from "./data/data-sources/hacker-news-story-ids.network.data-source";
-import {CacheDecoratorFactory} from "@bugfender/sdk/lib/utils";
 
 // Caching via decorator
 const Cached = CacheDecoratorFactory(new Map());
