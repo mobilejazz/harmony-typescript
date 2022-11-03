@@ -9,8 +9,8 @@ import {
   SingleGetDataSourceRepository,
   VoidDataSource
 } from '@mobilejazz/harmony-core';
-import { HackerNewsStoryNetworkDataSource } from 'src/features/hacker-news-story/data/data-sources/hacker-news-story.network.data-source';
-import { HackerNewsStoryEntity } from 'src/features/hacker-news-story/data/entities/hacker-news-item.entity';
+import { HackerNewsStoryNetworkDataSource } from './data/data-sources/hacker-news-story.network.data-source';
+import { HackerNewsStoryEntity } from './data/entities/hacker-news-item.entity';
 import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from './data/mappers/hacker-news-story.mapper';
 import { HackerNewsFetchService, HackerNewsService } from './data/service/hacker-news.service';
 import { GetHackerNewsLatestAskStoriesInteractor } from './domain/interactors/get-hacker-news-latest-ask-stories.interactor';
