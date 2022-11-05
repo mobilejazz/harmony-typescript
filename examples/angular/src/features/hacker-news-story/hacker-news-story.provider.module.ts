@@ -9,9 +9,7 @@ import { NgModule } from "@angular/core";
     {
       provide: HackerNewsStoryProvider,
       deps: [],
-      useFactory: () => {
-        return new HackerNewsStoryDefaultProvider();
-      },
+      useFactory: () => new HackerNewsStoryDefaultProvider(),
     },
     {
       provide: GetHackerNewsLatestAskStoriesInteractor,
