@@ -1,6 +1,6 @@
 import {
-  CacheDecoratorFactory,
   CacheRepository,
+  createCacheDecorator,
   DefaultObjectValidator,
   GetInteractor,
   GetRepository,
@@ -20,7 +20,7 @@ import { HackerNewsStory } from './domain/models/hacker-news-story.model';
 import { HackerNewsStoryIdsNetworkDataSource } from "./data/data-sources/hacker-news-story-ids.network.data-source";
 
 // Caching via decorator
-const Cached = CacheDecoratorFactory(new Map());
+const Cached = createCacheDecorator();
 
 export abstract class HackerNewsStoryProvider {
   abstract getHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor;

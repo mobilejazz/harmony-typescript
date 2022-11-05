@@ -5,7 +5,7 @@ type CacheDecorator = () => MethodDecorator;
  * Creates a `CacheDecorator`
  *
  * We don't expose directly `CacheDecorator` as we want to have a different
- * cache per class when this is used. Otherwise different classes would share
+ * cache per class when this is used. Otherwise, different classes would share
  * the same cache.
  *
  * @returns a `CacheDecorator` with unique cache
