@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppProviderModule } from '../domain/app.provider.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LatestAskStoriesComponent } from './components/latest-ask-stories/latest-ask-stories.component';
-import { ShowStoryComponent } from './components/show-story/show-story.component';
+import { LatestAskStoriesComponent } from './story/latest-ask-stories/latest-ask-stories.component';
+import { ShowStoryComponent } from './story/show-story/story.component';
+import { DefaultNavigationService, NavigationService } from "./services/navigation.service";
+import { Router} from "@angular/router";
+import {
+  HackerNewsStoryProviderModule
+} from "../features/hacker-news-story/hacker-news-story.provider.module";
 
 @NgModule({
   declarations: [
@@ -14,11 +17,18 @@ import { ShowStoryComponent } from './components/show-story/show-story.component
     ShowStoryComponent
   ],
   imports: [
-    AppProviderModule,
     AppRoutingModule,
     BrowserModule,
+    // Features
+    HackerNewsStoryProviderModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: NavigationService,
+      deps: [Router],
+      useFactory: (router: Router) => new DefaultNavigationService(router),
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

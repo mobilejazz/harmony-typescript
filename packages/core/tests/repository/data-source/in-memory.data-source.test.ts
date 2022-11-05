@@ -1,4 +1,4 @@
-import {InMemoryDataSource, KeyQuery, NotFoundError, ObjectQuery, QueryNotSupportedError} from '../../../src';
+import { InMemoryDataSource, KeyQuery, NotFoundError, ObjectQuery, QueryNotSupportedError } from '../../../src';
 
 class SimplestClass {
     constructor(public readonly id: number) {}
@@ -62,7 +62,7 @@ describe('InMemoryDataSource', () => {
             await cacheDataSource.put(myObject, keyQuery);
             await cacheDataSource.delete(keyQuery);
 
-            const result = cacheDataSource.get(keyQuery)
+            const result = cacheDataSource.get(keyQuery);
 
             await expect(result).rejects.toThrow(NotFoundError);
         });

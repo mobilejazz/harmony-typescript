@@ -14,7 +14,7 @@ import {
     Query,
     QueryNotSupportedError,
 } from '../../src';
-import {Book, getDefaultBook, getRandomBook} from './BookHelper';
+import { Book, getDefaultBook, getRandomBook } from './BookHelper';
 
 describe('CacheRepository', () => {
     let repository: CacheRepository<Book>;
@@ -46,7 +46,7 @@ describe('CacheRepository', () => {
         });
 
         it('should return `undefined` when the key is not found', () => {
-            const nonExistingKeyQuery = getMissingKeyQuery()
+            const nonExistingKeyQuery = getMissingKeyQuery();
             const operation = getDefaultOperation();
 
             const result = repository.get(nonExistingKeyQuery, operation);
@@ -127,7 +127,7 @@ describe('CacheRepository', () => {
             const query = getNotSupportedQuery();
             const operation = getMainSyncOperation();
 
-            const syncResult = repository.put(book, query, operation)
+            const syncResult = repository.put(book, query, operation);
             const cacheResult = repository.get(getDefaultKeyQuery(), getCacheOperation());
 
             await expect(syncResult).rejects.toThrowError(QueryNotSupportedError);
@@ -176,8 +176,7 @@ function getDefaultOperation(): Operation {
     return new DefaultOperation();
 }
 
-class WrongOperation implements Operation {
-}
+class WrongOperation implements Operation {}
 
 function getNotSupportedOperation(): Operation {
     return new WrongOperation();
