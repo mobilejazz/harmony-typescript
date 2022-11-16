@@ -1,3 +1,5 @@
+import {Dictionary, ParameterType} from "../../data";
+
 export class Query {}
 
 export class KeyQuery extends Query {
@@ -73,5 +75,22 @@ export class DictionaryQuery<T> extends Query {
 export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
     constructor(public dictionary: Record<string, T>, public relations: string[] = []) {
         super(dictionary);
+    }
+}
+
+export abstract class NetworkQuery extends Query {
+    abstract get endpoint(): string;
+
+    get body(): string | FormData {
+        return '';
+    }
+    get urlParameters(): Record<string, ParameterType> {
+        return {};
+    }
+    get queryParameters(): Record<string, ParameterType> {
+        return {};
+    }
+    get headers(): Record<string, string> {
+        return {};
     }
 }

@@ -143,6 +143,23 @@ export class PaginationPageMapper<From, To> implements Mapper<PaginationPage<Fro
     }
 }
 
+export class MaybeMapper<From extends string | Record<string, unknown>, To> implements Mapper<From, To> {
+    constructor(
+        private toType: Type<To>,
+        private objectMapper: JsonDeserializerMapper<From, To> = new JsonDeserializerMapper<From, To>(toType),
+        private arrayMapper: ArrayMapper<From, To> = new ArrayMapper(objectMapper),
+    ) {
+    }
+
+    public map(from: From[] | From): To {
+       if (Array.isArray(from)) {
+           return this.arrayMapper.map(from);
+       }
+       return this.objectMapper.map(from);
+    }
+}
+
+
 /**
  * Maps an array of objects
  */
@@ -152,3 +169,4 @@ export class ArrayMapper<From, To> implements Mapper<From[], To[]> {
         return from.map((value) => this.mapper.map(value));
     }
 }
+
