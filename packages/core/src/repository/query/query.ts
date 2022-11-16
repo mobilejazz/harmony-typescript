@@ -1,4 +1,4 @@
-import {Dictionary, ParameterType} from "../../data";
+import { Dictionary, ParameterType } from '../../data';
 
 export class Query {}
 

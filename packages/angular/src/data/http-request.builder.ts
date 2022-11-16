@@ -1,10 +1,10 @@
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {BlankMapper, Mapper, ParameterType, Type, UrlBuilder} from '@mobilejazz/harmony-core';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { BlankMapper, Mapper, ParameterType, UrlBuilder } from '@mobilejazz/harmony-core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
-interface IRequestOptions {
+interface RequestOptions {
     headers: HttpHeaders;
     observe: 'response';
     responseType: 'json';
@@ -13,7 +13,9 @@ interface IRequestOptions {
 export class HttpRequestBuilder<T = unknown> {
     private urlBuilder: UrlBuilder;
     private body: string | FormData = '';
-    private mapper: Mapper<unknown, T> = new BlankMapper<T>();
+
+    // This `as ...` is needed to appease TS. Feel free to try to remove it.
+    private mapper: Mapper<unknown, T> = new BlankMapper() as Mapper<unknown, T>;
 
     constructor(
         protected readonly endpoint: string,
@@ -25,7 +27,7 @@ export class HttpRequestBuilder<T = unknown> {
 
     // HEADERS & OPTIONS
 
-    private createRequestOptions(): IRequestOptions {
+    private createRequestOptions(): RequestOptions {
         const headers = new HttpHeaders({
             ...this.defaultHeaders,
             ...this.authService.getAuthHeaders(),
@@ -45,7 +47,7 @@ export class HttpRequestBuilder<T = unknown> {
         };
     }
 
-    public setMapper(mapper: Mapper<unknown, T>): HttpRequestBuilder<T> {
+    public setMapper<From>(mapper: Mapper<From, T>): this {
         this.mapper = mapper;
         return this;
     }
@@ -58,17 +60,17 @@ export class HttpRequestBuilder<T = unknown> {
         return this.mapper.map(res.body);
     }
 
-    public setUrlParameters(urlParameters: Record<string, ParameterType>): HttpRequestBuilder<T> {
+    public setUrlParameters(urlParameters: Record<string, ParameterType>): this {
         this.urlBuilder.setUrlParameters(urlParameters);
         return this;
     }
 
-    public setQueryParameters(queryParameters: Record<string, ParameterType>): HttpRequestBuilder<T> {
+    public setQueryParameters(queryParameters: Record<string, ParameterType>): this {
         this.urlBuilder.setQueryParameters(queryParameters);
         return this;
     }
 
-    public setBody(body: unknown): HttpRequestBuilder<T> {
+    public setBody(body: unknown): this {
         this.body = JSON.stringify(body);
         return this;
     }
