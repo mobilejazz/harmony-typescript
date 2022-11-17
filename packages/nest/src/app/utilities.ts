@@ -1,13 +1,21 @@
-import { FactoryProvider, InjectionToken, Provider, Type } from '@nestjs/common';
+import { HarmonyProvider } from '@mobilejazz/harmony-core';
+import { FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
 
-export function createNestProviders(provider: InjectionToken, interactors: Type[]): Provider[] {
-    return interactors.map<FactoryProvider>((interactor) => {
-        const method = `get${interactor.name.replace('Interactor', '')}`;
+export function createNestProviderModuleMetadata(provider: FactoryProvider, interactors: Type[]): ModuleMetadata {
+    const providers: Provider[] = [provider];
 
-        return {
+    interactors.forEach((interactor) => {
+        const method = `provide${interactor.name.replace('Interactor', '')}`;
+
+        providers.push({
             provide: interactor,
-            inject: [provider],
-            useFactory: (providerInstance) => providerInstance[method](),
-        };
+            inject: [provider.provide],
+            useFactory: (providerInstance: HarmonyProvider) => providerInstance[method](),
+        });
     });
+
+    return {
+        providers,
+        exports: [provider.provide, ...interactors],
+    };
 }
