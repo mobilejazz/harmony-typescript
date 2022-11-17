@@ -23,8 +23,8 @@ import { HackerNewsStoryIdsNetworkDataSource } from "./data/data-sources/hacker-
 const Cached = createCacheDecorator();
 
 export abstract class HackerNewsStoryProvider {
-  abstract getGetHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor;
-  abstract getGetHackerNewsStory(): GetHackerNewsStoryInteractor;
+  abstract provideGetHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor;
+  abstract provideGetHackerNewsStory(): GetHackerNewsStoryInteractor;
 }
 
 export class HackerNewsStoryDefaultProvider implements HackerNewsStoryProvider {
@@ -62,14 +62,14 @@ export class HackerNewsStoryDefaultProvider implements HackerNewsStoryProvider {
     );
   }
 
-  public getGetHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor {
+  public provideGetHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor {
     return new GetHackerNewsLatestAskStoriesInteractor(
-      this.getGetHackerNewsStory(),
+      this.provideGetHackerNewsStory(),
       new GetInteractor(this.getHackerNewsStoryIdsRepository()),
     );
   }
 
-  public getGetHackerNewsStory(): GetHackerNewsStoryInteractor {
+  public provideGetHackerNewsStory(): GetHackerNewsStoryInteractor {
     return new GetHackerNewsStoryInteractor(
       new GetInteractor(this.getHackerNewsStoryRepository()),
     );

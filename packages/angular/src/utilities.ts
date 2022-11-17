@@ -1,12 +1,11 @@
 import { Provider, FactoryProvider, Type } from '@angular/core';
-
-type HarmonyProvider = Record<string, () => unknown>;
+import { HarmonyProvider } from '@mobilejazz/harmony-core';
 
 export function createAngularProviders(provider: FactoryProvider, interactors: Type<unknown>[]): Provider[] {
     const providers: Provider[] = [provider];
 
     interactors.forEach((interactor) => {
-        const method = `get${interactor.name.replace('Interactor', '')}`;
+        const method = `provide${interactor.name.replace('Interactor', '')}`;
 
         providers.push({
             provide: interactor,
