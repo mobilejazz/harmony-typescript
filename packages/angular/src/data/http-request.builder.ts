@@ -4,13 +4,29 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
+// TODO: Move to `harmony-core`
 interface RequestOptions {
     headers: HttpHeaders;
     observe: 'response';
     responseType: 'json';
 }
 
-export class HttpRequestBuilder<T = unknown> {
+// TODO: Move to `harmony-core`
+export interface HttpRequestBuilder<T = unknown> {
+    // Builder methods
+    setBody(body: unknown): this;
+    setMapper<From>(mapper: Mapper<From, T>): this;
+    setQueryParameters(queryParameters: Record<string, ParameterType>): this;
+    setUrlParameters(urlParameters: Record<string, ParameterType>): this;
+
+    // Methods
+    get(): Observable<T | undefined>;
+    post(): Observable<T | undefined>;
+    put(): Observable<T | undefined>;
+    delete(): Observable<void>;
+}
+
+export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilder<T> {
     private urlBuilder: UrlBuilder;
     private body: string | FormData = '';
 
@@ -76,7 +92,6 @@ export class HttpRequestBuilder<T = unknown> {
     }
 
     // METHODS
-
     public get(): Observable<T | undefined> {
         return this.http
             .get<T>(this.urlBuilder.getUrl(), this.createRequestOptions())

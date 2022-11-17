@@ -1,17 +1,16 @@
 import {
-    DeleteDataSource,
-    GetDataSource,
+    DataSource,
     Mapper,
     MethodNotImplementedError,
     NetworkQuery,
-    PutDataSource,
     Query,
     QueryNotSupportedError,
 } from '@mobilejazz/harmony-core';
 import { lastValueFrom, Observable } from 'rxjs';
 import { ApiRequestService } from '../api-request.service';
 
-export class DefaultNetworkDataSource<T> implements GetDataSource<T>, PutDataSource<T>, DeleteDataSource {
+// TODO: Move to `harmony-core`
+export class DefaultNetworkDataSource<T> implements DataSource<T> {
     constructor(private readonly requestService: ApiRequestService, private readonly mapper: Mapper<unknown, T>) {}
 
     public async get(query: Query): Promise<T> {
