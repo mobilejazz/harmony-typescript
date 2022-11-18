@@ -6,6 +6,7 @@ import { AppDefaultProvider, AppProvider } from 'src/domain/app.provider';
 import { GetBasicUserInteractor } from './interactors/auth/get-basic-user.interactor';
 import { LoginUserInteractor } from './interactors/auth/login-user.interactor';
 import { ValidateUserScopeInteractor } from './interactors/auth/validate-user-scope.interactor';
+
 @Global()
 @Module(
     createNestProviderModuleMetadata(
