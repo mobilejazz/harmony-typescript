@@ -2,8 +2,5 @@
     "version": "0.11.0",
     "useNx": true,
     "useWorkspaces": true,
-    "packages": [
-        "examples/*",
-        "packages/*"
-    ]
+    "packages": ["examples/*", "packages/*"]
 }

@@ -30,10 +30,10 @@
     "peerDependencies": {
         "@mobilejazz/harmony-core": "*",
         "@mobilejazz/harmony-typeorm": "*",
-        "@nestjs/common": "^9.0.0"
+        "@nestjs/common": "9.2.*"
     },
     "optionalDependencies": {
-        "@nestjs/swagger": "^6.0.0",
+        "@nestjs/swagger": "6.1.*",
         "@nestjs/typeorm": "^9.0.0",
         "nestjs-i18n": "^9.0.0"
     }
