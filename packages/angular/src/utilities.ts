@@ -1,7 +1,7 @@
+import { Provider, FactoryProvider, Type } from '@angular/core';
 import { HarmonyProvider } from '@mobilejazz/harmony-core';
-import { FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
 
-export function createNestProviderModuleMetadata(provider: FactoryProvider, interactors: Type[]): ModuleMetadata {
+export function createAngularProviders(provider: FactoryProvider, interactors: Type<unknown>[]): Provider[] {
     const providers: Provider[] = [provider];
 
     interactors.forEach((interactor) => {
@@ -9,13 +9,10 @@ export function createNestProviderModuleMetadata(provider: FactoryProvider, inte
 
         providers.push({
             provide: interactor,
-            inject: [provider.provide],
+            deps: [provider.provide],
             useFactory: (providerInstance: HarmonyProvider) => providerInstance[method](),
         });
     });
 
-    return {
-        providers,
-        exports: [provider.provide, ...interactors],
-    };
+    return providers;
 }

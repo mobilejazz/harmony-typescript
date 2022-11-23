@@ -28,9 +28,9 @@ import {
 } from './mappers/user.mapper';
 
 export abstract class AppProvider {
-    abstract getGetBasicUser(): GetBasicUserInteractor;
-    abstract getLoginUser(): LoginUserInteractor;
-    abstract getValidateUserScope(): ValidateUserScopeInteractor;
+    abstract provideGetBasicUser(): GetBasicUserInteractor;
+    abstract provideLoginUser(): LoginUserInteractor;
+    abstract provideValidateUserScope(): ValidateUserScopeInteractor;
 }
 
 const Cached = createCacheDecorator();
@@ -72,13 +72,13 @@ export class AppDefaultProvider implements AppProvider {
         );
     }
 
-    public getGetBasicUser(): GetBasicUserInteractor {
+    public provideGetBasicUser(): GetBasicUserInteractor {
         return new GetBasicUserInteractor(
             new GetInteractor(this.getUserRepository()),
         );
     }
 
-    public getLoginUser(): LoginUserInteractor {
+    public provideLoginUser(): LoginUserInteractor {
         const dataSource = new OauthUserInfoMysqlDataSource(
             this.dialect,
             this.db,
@@ -91,7 +91,7 @@ export class AppDefaultProvider implements AppProvider {
         return new LoginUserInteractor(new GetInteractor(repo));
     }
 
-    public getValidateUserScope(): ValidateUserScopeInteractor {
+    public provideValidateUserScope(): ValidateUserScopeInteractor {
         return new ValidateUserScopeInteractor();
     }
 }
