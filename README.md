@@ -30,6 +30,7 @@ Harmony TypeScript is split into several NPM packages, being `@mobilejazz/harmon
 | `@mobilejazz/harmony-bugfender` | Integration with [Bugfender](https://bugfender.com).       |
 | `@mobilejazz/harmony-nest`      | Integration with [NestJS](https://nestjs.com).             |
 | `@mobilejazz/harmony-typeorm`   | Integration with [TypeORM](https://typeorm.io).            |
+| `@mobilejazz/harmony-cli`       | CLI with utilities for the Harmony framework.              |
 
 ## Contributing
 

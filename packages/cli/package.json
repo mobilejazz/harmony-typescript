@@ -1,0 +1,39 @@
+{
+    "name": "@mobilejazz/harmony-cli",
+    "version": "0.0.0",
+    "description": "CLI with utilities for the Mobile Jazz Harmony framework",
+    "author": "Mobile Jazz",
+    "license": "Apache-2.0",
+    "repository": "github:mobilejazz/harmony-typescript",
+    "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/cli#readme",
+    "bugs": "https://github.com/mobilejazz/harmony-typescript/issues",
+    "type": "module",
+    "keywords": [
+        "cli",
+        "harmony",
+        "blueprints",
+        "code generation",
+        "schematics"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "bin": {
+        "mj": "dist/bin/mj.js"
+    },
+    "scripts": {
+        "clean": "rimraf dist/",
+        "build": "npm run clean && tsc && npm run copy-files",
+        "copy-files": "copyfiles src/**/*.hbs dist/",
+        "test": "echo 'alo!'"
+    },
+    "dependencies": {
+        "commander": "^9.4.1",
+        "plop": "^3.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^16.0.0",
+        "copyfiles": "^2.4.1",
+        "rimraf": "^3.0.2"
+    }
+}

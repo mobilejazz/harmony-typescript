@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { createAngularProviders } from '@mobilejazz/harmony-angular';
+
+import { {{ pascalCase name }}Provider, {{ pascalCase name }}DefaultProvider } from './{{ kebabCase name }}.provider';
+
+@NgModule({
+  providers: createAngularProviders(
+    {
+      provide: {{ pascalCase name }}Provider,
+      useFactory: () => new {{ pascalCase name }}DefaultProvider(),
+    },
+    [
+    ],
+  ),
+})
+export class {{ pascalCase name }}ProviderModule {}

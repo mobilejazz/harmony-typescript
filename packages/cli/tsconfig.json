@@ -1,0 +1,15 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "outDir": "./dist",
+        "lib": ["ESNext"],
+        "module": "NodeNext",
+        "target": "ES2021",
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["*.ts", "**/*.ts"],
+    "exclude": ["node_modules", "dist", "tests"]
+}
