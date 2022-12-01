@@ -20,10 +20,10 @@
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
     "devDependencies": {
-        "@bugfender/common": "^1.0.0-alpha.5"
+        "@bugfender/common": "^1.1.1"
     },
     "peerDependencies": {
-        "@bugfender/sdk": "2.x",
+        "@bugfender/sdk": "^2.2.0",
         "@mobilejazz/harmony-core": "*"
     }
 }
