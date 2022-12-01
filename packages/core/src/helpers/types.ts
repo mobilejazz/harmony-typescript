@@ -3,7 +3,9 @@
  * @see https://stackoverflow.com/a/52183279/379923
  */
 export interface Type<T> extends Function {
-    new (...args: unknown[]): T;
+    // In this case, it must be `any`. Using `unknown` give compile errors.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    new (...args: any[]): T;
 }
 
 /**

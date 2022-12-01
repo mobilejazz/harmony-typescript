@@ -62,7 +62,11 @@ export class HttpRequestBuilder<T> {
         return mapper.map(responseItem);
     }
 
-    private mapResponse(res: HttpResponse<T>): T | T[] | undefined {
+    // HACK: This is problematic but it's the best we can do right now.
+    // Let's assume that `T` equals to the return type of this `mapResponse`.
+    // See: https://app.asana.com/0/1109863238977521/1203450043003508/f
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private mapResponse(res: HttpResponse<T>): any {
         if (!res.body) {
             return undefined;
         }
@@ -80,19 +84,19 @@ export class HttpRequestBuilder<T> {
         return this.mapItem(res.body);
     }
 
-    public get(): Observable<T | T[] | undefined> {
+    public get(): Observable<T> {
         return this.http
             .get<T>(this.urlBuilder.getUrl(), { observe: 'response', headers: this.headers })
             .pipe(map((res) => this.mapResponse(res)));
     }
 
-    public post(): Observable<T | T[] | undefined> {
+    public post(): Observable<T> {
         return this.http
             .post<T>(this.urlBuilder.getUrl(), this.body, { observe: 'response', headers: this.headers })
             .pipe(map((res) => this.mapResponse(res)));
     }
 
-    public put(): Observable<T | T[] | undefined> {
+    public put(): Observable<T> {
         return this.http
             .put<T>(this.urlBuilder.getUrl(), this.body, { observe: 'response', headers: this.headers })
             .pipe(map((res) => this.mapResponse(res)));
