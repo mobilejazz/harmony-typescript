@@ -21,7 +21,6 @@ export type HarmonyProvider = Record<`provide${string}`, () => unknown>;
  *
  * @see https://stackoverflow.com/a/51399781/379923
  */
-export type ArrayElement<MaybeArrayType> =
-    MaybeArrayType extends readonly (infer ElementType)[]
-        ? ElementType
-        : MaybeArrayType;
+export type ArrayElement<MaybeArrayType> = MaybeArrayType extends readonly (infer ElementType)[]
+    ? ElementType
+    : MaybeArrayType;
