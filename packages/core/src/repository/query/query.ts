@@ -34,6 +34,36 @@ export class AllObjectsQuery extends Query {
     }
 }
 
+/**
+ * @deprecated
+ */
+export class ObjectQuery<T> extends Query {
+    constructor(public readonly value: T) {
+        super();
+    }
+}
+
+/**
+ * @deprecated
+ */
+export class ObjectsQuery<T> extends Query {
+    constructor(public readonly values: T[]) {
+        super();
+    }
+}
+
+/**
+ * @deprecated
+ */
+export class ObjectRelationsQuery<T> extends ObjectQuery<T> {
+    constructor(value: T, public readonly relations: string[] = []) {
+        super(value);
+    }
+}
+
+/**
+ * @deprecated
+ */
 export abstract class PaginationQuery extends Query {
 }
 
@@ -46,5 +76,23 @@ export class PaginationOffsetLimitQuery extends PaginationQuery {
 export class PaginationPageQuery extends PaginationQuery {
     constructor(public readonly page: number) {
         super();
+    }
+}
+
+/**
+ * @deprecated
+ */
+export class DictionaryQuery<T> extends Query {
+    constructor(public dictionary: Record<string, T>) {
+        super();
+    }
+}
+
+/**
+ * @deprecated
+ */
+export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
+    constructor(public dictionary: Record<string, T>, public relations: string[] = []) {
+        super(dictionary);
     }
 }
