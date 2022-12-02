@@ -14,3 +14,14 @@ export interface Type<T> extends Function {
  * Needed as a _helper type_ for Angular/Nest `*ProviderModule` helpers.
  */
 export type HarmonyProvider = Record<`provide${string}`, () => unknown>;
+
+/**
+ * Given an array type `T[]`, removes the array part, leaving only `T`.
+ * Note that it only handles one dimensional arrays, for multiple dimensions see: https://stackoverflow.com/a/74644590/379923
+ *
+ * @see https://stackoverflow.com/a/51399781/379923
+ */
+export type ArrayElement<MaybeArrayType> =
+    MaybeArrayType extends readonly (infer ElementType)[]
+        ? ElementType
+        : MaybeArrayType;

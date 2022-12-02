@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { JsonDeserializerMapper, ParameterType, Type, UrlBuilder } from '@mobilejazz/harmony-core';
+import { ArrayElement, JsonDeserializerMapper, ParameterType, Type, UrlBuilder } from '@mobilejazz/harmony-core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ export class HttpRequestBuilder<T> {
 
     private body: string | FormData = '';
     private headers: HttpHeaders = new HttpHeaders();
-    private responseConstructor!: Type<T>;
+    private responseConstructor?: Type<ArrayElement<T>>;
 
     constructor(endpoint: string, private http: HttpClient) {
         this.urlBuilder = new UrlBuilder(endpoint);
@@ -45,7 +45,7 @@ export class HttpRequestBuilder<T> {
         return this;
     }
 
-    public setResponseConstructor(responseConstructor: Type<T>): HttpRequestBuilder<T> {
+    public setResponseConstructor(responseConstructor: Type<ArrayElement<T>>): HttpRequestBuilder<T> {
         this.responseConstructor = responseConstructor;
         return this;
     }
@@ -57,13 +57,13 @@ export class HttpRequestBuilder<T> {
         });
     }
 
-    private mapItem(responseItem: string | Record<string, unknown>): T {
-        const mapper = new JsonDeserializerMapper(this.responseConstructor);
+    private mapItem(ctr: Type<ArrayElement<T>>, responseItem: string | Record<string, unknown>): ArrayElement<T> {
+        const mapper = new JsonDeserializerMapper(ctr);
         return mapper.map(responseItem);
     }
 
     // HACK: This is problematic but it's the best we can do right now.
-    // Let's assume that `T` equals to the return type of this `mapResponse`.
+    // Let's assume that the `any` return type equals to `T`.
     // See: https://app.asana.com/0/1109863238977521/1203450043003508/f
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapResponse(res: HttpResponse<T>): any {
@@ -77,11 +77,13 @@ export class HttpRequestBuilder<T> {
 
         if (Array.isArray(res.body)) {
             return res.body.map((item) => {
-                return this.mapItem(item);
+                // SAFETY `!`: We've just checked few lines above that `responseConstructor` exists
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                return this.mapItem(this.responseConstructor!, item);
             });
         }
 
-        return this.mapItem(res.body);
+        return this.mapItem(this.responseConstructor, res.body);
     }
 
     public get(): Observable<T> {
