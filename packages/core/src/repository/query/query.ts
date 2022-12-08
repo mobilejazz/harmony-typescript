@@ -61,9 +61,6 @@ export class ObjectRelationsQuery<T> extends ObjectQuery<T> {
     }
 }
 
-/**
- * @deprecated
- */
 export abstract class PaginationQuery extends Query {
 }
 
