@@ -1,14 +1,15 @@
-import { InMemoryDataSource, KeyQuery, NotFoundError, ObjectQuery, QueryNotSupportedError } from '../../../src';
+import {InMemoryDataSource, KeyQuery, NotFoundError, PaginationPageQuery, QueryNotSupportedError} from '../../../src';
 
 class SimplestClass {
-    constructor(public readonly id: number) {}
+    constructor(public readonly id: number) {
+    }
 }
 
 describe('InMemoryDataSource', () => {
     const myObject = new SimplestClass(1);
     const keyQuery = new KeyQuery(`${myObject.id}`);
     const anotherKeyQuery = new KeyQuery(`Another value`);
-    const notAllowedQuery = new ObjectQuery(myObject);
+    const notAllowedQuery = new PaginationPageQuery(0);
 
     describe('get', () => {
         it('should throw an error when a non-existing key is given', async () => {
