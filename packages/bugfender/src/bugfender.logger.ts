@@ -1,4 +1,4 @@
-import { Logger, LogLevel, UnknownLogLevelError } from '@mobilejazz/harmony-core';
+import { Logger, LogLevel } from '@mobilejazz/harmony-core';
 import { BugfenderClass, LogLevel as BFLogLevel } from '@bugfender/sdk';
 import type { DeviceKeyValue } from '@bugfender/common';
 
