@@ -1,6 +1,6 @@
 {
     "name": "@mobilejazz/harmony-typeorm",
-    "version": "0.11.0",
+    "version": "0.11.2",
     "description": "Mobile Jazz Harmony integration with TypeORM",
     "author": "Mobile Jazz",
     "license": "Apache-2.0",

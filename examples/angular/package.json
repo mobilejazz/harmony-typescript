@@ -1,6 +1,6 @@
 {
   "name": "harmony-angular-example",
-  "version": "0.11.0",
+  "version": "0.11.2",
   "private": true,
   "scripts": {
     "ng": "ng",
