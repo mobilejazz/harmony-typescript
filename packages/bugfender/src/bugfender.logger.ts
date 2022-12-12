@@ -4,6 +4,14 @@ import type { DeviceKeyValue } from '@bugfender/common';
 
 export class BugfenderLogger extends Logger {
     private tag?: string;
+    private readonly LEVEL_MAP: Record<LogLevel, BFLogLevel> = {
+        [LogLevel.Fatal]: BFLogLevel.Fatal,
+        [LogLevel.Error]: BFLogLevel.Error,
+        [LogLevel.Warning]: BFLogLevel.Warning,
+        [LogLevel.Info]: BFLogLevel.Info,
+        [LogLevel.Debug]: BFLogLevel.Debug,
+        [LogLevel.Trace]: BFLogLevel.Trace,
+    };
 
     constructor(protected bugfender: BugfenderClass, tag?: string) {
         super();
@@ -23,17 +31,8 @@ export class BugfenderLogger extends Logger {
     }
 
     protected handleLog(level: LogLevel, parameters: unknown[]): void {
-        const levelMap: Record<LogLevel, BFLogLevel> = {
-            [LogLevel.Fatal]: BFLogLevel.Fatal,
-            [LogLevel.Error]: BFLogLevel.Error,
-            [LogLevel.Warning]: BFLogLevel.Warning,
-            [LogLevel.Info]: BFLogLevel.Info,
-            [LogLevel.Debug]: BFLogLevel.Debug,
-            [LogLevel.Trace]: BFLogLevel.Trace,
-        };
-
         this.bugfender.sendLog({
-            level: levelMap[level],
+            level: this.LEVEL_MAP[level],
             tag: this.tag,
             text: parameters,
         });
