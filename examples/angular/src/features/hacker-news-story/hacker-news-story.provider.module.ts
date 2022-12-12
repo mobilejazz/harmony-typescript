@@ -10,7 +10,9 @@ import { HackerNewsStoryDefaultProvider } from "./hacker-news-story.provider";
   providers: createAngularProviders(
     {
       provide: HackerNewsStoryProvider,
-      useFactory: () => new HackerNewsStoryDefaultProvider(),
+      useFactory: () => new HackerNewsStoryDefaultProvider(
+        // 'BUGFENDER_APP_KEY'
+      ),
     },
     [
       GetHackerNewsLatestAskStoriesInteractor,

@@ -2,13 +2,17 @@ import {
   CacheRepository,
   createCacheDecorator,
   DefaultObjectValidator,
+  DeviceConsoleLogger,
   GetInteractor,
   GetRepository,
   InMemoryDataSource,
+  Logger,
   RepositoryMapper,
   SingleGetDataSourceRepository,
   VoidDataSource
 } from '@mobilejazz/harmony-core';
+import { BugfenderLogger } from '@mobilejazz/harmony-bugfender';
+import { Bugfender } from '@bugfender/sdk';
 import { HackerNewsStoryNetworkDataSource } from './data/data-sources/hacker-news-story.network.data-source';
 import { HackerNewsStoryEntity } from './data/entities/hacker-news-item.entity';
 import { HackerNewsStoryJSONToHackerNewsStoryEntityMapper } from './data/mappers/hacker-news-story.mapper';
@@ -29,6 +33,24 @@ export abstract class HackerNewsStoryProvider {
 
 export class HackerNewsStoryDefaultProvider implements HackerNewsStoryProvider {
   private readonly hackerNewsService: HackerNewsService = new HackerNewsFetchService();
+
+  constructor(
+    private readonly bugfenderAppKey?: string,
+  ) {}
+
+  @Cached()
+  private getLogger(): Logger {
+    if (this.bugfenderAppKey) {
+      Bugfender.init({
+        appKey: this.bugfenderAppKey,
+        overrideConsoleMethods: false,
+      });
+
+      return new BugfenderLogger(Bugfender);
+    }
+
+    return new DeviceConsoleLogger();
+  }
 
   @Cached()
   private getHackerNewsStoryIdsRepository(): GetRepository<number[]> {
@@ -63,15 +85,21 @@ export class HackerNewsStoryDefaultProvider implements HackerNewsStoryProvider {
   }
 
   public provideGetHackerNewsLatestAskStories(): GetHackerNewsLatestAskStoriesInteractor {
+    this.getLogger().info('Creating instance: GetHackerNewsLatestAskStoriesInteractor');
+
     return new GetHackerNewsLatestAskStoriesInteractor(
       this.provideGetHackerNewsStory(),
       new GetInteractor(this.getHackerNewsStoryIdsRepository()),
+      this.getLogger().withTag(GetHackerNewsLatestAskStoriesInteractor),
     );
   }
 
   public provideGetHackerNewsStory(): GetHackerNewsStoryInteractor {
+    this.getLogger().info('Creating instance: GetHackerNewsStoryInteractor');
+
     return new GetHackerNewsStoryInteractor(
       new GetInteractor(this.getHackerNewsStoryRepository()),
+      this.getLogger().withTag(GetHackerNewsStoryInteractor),
     );
   }
 }
