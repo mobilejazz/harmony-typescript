@@ -19,8 +19,6 @@ export class DeviceConsoleLogger extends Logger {
     }
 
     protected handleLog(level: LogLevel, parameters: unknown[]): void {
-        parameters = parameters ?? [];
-
         if (this.tag) {
             const tagStr = `[${this.tag}]`;
 
