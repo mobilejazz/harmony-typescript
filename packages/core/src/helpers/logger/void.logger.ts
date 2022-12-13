@@ -1,17 +1,19 @@
-import { AbstractLogger, LogLevel } from './logger';
+import { Logger, LogLevel } from './logger';
 
-export class VoidLogger extends AbstractLogger {
+export class VoidLogger extends Logger {
     constructor() {
         super();
     }
 
-    logKeyValue(_key: string, _value: unknown): void {
+    public logKeyValue(_key: string, _value: unknown): void {
         return;
     }
 
-    log(level: LogLevel, message: string): void;
-    log(level: LogLevel, tag: string, message: string): void;
-    log(_level: LogLevel, _tagOrMessage: string, _message?: string): void {
+    protected createLoggerWithTag(_tag: string): Logger {
+        return new VoidLogger();
+    }
+
+    protected handleLog(_level: LogLevel, _parameters: unknown[]): void {
         return;
     }
 }
