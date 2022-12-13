@@ -1,10 +1,5 @@
 export class Book {
-    constructor(
-        public readonly id: number,
-        public readonly name: string,
-        public readonly author: string,
-    ) {
-    }
+    constructor(public readonly id: number, public readonly name: string, public readonly author: string) {}
 }
 
 export function getDefaultBook(): Book {

@@ -1,10 +1,7 @@
 {
-  "name": "backend",
-  "version": "0.11.2",
-  "description": "",
-  "author": "",
+  "name": "harmony-backend-example",
+  "version": "0.0.0",
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -21,9 +18,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@mobilejazz/harmony-core": "^0.11.2",
-    "@mobilejazz/harmony-nest": "^0.11.2",
-    "@mobilejazz/harmony-typeorm": "^0.11.2",
+    "@mobilejazz/harmony-core": "*",
+    "@mobilejazz/harmony-nest": "*",
+    "@mobilejazz/harmony-typeorm": "*",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
