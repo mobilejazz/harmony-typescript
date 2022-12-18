@@ -3,8 +3,11 @@ import { ApiRequestService } from '../../../../angular/src/data/api-request.serv
 import { DataSource } from './data-source';
 import { NetworkQuery, Query } from '../query/query';
 import { MethodNotImplementedError, QueryNotSupportedError } from '../errors';
+import { DataSourceMapper } from './data-source-mapper';
+import { ArrayMapper, JsonDeserializerMapper, VoidMapper } from "../mapper/mapper";
+import { Type } from "../../helpers";
 
-export class DefaultNetworkDataSource<T> implements DataSource<unknown> {
+export class NetworkDataSource<T> implements DataSource<unknown> {
     constructor(private readonly requestService: ApiRequestService) {}
 
     public async get(query: Query): Promise<unknown> {
@@ -76,4 +79,28 @@ export class DefaultNetworkDataSource<T> implements DataSource<unknown> {
 
         throw new QueryNotSupportedError();
     }
+}
+
+export function getDefaultNetworkDataSource<T>(requestService: ApiRequestService, type: Type<T>): DataSource<T> {
+    const dataSource = new NetworkDataSource<T>(requestService);
+    return new DataSourceMapper<unknown, T>(
+        dataSource,
+        dataSource,
+        dataSource,
+        new JsonDeserializerMapper<string | Record<string, unknown>, T>(type),
+        new VoidMapper(),
+    );
+}
+
+export function getDefaultArrayNetworkDataSource<T>(requestService: ApiRequestService, type: Type<T>): DataSource<T[]> {
+    const dataSource = new NetworkDataSource<T[]>(requestService);
+    return new DataSourceMapper<unknown, T[]>(
+        dataSource,
+        dataSource,
+        dataSource,
+        new ArrayMapper<string | Record<string, unknown>, T>(
+            new JsonDeserializerMapper<string | Record<string, unknown>, T>(type)
+        ),
+        new VoidMapper(),
+    );
 }
