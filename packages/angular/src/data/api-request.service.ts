@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { AngularHttpRequestBuilder, HttpRequestBuilder } from './http-request.builder';
+import { HttpRequestBuilder } from '@mobilejazz/harmony-core';
+import { AngularHttpRequestBuilder } from './http-request.builder';
 import { AuthService } from './auth.service';
 
 // TODO: Move to `harmony-core`

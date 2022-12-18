@@ -1,4 +1,5 @@
 export * from './dictionary';
+export * from './http-request.builder';
 export * from './parameter-type';
 export * from './pagination';
 export * from './sql.interface';

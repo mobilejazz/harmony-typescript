@@ -1,24 +1,17 @@
-import {
-    DataSource,
-    Mapper,
-    MethodNotImplementedError,
-    NetworkQuery,
-    Query,
-    QueryNotSupportedError,
-} from '@mobilejazz/harmony-core';
 import { lastValueFrom, Observable } from 'rxjs';
-import { ApiRequestService } from '../api-request.service';
+import { ApiRequestService } from '../../../../angular/src/data/api-request.service';
+import { DataSource } from './data-source';
+import { NetworkQuery, Query } from '../query/query';
+import { MethodNotImplementedError, QueryNotSupportedError } from '../errors';
 
-// TODO: Move to `harmony-core`
-export class DefaultNetworkDataSource<T> implements DataSource<T> {
-    constructor(private readonly requestService: ApiRequestService, private readonly mapper: Mapper<unknown, T>) {}
+export class DefaultNetworkDataSource<T> implements DataSource<unknown> {
+    constructor(private readonly requestService: ApiRequestService) {}
 
-    public async get(query: Query): Promise<T> {
+    public async get(query: Query): Promise<unknown> {
         if (query instanceof NetworkQuery) {
             const res = await lastValueFrom(
                 this.requestService
-                    .builder<T>(query.endpoint)
-                    .setMapper(this.mapper)
+                    .builder<unknown>(query.endpoint)
                     .setQueryParameters(query.queryParameters)
                     .setUrlParameters(query.urlParameters)
                     .get(),
@@ -35,15 +28,15 @@ export class DefaultNetworkDataSource<T> implements DataSource<T> {
         throw new QueryNotSupportedError();
     }
 
-    public async getAll(_query: Query): Promise<T[]> {
+    public async getAll(_query: Query): Promise<unknown[]> {
         throw new MethodNotImplementedError();
     }
 
-    public async put(value: T | undefined, query: Query): Promise<T> {
+    public async put(value: unknown | undefined, query: Query): Promise<unknown> {
         if (query instanceof NetworkQuery) {
             let res$: Observable<T | undefined>;
             const request = this.requestService
-                .builder<T>(query.endpoint)
+                .builder<unknown>(query.endpoint)
                 .setQueryParameters(query.queryParameters)
                 .setUrlParameters(query.urlParameters);
 
@@ -66,7 +59,7 @@ export class DefaultNetworkDataSource<T> implements DataSource<T> {
         throw new QueryNotSupportedError();
     }
 
-    public async putAll(_values: T[] | undefined, _query: Query): Promise<T[]> {
+    public async putAll(_values: unknown[] | undefined, _query: Query): Promise<unknown[]> {
         throw new MethodNotImplementedError();
     }
 

@@ -1,2 +1,2 @@
-export * from './data/http-request.builder';
+export * from './data';
 export * from './utilities';
