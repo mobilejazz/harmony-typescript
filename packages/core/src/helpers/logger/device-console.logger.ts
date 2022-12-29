@@ -3,11 +3,13 @@ import { Logger, LogLevel, UnknownLogLevelError } from './logger';
 export class DeviceConsoleLogger extends Logger {
     private logger: Console;
     private tag?: string;
+    private tagColor: string;
 
     constructor(logger?: Console, tag?: string) {
         super();
         this.logger = logger ?? console;
         this.tag = tag;
+        this.tagColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 85%)`; // Thanks: https://codepen.io/neilorangepeel/pen/GopwNr
     }
 
     public logKeyValue(key: string, value: unknown): void {
@@ -18,10 +20,19 @@ export class DeviceConsoleLogger extends Logger {
         return new DeviceConsoleLogger(this.logger, tag);
     }
 
+    private getTagStyles(): string[] {
+        const radius = '3px';
+
+        return [
+            `background-color:${this.tagColor};color:${this.tagColor};border-radius:${radius} 0 0 ${radius}`,
+            `background-color:${this.tagColor};color:#000`,
+            `background-color:${this.tagColor};color:${this.tagColor};border-radius:0 ${radius} ${radius} 0`,
+            ``,
+        ];
+    }
+
     protected handleLog(level: LogLevel, parameters: unknown[]): void {
         if (this.tag) {
-            const tagStr = `[${this.tag}]`;
-
             // Our API is compatible with `console.*` methods this means that there are two ways of using this API:
             //
             // - With an array of mixed values
@@ -31,14 +42,28 @@ export class DeviceConsoleLogger extends Logger {
             // the tag to the `parameters` array. But, if we're using the template signature we don't want to mess
             // with the template, that's why we prepend the tag to the template string. This way the first parameter
             // is still (potentially) a template.
-            if (parameters.length === 0 || typeof parameters[0] !== 'string') {
+            const isFirstString = parameters.length > 0 && typeof parameters[0] === 'string';
+
+            // `%c` is console CSS style placeholder
+            const tagStr = `%c[%c${this.tag}%c]%c`;
+            let firstEl = '';
+
+            if (isFirstString) {
+                // SAFETY `as T`: we know this is a string via `isFirstString`
+                firstEl = parameters.shift() as string;
+            }
+
+            // Add tag CSS styles at the beginning
+            parameters.unshift(...this.getTagStyles());
+
+            if (!isFirstString) {
                 // CASE: array of mixed values
                 // Add tag in the first position of the parameters array
                 parameters.unshift(tagStr);
             } else {
                 // CASE: Template with string substitutions
                 // Add tag to the first parameter as it might have formatting placeholders
-                parameters[0] = `${tagStr} ${parameters[0]}`;
+                parameters.unshift(`${tagStr} ${firstEl}`);
             }
         }
 
