@@ -76,10 +76,10 @@ export class DeviceConsoleLogger extends Logger {
                 return this.logger.warn(...parameters);
 
             case LogLevel.Info:
-                return this.logger.log(...parameters);
+                return this.logger.info(...parameters);
 
             case LogLevel.Debug:
-                return this.logger.debug(...parameters);
+                return this.logger.log(...parameters);
 
             case LogLevel.Trace:
                 return this.logger.trace(...parameters);
