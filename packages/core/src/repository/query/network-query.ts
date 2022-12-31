@@ -12,9 +12,6 @@ export abstract class NetworkQuery {
     get queryParameters(): Record<string, ParameterType> {
         return {};
     }
-    get headers(): Record<string, string> {
-        return {};
-    }
 }
 
 export class GetNetworkQuery extends NetworkQuery {}
