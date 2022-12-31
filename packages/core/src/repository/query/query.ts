@@ -1,6 +1,5 @@
-import { ParameterType } from '../../data';
-
-export class Query {}
+export class Query {
+}
 
 export class KeyQuery extends Query {
     constructor(public readonly key: string) {
@@ -14,7 +13,8 @@ export class KeyListQuery extends KeyQuery {
     }
 }
 
-export class VoidQuery extends Query {}
+export class VoidQuery extends Query {
+}
 
 export class IdQuery<T extends number | string> extends KeyQuery {
     constructor(public readonly id: T) {
@@ -22,9 +22,9 @@ export class IdQuery<T extends number | string> extends KeyQuery {
     }
 }
 
-export class IdsQuery<T> extends Query {
+export class IdsQuery<T extends number | string> extends KeyListQuery {
     constructor(public readonly ids: T[]) {
-        super();
+        super(ids.map(id => id.toString()));
     }
 }
 
@@ -34,25 +34,35 @@ export class AllObjectsQuery extends Query {
     }
 }
 
+/**
+ * @deprecated
+ */
 export class ObjectQuery<T> extends Query {
     constructor(public readonly value: T) {
         super();
     }
 }
 
+/**
+ * @deprecated
+ */
 export class ObjectsQuery<T> extends Query {
     constructor(public readonly values: T[]) {
         super();
     }
 }
 
+/**
+ * @deprecated
+ */
 export class ObjectRelationsQuery<T> extends ObjectQuery<T> {
     constructor(value: T, public readonly relations: string[] = []) {
         super(value);
     }
 }
 
-export abstract class PaginationQuery extends Query {}
+export abstract class PaginationQuery extends Query {
+}
 
 export class PaginationOffsetLimitQuery extends PaginationQuery {
     constructor(public readonly offset: number, public readonly limit: number) {
@@ -66,12 +76,18 @@ export class PaginationPageQuery extends PaginationQuery {
     }
 }
 
+/**
+ * @deprecated
+ */
 export class DictionaryQuery<T> extends Query {
     constructor(public dictionary: Record<string, T>) {
         super();
     }
 }
 
+/**
+ * @deprecated
+ */
 export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
     constructor(public dictionary: Record<string, T>, public relations: string[] = []) {
         super(dictionary);
