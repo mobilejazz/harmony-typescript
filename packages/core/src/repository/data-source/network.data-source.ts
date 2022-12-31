@@ -8,20 +8,19 @@ import { Type } from '../../helpers';
 import {
     DeleteNetworkQuery,
     GetNetworkQuery,
-    NetworkQuery, PostNetworkQuery,
+    NetworkQuery,
+    PostNetworkQuery,
     PutNetworkQuery,
-} from "../query/network-query";
-import { ApiRequestService } from "./api-request.service";
-import { HttpRequestBuilder } from "../../data";
+} from '../query/network-query';
+import { ApiRequestService } from './api-request.service';
+import { HttpRequestBuilder } from '../../data';
 
 export class NetworkDataSource implements DataSource<unknown> {
     constructor(private readonly requestService: ApiRequestService) {}
 
     public get(query: Query): Promise<unknown> {
         if (query instanceof GetNetworkQuery) {
-            return lastValueFrom(
-                this.getRequestWithParameters<unknown>(query).get(),
-            );
+            return lastValueFrom(this.getRequestWithParameters<unknown>(query).get());
         }
 
         throw new QueryNotSupportedError();
@@ -30,9 +29,9 @@ export class NetworkDataSource implements DataSource<unknown> {
     public put(value: unknown | undefined, query: Query): Promise<unknown> {
         let $request: Observable<unknown>;
         if (query instanceof PutNetworkQuery) {
-            $request = this.getRequestWithParameters<void>(query).put()
+            $request = this.getRequestWithParameters<void>(query).put();
         } else if (query instanceof PostNetworkQuery) {
-            $request = this.getRequestWithParameters<void>(query).post()
+            $request = this.getRequestWithParameters<void>(query).post();
         } else {
             throw new QueryNotSupportedError();
         }
@@ -42,15 +41,16 @@ export class NetworkDataSource implements DataSource<unknown> {
 
     public delete(query: Query): Promise<void> {
         if (query instanceof DeleteNetworkQuery) {
-            return lastValueFrom(
-                this.getRequestWithParameters<void>(query).delete(),
-            );
+            return lastValueFrom(this.getRequestWithParameters<void>(query).delete());
         }
 
         throw new QueryNotSupportedError();
     }
 
-    private getRequestWithParameters<T extends unknown | void>(query: NetworkQuery, value?: unknown | undefined): HttpRequestBuilder<T> {
+    private getRequestWithParameters<T extends unknown | void>(
+        query: NetworkQuery,
+        value?: unknown | undefined,
+    ): HttpRequestBuilder<T> {
         const request = this.requestService
             .builder<T>(query.endpoint)
             .setQueryParameters(query.queryParameters)
@@ -59,7 +59,7 @@ export class NetworkDataSource implements DataSource<unknown> {
         if (value) {
             request.setBody(value);
         } else {
-            request.setBody(query.body)
+            request.setBody(query.body);
         }
 
         return request;
@@ -85,7 +85,10 @@ export function provideDefaultNetworkDataSource<T>(requestService: ApiRequestSer
     );
 }
 
-export function provideDefaultArrayNetworkDataSource<T>(requestService: ApiRequestService, type: Type<T>): DataSource<T[]> {
+export function provideDefaultArrayNetworkDataSource<T>(
+    requestService: ApiRequestService,
+    type: Type<T>,
+): DataSource<T[]> {
     const dataSource = new NetworkDataSource(requestService);
     return new DataSourceMapper<unknown, T[]>(
         dataSource,
