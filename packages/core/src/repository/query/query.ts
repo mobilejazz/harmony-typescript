@@ -77,20 +77,3 @@ export class DictionaryRelationsQuery<T> extends DictionaryQuery<T> {
         super(dictionary);
     }
 }
-
-export abstract class NetworkQuery extends Query {
-    abstract get endpoint(): string;
-
-    get body(): string | FormData {
-        return '';
-    }
-    get urlParameters(): Record<string, ParameterType> {
-        return {};
-    }
-    get queryParameters(): Record<string, ParameterType> {
-        return {};
-    }
-    get headers(): Record<string, string> {
-        return {};
-    }
-}
