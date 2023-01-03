@@ -5,12 +5,6 @@ class SimplestClass {
     }
 }
 
-class SimplestQuery extends KeyQuery {
-    constructor(value: SimplestClass) {
-        super(value.id.toString());
-    }
-}
-
 describe('InMemoryDataSource', () => {
     const myObject1 = new SimplestClass(1);
     const myObject2 = new SimplestClass(2);
@@ -47,8 +41,8 @@ describe('InMemoryDataSource', () => {
     describe('getAll', () => {
         it(`should handle 'IdsQuery'`, async () => {
             const dataSource = new InMemoryDataSource<SimplestClass>();
-            await dataSource.put(myObject1, new SimplestQuery(myObject1));
-            await dataSource.put(myObject2, new SimplestQuery(myObject2));
+            await dataSource.put(myObject1, new IdQuery(myObject1.id));
+            await dataSource.put(myObject2, new IdQuery(myObject2.id));
 
             const result = await dataSource.getAll(new IdsQuery([
                 myObject1.id,
