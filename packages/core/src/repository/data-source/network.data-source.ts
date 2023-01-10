@@ -20,7 +20,7 @@ export class NetworkDataSource implements DataSource<unknown> {
 
     public get(query: Query): Promise<unknown> {
         if (query instanceof GetNetworkQuery) {
-            return lastValueFrom(this.getRequestWithParameters<unknown>(query).get());
+            return lastValueFrom(this.getRequestWithParameters(query).get());
         }
 
         throw new QueryNotSupportedError();
