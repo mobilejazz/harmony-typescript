@@ -90,12 +90,12 @@ export function provideDefaultArrayNetworkDataSource<T>(
     type: Type<T>,
 ): DataSource<T[]> {
     const dataSource = new NetworkDataSource(requestService);
-    return new DataSourceMapper<unknown, T[]>(
+    return new DataSourceMapper(
         dataSource,
         dataSource,
         dataSource,
-        new ArrayMapper<string | Record<string, unknown>, T>(
-            new JsonDeserializerMapper<string | Record<string, unknown>, T>(type),
+        new ArrayMapper(
+            new JsonDeserializerMapper(type),
         ),
         new VoidMapper(),
     );
