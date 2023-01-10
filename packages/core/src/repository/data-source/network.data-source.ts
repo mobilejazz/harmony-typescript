@@ -80,7 +80,7 @@ export function provideDefaultNetworkDataSource<T>(requestService: ApiRequestSer
         dataSource,
         dataSource,
         dataSource,
-        new JsonDeserializerMapper<string | Record<string, unknown>, T>(type),
+        new JsonDeserializerMapper(type),
         new VoidMapper(),
     );
 }
