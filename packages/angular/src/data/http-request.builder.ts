@@ -65,7 +65,7 @@ export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilde
 
     public post(): Observable<T | undefined> {
         return this.http
-            .put<T>(this.urlBuilder.getUrl(), this.body, this.createRequestOptions())
+            .post<T>(this.urlBuilder.getUrl(), this.body, this.createRequestOptions())
             .pipe(map((res) => res.body ?? undefined));
     }
 
