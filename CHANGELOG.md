@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - core: FRONTEND-8367 :: Feature Internal :: Add a Changelog ([#132])
+- core: FRONTEND-8139 :: Feature Internal :: Tweak log tags rendering ([#128])
 
 ### Changed
 
 - core: FRONTEND-3555 :: Feature :: Merge Logger & AbstractLogger and improve API ([#124]).
 - core: FRONTEND-1702 :: Feature Internal :: Tweak tooling configuration ([#118]).
 - core: FRONTEND-7708 :: Feature Internal :: Remove createCacheDecorator in favor of self contained `Cached` decorator ([#127]).
+- core: FRONTEND-3575 :: Feature Internal :: Refactor InMemoryDataSource to use `Map` ([#129])
 
 ### Deprecated
 
@@ -37,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#121]: https://github.com/mobilejazz/harmony-typescript/pull/121
 [#124]: https://github.com/mobilejazz/harmony-typescript/pull/124
 [#127]: https://github.com/mobilejazz/harmony-typescript/pull/127
+[#128]: https://github.com/mobilejazz/harmony-typescript/pull/128
+[#129]: https://github.com/mobilejazz/harmony-typescript/pull/129
 [#132]: https://github.com/mobilejazz/harmony-typescript/pull/132
 
 ## [0.11.0-0.11.2] - 2022-12-02
