@@ -13,13 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- core: FRONTEND-3555 :: Feature :: Merge Logger & AbstractLogger and improve API (#124).
-- core: FRONTEND-1702 :: Feature Internal :: Tweak tooling configuration (#118).
-- core: FRONTEND-7708 :: Feature Internal :: Remove createCacheDecorator in favor of self contained `Cached` decorator (#127).
+- core: FRONTEND-3555 :: Feature :: Merge Logger & AbstractLogger and improve API ([#124]).
+- core: FRONTEND-1702 :: Feature Internal :: Tweak tooling configuration ([#118]).
+- core: FRONTEND-7708 :: Feature Internal :: Remove createCacheDecorator in favor of self contained `Cached` decorator ([#127]).
 
 ### Deprecated
 
-- core: BACKEND-3553 :: Feature :: Harmony TS | Queries deprecation (#121).
+- core: BACKEND-3553 :: Feature :: Harmony TS | Queries deprecation ([#121]).
 
 ### Removed
 
@@ -32,6 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 - …
+
+[#118]: https://github.com/mobilejazz/harmony-typescript/pull/118
+[#121]: https://github.com/mobilejazz/harmony-typescript/pull/121
+[#124]: https://github.com/mobilejazz/harmony-typescript/pull/124
+[#127]: https://github.com/mobilejazz/harmony-typescript/pull/127
 
 ## [0.11.0-0.11.2] - 2022-12-02
 
