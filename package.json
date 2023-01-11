@@ -29,7 +29,7 @@
         "prepublish": "npm run build",
         "publish": "lerna publish --contents dist --force-publish --no-private",
         "version": "lerna version --no-private",
-        "test": "jest",
+        "test": "jest --silent",
         "test:watch": "jest --watch",
         "prepare": "husky install",
         "setup": "npm ci && npm run bootstrap && npm run build"
