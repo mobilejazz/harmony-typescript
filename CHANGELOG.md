@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- …
+- core: FRONTEND-8367 :: Feature Internal :: Add a Changelog ([#132])
 
 ### Changed
 
@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#121]: https://github.com/mobilejazz/harmony-typescript/pull/121
 [#124]: https://github.com/mobilejazz/harmony-typescript/pull/124
 [#127]: https://github.com/mobilejazz/harmony-typescript/pull/127
+[#132]: https://github.com/mobilejazz/harmony-typescript/pull/132
 
 ## [0.11.0-0.11.2] - 2022-12-02
 
