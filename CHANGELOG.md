@@ -37,38 +37,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- examples: BACKEND-1431 :: Feature Internal :: Harmony TS | Add `API.http` documentation for backend example (#112).
-- examples: FRONTEND-5167 :: Feature Internal :: Refactor Angular sample to use view-states (#114).
-- FRONTEND-2716 :: Feature Internal :: Add owners to Harmony-TS - Github (#117).
-- angular: FRONTEND-1215 :: Feature :: Add createAngularProviders in a similarway to `createNestProviders` (#119).
+- examples: BACKEND-1431 :: Feature Internal :: Harmony TS | Add `API.http` documentation for backend example ([#112]).
+- examples: FRONTEND-5167 :: Feature Internal :: Refactor Angular sample to use view-states ([#115]).
+- FRONTEND-2716 :: Feature Internal :: Add owners to Harmony-TS - Github ([#117]).
+- angular: FRONTEND-1215 :: Feature :: Add createAngularProviders in a similarway to `createNestProviders` ([#119]).
 
 ### Changed
 
-- core: Remove optionals (`?`) from SQL query signatures (#72).
-- core: Improve StorageDataSource (#73).
-- core: Fix "put" pipeline signatures (#75).
-- core: Enable strict mode (#76).
-- core: Repurpose `Repository` & `DataSource` to express the combination of get/put/delete types (#108).
-- core: BACKEND-1429 :: Feature-Internal :: Use abstract classes for SQLInterface & SQLDialect (for DI).
-- core: FRONTEND-1411 :: Feature Internal :: Change harmony-core `class-transformer` dependency into a `peerDependency`.
+- core: Remove optionals (`?`) from SQL query signatures ([#72]).
+- core: Improve StorageDataSource ([#73]).
+- core: Fix "put" pipeline signatures ([#75]).
+- core: Enable strict mode ([#76]).
+- core: Repurpose `Repository` & `DataSource` to express the combination of get/put/delete types ([#108]).
+- core: BACKEND-1429 :: Feature-Internal :: Use abstract classes for SQLInterface & SQLDialect (for DI) ([#111]).
+- core: FRONTEND-1411 :: Feature Internal :: Change harmony-core `class-transformer` dependency into a `peerDependency` ([#114]).
 
 ### Deprecated
 
-- core: ALL-8972 :: Feature :: Delete/deprecate getAll and putAll from Harmony (#97).
+- core: ALL-8972 :: Feature :: Delete/deprecate getAll and putAll from Harmony ([#97]).
 
 ### Removed
 
-- core: Deprecated `deleteAll` removed (#69).
+- core: Deprecated `deleteAll` removed ([#69]).
 
 ### Fixed
 
-- core: FRONTEND-3512 :: Bug :: Relax `Type<T>` and `HttpRequestBuilder` return types (#123).
-- core: FRONTEND-3523 :: Bug :: Fix `HttpRequestBuilder.setResponseConstructor` for array generics (#125).
+- core: FRONTEND-3512 :: Bug :: Relax `Type<T>` and `HttpRequestBuilder` return types ([#123]).
+- core: FRONTEND-3523 :: Bug :: Fix `HttpRequestBuilder.setResponseConstructor` for array generics ([#125]).
 
 ### Security
 
 - core: Upgrade dependencies.
-- core: BACKEND-1205 :: Feature Internal :: Update bcrypt cost factor (#113).
+- core: BACKEND-1205 :: Feature Internal :: Update bcrypt cost factor ([#113]).
+
+[#69]: https://github.com/mobilejazz/harmony-typescript/pull/69
+[#72]: https://github.com/mobilejazz/harmony-typescript/pull/72
+[#73]: https://github.com/mobilejazz/harmony-typescript/pull/73
+[#75]: https://github.com/mobilejazz/harmony-typescript/pull/75
+[#76]: https://github.com/mobilejazz/harmony-typescript/pull/76
+[#97]: https://github.com/mobilejazz/harmony-typescript/pull/97
+[#108]: https://github.com/mobilejazz/harmony-typescript/pull/108
+[#111]: https://github.com/mobilejazz/harmony-typescript/pull/111
+[#112]: https://github.com/mobilejazz/harmony-typescript/pull/112
+[#113]: https://github.com/mobilejazz/harmony-typescript/pull/113
+[#114]: https://github.com/mobilejazz/harmony-typescript/pull/114
+[#115]: https://github.com/mobilejazz/harmony-typescript/pull/115
+[#117]: https://github.com/mobilejazz/harmony-typescript/pull/117
+[#119]: https://github.com/mobilejazz/harmony-typescript/pull/119
+[#123]: https://github.com/mobilejazz/harmony-typescript/pull/123
+[#125]: https://github.com/mobilejazz/harmony-typescript/pull/125
 
 ## [0.10.0] - 2021-09-16
 
