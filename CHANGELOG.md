@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- …
+
+### Changed
+
+- …
+
+### Deprecated
+
+- …
+
+### Removed
+
+- …
+
+### Fixed
+
+- …
+
+### Security
+
+- …
+
+## [0.12.0] - 2023-01-19
+
+### Added
+
 - core: FRONTEND-8367 :: Feature Internal :: Add a Changelog ([#132])
 - core: FRONTEND-8139 :: Feature Internal :: Tweak log tags rendering ([#128])
 
@@ -22,18 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 - core: BACKEND-3553 :: Feature :: Harmony TS | Queries deprecation ([#121]).
-
-### Removed
-
-- …
-
-### Fixed
-
-- …
-
-### Security
-
-- …
 
 [#118]: https://github.com/mobilejazz/harmony-typescript/pull/118
 [#121]: https://github.com/mobilejazz/harmony-typescript/pull/121
@@ -234,7 +248,8 @@ First release! 🥳
 - core: Fix cache repository.
 - core: Fix cache issue on `getAll`.
 
-[unreleased]: https://github.com/mobilejazz/harmony-typescript/compare/v0.11.2...HEAD
+[unreleased]: https://github.com/mobilejazz/harmony-typescript/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.11.2...v0.12.0
 [0.11.0-0.11.2]: https://github.com/mobilejazz/harmony-typescript/compare/v0.10.0...v0.11.2
 [0.10.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.8.2...v0.9.0
