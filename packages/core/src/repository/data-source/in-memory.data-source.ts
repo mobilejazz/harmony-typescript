@@ -36,7 +36,7 @@ export class InMemoryDataSource<T> implements DataSource<T> {
         console.warn('getAll is deprecated. Please use get instead');
 
         if (query instanceof IdsQuery) {
-            return query.keys.map(key => {
+            return query.keys.map((key) => {
                 if (!this.objects.has(key)) {
                     throw new NotFoundError();
                 }
@@ -54,7 +54,7 @@ export class InMemoryDataSource<T> implements DataSource<T> {
         } else if (query instanceof AllObjectsQuery) {
             return [
                 ...Array.from(this.objects.values()),
-                ...Array.from(this.arrays.values()).flatMap(values => values),
+                ...Array.from(this.arrays.values()).flatMap((values) => values),
             ];
         }
 

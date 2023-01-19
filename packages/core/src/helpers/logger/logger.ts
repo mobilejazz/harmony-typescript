@@ -46,11 +46,7 @@ export abstract class Logger {
      * @param tag Tag that will be applied to logs
      */
     public withTag(tag: string | Type<unknown>): Logger {
-        return this.createLoggerWithTag(
-            typeof tag === 'string'
-                ? tag
-                : tag.name
-        );
+        return this.createLoggerWithTag(typeof tag === 'string' ? tag : tag.name);
     }
 
     public log(obj: unknown, ...objs: unknown[]): void;

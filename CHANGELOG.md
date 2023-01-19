@@ -9,45 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- …
+-   …
 
 ### Changed
 
-- …
+-   …
 
 ### Deprecated
 
-- …
+-   …
 
 ### Removed
 
-- …
+-   …
 
 ### Fixed
 
-- …
+-   …
 
 ### Security
 
-- …
+-   …
 
 ## [0.12.0] - 2023-01-19
 
 ### Added
 
-- core: FRONTEND-8367 :: Feature Internal :: Add a Changelog ([#132])
-- core: FRONTEND-8139 :: Feature Internal :: Tweak log tags rendering ([#128])
+-   core: FRONTEND-8367 :: Feature Internal :: Add a Changelog ([#132])
+-   core: FRONTEND-8139 :: Feature Internal :: Tweak log tags rendering ([#128])
 
 ### Changed
 
-- core: FRONTEND-3555 :: Feature :: Merge Logger & AbstractLogger and improve API ([#124]).
-- core: FRONTEND-1702 :: Feature Internal :: Tweak tooling configuration ([#118]).
-- core: FRONTEND-7708 :: Feature Internal :: Remove createCacheDecorator in favor of self contained `Cached` decorator ([#127]).
-- core: FRONTEND-3575 :: Feature Internal :: Refactor InMemoryDataSource to use `Map` ([#129])
+-   core: FRONTEND-3555 :: Feature :: Merge Logger & AbstractLogger and improve API ([#124]).
+-   core: FRONTEND-1702 :: Feature Internal :: Tweak tooling configuration ([#118]).
+-   core: FRONTEND-7708 :: Feature Internal :: Remove createCacheDecorator in favor of self contained `Cached` decorator ([#127]).
+-   core: FRONTEND-3575 :: Feature Internal :: Refactor InMemoryDataSource to use `Map` ([#129])
 
 ### Deprecated
 
-- core: BACKEND-3553 :: Feature :: Harmony TS | Queries deprecation ([#121]).
+-   core: BACKEND-3553 :: Feature :: Harmony TS | Queries deprecation ([#121]).
 
 [#118]: https://github.com/mobilejazz/harmony-typescript/pull/118
 [#121]: https://github.com/mobilejazz/harmony-typescript/pull/121
@@ -61,38 +61,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- examples: BACKEND-1431 :: Feature Internal :: Harmony TS | Add `API.http` documentation for backend example ([#112]).
-- examples: FRONTEND-5167 :: Feature Internal :: Refactor Angular sample to use view-states ([#115]).
-- FRONTEND-2716 :: Feature Internal :: Add owners to Harmony-TS - Github ([#117]).
-- angular: FRONTEND-1215 :: Feature :: Add createAngularProviders in a similarway to `createNestProviders` ([#119]).
+-   examples: BACKEND-1431 :: Feature Internal :: Harmony TS | Add `API.http` documentation for backend example ([#112]).
+-   examples: FRONTEND-5167 :: Feature Internal :: Refactor Angular sample to use view-states ([#115]).
+-   FRONTEND-2716 :: Feature Internal :: Add owners to Harmony-TS - Github ([#117]).
+-   angular: FRONTEND-1215 :: Feature :: Add createAngularProviders in a similarway to `createNestProviders` ([#119]).
 
 ### Changed
 
-- core: Remove optionals (`?`) from SQL query signatures ([#72]).
-- core: Improve StorageDataSource ([#73]).
-- core: Fix "put" pipeline signatures ([#75]).
-- core: Enable strict mode ([#76]).
-- core: Repurpose `Repository` & `DataSource` to express the combination of get/put/delete types ([#108]).
-- core: BACKEND-1429 :: Feature-Internal :: Use abstract classes for SQLInterface & SQLDialect (for DI) ([#111]).
-- core: FRONTEND-1411 :: Feature Internal :: Change harmony-core `class-transformer` dependency into a `peerDependency` ([#114]).
+-   core: Remove optionals (`?`) from SQL query signatures ([#72]).
+-   core: Improve StorageDataSource ([#73]).
+-   core: Fix "put" pipeline signatures ([#75]).
+-   core: Enable strict mode ([#76]).
+-   core: Repurpose `Repository` & `DataSource` to express the combination of get/put/delete types ([#108]).
+-   core: BACKEND-1429 :: Feature-Internal :: Use abstract classes for SQLInterface & SQLDialect (for DI) ([#111]).
+-   core: FRONTEND-1411 :: Feature Internal :: Change harmony-core `class-transformer` dependency into a `peerDependency` ([#114]).
 
 ### Deprecated
 
-- core: ALL-8972 :: Feature :: Delete/deprecate getAll and putAll from Harmony ([#97]).
+-   core: ALL-8972 :: Feature :: Delete/deprecate getAll and putAll from Harmony ([#97]).
 
 ### Removed
 
-- core: Deprecated `deleteAll` removed ([#69]).
+-   core: Deprecated `deleteAll` removed ([#69]).
 
 ### Fixed
 
-- core: FRONTEND-3512 :: Bug :: Relax `Type<T>` and `HttpRequestBuilder` return types ([#123]).
-- core: FRONTEND-3523 :: Bug :: Fix `HttpRequestBuilder.setResponseConstructor` for array generics ([#125]).
+-   core: FRONTEND-3512 :: Bug :: Relax `Type<T>` and `HttpRequestBuilder` return types ([#123]).
+-   core: FRONTEND-3523 :: Bug :: Fix `HttpRequestBuilder.setResponseConstructor` for array generics ([#125]).
 
 ### Security
 
-- core: Upgrade dependencies.
-- core: BACKEND-1205 :: Feature Internal :: Update bcrypt cost factor ([#113]).
+-   core: Upgrade dependencies.
+-   core: BACKEND-1205 :: Feature Internal :: Update bcrypt cost factor ([#113]).
 
 [#69]: https://github.com/mobilejazz/harmony-typescript/pull/69
 [#72]: https://github.com/mobilejazz/harmony-typescript/pull/72
@@ -115,111 +115,111 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-- core: Upgrade dependencies.
+-   core: Upgrade dependencies.
 
 ## [0.9.0] - 2020-08-04
 
 ### Added
 
-- bugfender: Add `@mobilejazz/harmony-bugfender` package.
+-   bugfender: Add `@mobilejazz/harmony-bugfender` package.
 
 ### Changed
 
-- core: Clean-up project.
+-   core: Clean-up project.
 
 ## [0.8.0-0.8.2] - 2021-04-07
 
 ### Added
 
-- angular: Add option to set FormData.
-- core: Implements cache operation fallback.
+-   angular: Add option to set FormData.
+-   core: Implements cache operation fallback.
 
 ### Fixed
 
-- core: `UrlBuilder.prepareQueryParameters` handle falsy values.
+-   core: `UrlBuilder.prepareQueryParameters` handle falsy values.
 
 ### Security
 
-- core: Auditing all packages and removing all vulnerabilities.
+-   core: Auditing all packages and removing all vulnerabilities.
 
 ## [0.7.0] - 2020-12-04
 
 ### Changed
 
-- core: New SQL Params paradigm (#49).
+-   core: New SQL Params paradigm (#49).
 
 ## [0.6.0-0.6.7] - 2020-12-03
 
 ### Added
 
-- core: Adding support for better sql params support.
+-   core: Adding support for better sql params support.
 
 ### Changed
 
-- core: Update to Bugfender Web SDK 1.x
-- core: Allow empty SQLWhere Queries.
+-   core: Update to Bugfender Web SDK 1.x
+-   core: Allow empty SQLWhere Queries.
 
 ### Fixed
 
-- core: Fixing SQLRowCounter to support empty SQLWhere queries.
+-   core: Fixing SQLRowCounter to support empty SQLWhere queries.
 
 ## [0.5.0-0.5.1] - 2020-07-15
 
 ### Added
 
-- core: Add linting.
-- core: Implementing soft delete and error codes.
+-   core: Add linting.
+-   core: Implementing soft delete and error codes.
 
 ## [0.4.1] - 2020-05-13
 
 ### Added
 
-- core: Add Bugfender logger
+-   core: Add Bugfender logger
 
 ## [0.3.0-0.3.4] - 2020-04-08
 
 ### Added
 
-- core, nest: Support for PostgresSQL and MySQL.
-- core: Add test infrastructure.
-- nest: Adding token invalidation support.
+-   core, nest: Support for PostgresSQL and MySQL.
+-   core: Add test infrastructure.
+-   nest: Adding token invalidation support.
 
 ### Changed
 
-- core: Use ES5 target instead of ES6 for maximum browser compatibility.
-- core: Removing offset limit limitation if where querery is not paginated.
+-   core: Use ES5 target instead of ES6 for maximum browser compatibility.
+-   core: Removing offset limit limitation if where querery is not paginated.
 
 ### Deprecated
 
-- core: Add `deleteAll` deprecation notices.
+-   core: Add `deleteAll` deprecation notices.
 
 ### Security
 
-- core: Security fixes & `package-lock.json` update.
+-   core: Security fixes & `package-lock.json` update.
 
 ## [0.2.0] - 2020-01-10
 
 ### Added
 
-- core: Add `Logger` implementation.
-- core: Adding new Forbidden error.
-- core: Adding sql interface.
-- typeorm: Added the new typeorm sql interface.
-- core: Adding sql data source.
-- nest: Adding oauth sql script.
+-   core: Add `Logger` implementation.
+-   core: Adding new Forbidden error.
+-   core: Adding sql interface.
+-   typeorm: Added the new typeorm sql interface.
+-   core: Adding sql data source.
+-   nest: Adding oauth sql script.
 
 ### Changed
 
-- core: Cleaning datasource and repository interfaces from ids.
-- core: Upgrading typescript to new datasource interface.
-- core: Modifying lerna scripts with canary option.
-- core: Improving constructors implementation.
-- nest: Moving crypto utils to harmony-nest.
-- core: Change library target compilation to ES2015 to have better browsers support.
+-   core: Cleaning datasource and repository interfaces from ids.
+-   core: Upgrading typescript to new datasource interface.
+-   core: Modifying lerna scripts with canary option.
+-   core: Improving constructors implementation.
+-   nest: Moving crypto utils to harmony-nest.
+-   core: Change library target compilation to ES2015 to have better browsers support.
 
 ### Security
 
-- core: Update dependencies.
+-   core: Update dependencies.
 
 ## [0.1.0-0.1.3] - 2019-11-07
 
@@ -227,26 +227,26 @@ First release! 🥳
 
 ### Added
 
-- core: Base project structure.
-- core: Add JsonSerializer/Deserializer Mapper + Network/Storage Operations + Dictionary refactor + Core errors + Angular package.
-- typeorm: Added method that parse every condition expressed as array and add an `In` clause before
-- angular: Added Parameter Type including arrays.
-- core: Make Operation optional for `DeleteAll` and `PutAll` interactors.
-- core: Adding new features as `MockDataSource` or `VoidDataSource`.
-- core: Implementing in-memory data-source and cache repository.
-- core: Adding InvalidArgumentError.
+-   core: Base project structure.
+-   core: Add JsonSerializer/Deserializer Mapper + Network/Storage Operations + Dictionary refactor + Core errors + Angular package.
+-   typeorm: Added method that parse every condition expressed as array and add an `In` clause before
+-   angular: Added Parameter Type including arrays.
+-   core: Make Operation optional for `DeleteAll` and `PutAll` interactors.
+-   core: Adding new features as `MockDataSource` or `VoidDataSource`.
+-   core: Implementing in-memory data-source and cache repository.
+-   core: Adding InvalidArgumentError.
 
 ### Changed
 
-- core: Change delete related return types to `void`.
-- core: Cache repository to throw `OperationNotSupportedError` instead of `MethodNotImplementedError`.
-- core: Improve constructors code.
+-   core: Change delete related return types to `void`.
+-   core: Cache repository to throw `OperationNotSupportedError` instead of `MethodNotImplementedError`.
+-   core: Improve constructors code.
 
 ### Fixed
 
-- angular: Fix `setUrlParameters` method.
-- core: Fix cache repository.
-- core: Fix cache issue on `getAll`.
+-   angular: Fix `setUrlParameters` method.
+-   core: Fix cache repository.
+-   core: Fix cache issue on `getAll`.
 
 [unreleased]: https://github.com/mobilejazz/harmony-typescript/compare/v0.12.0...HEAD
 [0.12.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.11.2...v0.12.0

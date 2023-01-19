@@ -1,8 +1,17 @@
-import {AllObjectsQuery, IdQuery, IdsQuery, InMemoryDataSource, InvalidArgumentError, KeyQuery, NotFoundError, PaginationPageQuery, QueryNotSupportedError, VoidQuery} from '../../../src';
+import {
+    AllObjectsQuery,
+    IdQuery,
+    IdsQuery,
+    InMemoryDataSource,
+    InvalidArgumentError,
+    KeyQuery,
+    NotFoundError,
+    QueryNotSupportedError,
+    VoidQuery,
+} from '../../../src';
 
 class SimplestClass {
-    constructor(public readonly id: number) {
-    }
+    constructor(public readonly id: number) {}
 }
 
 describe('InMemoryDataSource', () => {
@@ -44,10 +53,7 @@ describe('InMemoryDataSource', () => {
             await dataSource.put(myObject1, new IdQuery(myObject1.id));
             await dataSource.put(myObject2, new IdQuery(myObject2.id));
 
-            const result = await dataSource.getAll(new IdsQuery([
-                myObject1.id,
-                myObject2.id,
-            ]));
+            const result = await dataSource.getAll(new IdsQuery([myObject1.id, myObject2.id]));
 
             expect(result.length).toBe(2);
             expect(result[0]).toBe(myObject1);
@@ -57,10 +63,7 @@ describe('InMemoryDataSource', () => {
         it(`should error if 'IdsQuery' is not found`, () => {
             const dataSource = new InMemoryDataSource<SimplestClass>(); // EMPTY
 
-            const result = dataSource.getAll(new IdsQuery([
-                myObject1.id,
-                myObject2.id,
-            ]));
+            const result = dataSource.getAll(new IdsQuery([myObject1.id, myObject2.id]));
 
             expect(result).rejects.toThrow(NotFoundError);
         });
