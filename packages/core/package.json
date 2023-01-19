@@ -1,6 +1,6 @@
 {
     "name": "@mobilejazz/harmony-core",
-    "version": "0.11.2",
+    "version": "0.12.0",
     "description": "Mobile Jazz Harmony framework for TypeScript",
     "author": "Mobile Jazz",
     "license": "Apache-2.0",
