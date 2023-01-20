@@ -19,11 +19,8 @@
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
         "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
     },
-    "devDependencies": {
-        "@bugfender/common": "^1.1.1"
-    },
     "peerDependencies": {
-        "@bugfender/sdk": "^2.2.0",
+        "@bugfender/sdk": "^2.2.1",
         "@mobilejazz/harmony-core": "*"
     }
 }
