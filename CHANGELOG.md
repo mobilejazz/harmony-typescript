@@ -25,11 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   …
+-   all: FRONTEND-8163 :: Bug :: Remove `main` field from `package.json` ([#136])
 
 ### Security
 
 -   …
+
+[#136]: https://github.com/mobilejazz/harmony-typescript/pull/136
 
 ## [0.12.0] - 2023-01-19
 
