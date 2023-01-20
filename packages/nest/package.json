@@ -7,8 +7,9 @@
     "repository": "github:mobilejazz/harmony-typescript",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/nest#readme",
     "bugs": "https://github.com/mobilejazz/harmony-typescript/issues",
-    "main": "dist/index.js",
     "gitHead": "e2cfa71514880a00232939cac36ae4f6c2bc60d9",
+    "main": "dist/index.js",
+    "files": ["dist"],
     "publishConfig": {
         "access": "public"
     },
@@ -17,7 +18,7 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
-        "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
+        "prepack": "cp ../../README.md ./"
     },
     "dependencies": {
         "bcryptjs": "~2.4.3",

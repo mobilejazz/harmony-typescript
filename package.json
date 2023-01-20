@@ -27,7 +27,7 @@
         "format": "prettier --write .",
         "validate": "npm run lint && npm test",
         "prepublish": "npm run build",
-        "publish": "lerna publish --contents dist --force-publish --no-private",
+        "publish": "lerna publish --force-publish --no-private",
         "test": "jest --silent",
         "test:watch": "jest --watch",
         "prepare": "husky install",
