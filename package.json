@@ -17,6 +17,9 @@
         "examples/*",
         "packages/*"
     ],
+    "lint-staged": {
+        "*": "prettier --write --ignore-unknown"
+    },
     "scripts": {
         "bootstrap": "lerna bootstrap --use-workspaces --hoist --force-local",
         "check-deps": "npm outdated && lerna exec -- npm outdated && npm audit && lerna exec -- npm audit",
@@ -34,6 +37,7 @@
         "setup": "npm ci && npm run bootstrap && npm run build"
     },
     "devDependencies": {
+        "@mobilejazz/prettier-config": "^0.1.2",
         "@types/jest": "^28.1.8",
         "@types/node": "16.x",
         "@typescript-eslint/eslint-plugin": "^5.37.0",
@@ -42,6 +46,7 @@
         "husky": "^8.0.1",
         "jest": "^28.1.3",
         "lerna": "^5.5.0",
+        "lint-staged": "^13.1.0",
         "nx": "^14.7.13",
         "prettier": "2.7.1",
         "ts-jest": "^28.0.8",
