@@ -7,7 +7,6 @@
     "repository": "github:mobilejazz/harmony-typescript",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/bugfender#readme",
     "bugs": "https://github.com/mobilejazz/harmony-typescript/issues",
-    "main": "dist/index.js",
     "gitHead": "e2cfa71514880a00232939cac36ae4f6c2bc60d9",
     "publishConfig": {
         "access": "public"
