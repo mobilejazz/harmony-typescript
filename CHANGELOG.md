@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   all: FRONTEND-8163 :: Bug :: Remove `main` field from `package.json` ([#136])
+-   all: FRONTEND-8163 :: Bug :: Fix invalid `main` field error ([#136])
 
 ### Security
 
