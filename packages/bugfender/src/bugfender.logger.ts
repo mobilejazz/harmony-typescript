@@ -1,6 +1,5 @@
 import { Logger, LogLevel } from '@mobilejazz/harmony-core';
-import { BugfenderClass, LogLevel as BFLogLevel } from '@bugfender/sdk';
-import type { DeviceKeyValue } from '@bugfender/common';
+import { BugfenderClass, DeviceKeyValue, LogLevel as BFLogLevel } from '@bugfender/sdk';
 
 export class BugfenderLogger extends Logger {
     private tag?: string;
