@@ -1,5 +1,5 @@
 import {
-    createCacheDecorator,
+    Cached,
     DataSourceMapper,
     GetInteractor,
     GetRepositoryMapper,
@@ -32,8 +32,6 @@ export abstract class AppProvider {
     abstract provideLoginUser(): LoginUserInteractor;
     abstract provideValidateUserScope(): ValidateUserScopeInteractor;
 }
-
-const Cached = createCacheDecorator();
 
 export class AppDefaultProvider implements AppProvider {
     constructor(

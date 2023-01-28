@@ -1,29 +1,35 @@
 type MethodDecorator = (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) => void;
-type CacheDecorator = () => MethodDecorator;
 
 /**
- * Creates a `CacheDecorator`
+ * `@Cached()` decorator cache
  *
- * We don't expose directly `CacheDecorator` as we want to have a different
- * cache per class when this is used. Otherwise, different classes would share
- * the same cache.
- *
- * @returns a `CacheDecorator` with unique cache
+ * First key is the instance. So different instances from the same class
+ * will have a separate entry on the map. The second level key is the method name.
  */
-export function createCacheDecorator(): CacheDecorator {
-    const cache = new Map<string, unknown>();
+const cachedDecoratorCache: Map<unknown, Map<string, unknown>> = new Map();
 
-    return function CacheDecorator(): MethodDecorator {
-        return function (_target: unknown, propertyKey: string, descriptor: PropertyDescriptor): void {
-            const method = descriptor.value;
+/**
+ * Caches the return value from a method and reuses it in subsequent calls
+ */
+export function Cached(): MethodDecorator {
+    return function (instance: unknown, propertyName: string, descriptor: PropertyDescriptor): void {
+        const method = descriptor.value;
 
-            descriptor.value = function () {
-                if (!cache.has(propertyKey)) {
-                    cache.set(propertyKey, method.apply(this));
-                }
+        // Override the method with a decorator/wrapper that adds the cache logic
+        descriptor.value = function () {
+            if (!cachedDecoratorCache.has(instance)) {
+                cachedDecoratorCache.set(instance, new Map());
+            }
 
-                return cache.get(propertyKey);
-            };
+            // SAFETY `!`: We have just initialized the `instanceCache` above.
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const instanceCache = cachedDecoratorCache.get(instance)!;
+
+            if (!instanceCache.has(propertyName)) {
+                instanceCache.set(propertyName, method.apply(this));
+            }
+
+            return instanceCache.get(propertyName);
         };
     };
 }

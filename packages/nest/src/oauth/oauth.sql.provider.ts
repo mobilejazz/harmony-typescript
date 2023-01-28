@@ -41,7 +41,7 @@ import { OAuthUserInfoEntityToRawSqlMapper } from './data/datasource/mappers/oau
 import { OAuthUserInfoEntity } from './data/entity/oauth-user-info.entity';
 import { GetOAuthRefreshTokenInteractor } from './domain/interactors/get-oauth-refresh-token.interactor';
 import {
-    createCacheDecorator,
+    Cached,
     DataSourceMapper,
     DeleteInteractor,
     DeleteRepository,
@@ -68,14 +68,13 @@ import { InvalidateUserTokensInteractor } from './domain/interactors/invalidate-
 import { DeleteTokensDataSource } from './data/datasource/delete-tokens.data-source';
 import { OAuthUserInfoRepository } from './data/repository/oauth-user-info.repository';
 
-const Cached = createCacheDecorator();
-
 export class OAuthSQLProvider implements OAuthProvider {
     constructor(private readonly sqlDialect: SQLDialect, private readonly sqlInterface: SQLInterface) {}
 
     public clientModel(): OAuth2BaseModel {
         return new OAuth2BaseModel(this.getClient(), this.putToken(), this.getToken(), undefined, undefined);
     }
+
     public userModel(
         getUser: GetOAuthUserInteractor,
         loginUser: LoginOAuthUserInteractor,

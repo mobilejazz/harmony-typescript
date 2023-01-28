@@ -1,14 +1,15 @@
 {
     "name": "@mobilejazz/harmony-core",
-    "version": "0.11.2",
+    "version": "0.12.0",
     "description": "Mobile Jazz Harmony framework for TypeScript",
     "author": "Mobile Jazz",
     "license": "Apache-2.0",
     "repository": "github:mobilejazz/harmony-typescript",
     "homepage": "https://github.com/mobilejazz/harmony-typescript/tree/master/packages/core#readme",
     "bugs": "https://github.com/mobilejazz/harmony-typescript/issues",
+    "gitHead": "e2cfa71514880a00232939cac36ae4f6c2bc60d9",
     "main": "dist/index.js",
-    "gitHead": "4526b13c3283cb03577d0b3b6972f04a6b41fe86",
+    "files": ["dist"],
     "publishConfig": {
         "access": "public"
     },
@@ -17,7 +18,7 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "lint": "eslint -c ../../.eslintrc.js --ignore-path ../../.eslintignore '**/*.ts'",
-        "prepublishOnly": "cp ./package.json ./dist && cp ../../README.md ./dist"
+        "prepack": "cp ../../README.md ./"
     },
     "devDependencies": {
         "@types/mysql": "^2.15.21"

@@ -1,3 +1,5 @@
+import { Type } from '../types';
+
 export enum LogLevel {
     Trace,
     Debug,
@@ -14,78 +16,72 @@ export class UnknownLogLevelError extends Error {
     }
 }
 
-export interface Logger {
-    logKeyValue(key: string, value: unknown): void;
+export abstract class Logger {
+    /**
+     * Log key/value pair.
+     *
+     * @param key
+     * @param value
+     */
+    public abstract logKeyValue(key: string, value: unknown): void;
 
-    log(level: LogLevel, message: string): void;
-    log(level: LogLevel, tag: string, message: string): void;
+    /**
+     * Given a tag, return a new `Logger` with that tag applied
+     *
+     * @param tag Tag that identifies this `Logger`
+     */
+    protected abstract createLoggerWithTag(tag: string): Logger;
 
-    trace(message: string): void;
-    trace(tag: string, message: string): void;
+    /**
+     * Handles incoming log
+     *
+     * @param level Log level
+     * @param parameters List of parameters to log
+     */
+    protected abstract handleLog(level: LogLevel, parameters: unknown[]): void;
 
-    debug(message: string): void;
-    debug(tag: string, message: string): void;
-
-    info(message: string): void;
-    info(tag: string, message: string): void;
-
-    warning(message: string): void;
-    warning(tag: string, message: string): void;
-
-    error(message: string): void;
-    error(tag: string, message: string): void;
-
-    fatal(message: string): void;
-    fatal(tag: string, message: string): void;
-}
-
-export abstract class AbstractLogger implements Logger {
-    abstract logKeyValue(key: string, value: unknown): void;
-
-    abstract log(level: LogLevel, message: string): void;
-    abstract log(level: LogLevel, tag: string, message: string): void;
-
-    protected _log(level: LogLevel, tagOrMessage: string, message?: string): void {
-        if (message) {
-            this.log(level, tagOrMessage, message);
-        } else {
-            this.log(level, tagOrMessage);
-        }
+    /**
+     * Returns a new `Logger` instance but with a tag/namespace applied.
+     *
+     * @param tag Tag that will be applied to logs
+     */
+    public withTag(tag: string | Type<unknown>): Logger {
+        return this.createLoggerWithTag(typeof tag === 'string' ? tag : tag.name);
     }
 
-    trace(message: string): void;
-    trace(tag: string, message: string): void;
-    trace(tagOrMessage: string, message?: string): void {
-        this._log(LogLevel.Trace, tagOrMessage, message);
+    public log(obj: unknown, ...objs: unknown[]): void;
+    public log(msg: string, ...subst: unknown[]): void;
+    public log(...parameters: unknown[]): void {
+        this.handleLog(LogLevel.Debug, parameters);
     }
 
-    debug(message: string): void;
-    debug(tag: string, message: string): void;
-    debug(tagOrMessage: string, message?: string): void {
-        this._log(LogLevel.Debug, tagOrMessage, message);
+    public warn(obj: unknown, ...objs: unknown[]): void;
+    public warn(msg: string, ...subst: unknown[]): void;
+    public warn(...parameters: unknown[]): void {
+        this.handleLog(LogLevel.Warning, parameters);
     }
 
-    info(message: string): void;
-    info(tag: string, message: string): void;
-    info(tagOrMessage: string, message?: string): void {
-        this._log(LogLevel.Info, tagOrMessage, message);
+    public error(obj: unknown, ...objs: unknown[]): void;
+    public error(msg: string, ...subst: unknown[]): void;
+    public error(...parameters: unknown[]): void {
+        this.handleLog(LogLevel.Error, parameters);
     }
 
-    warning(message: string): void;
-    warning(tag: string, message: string): void;
-    warning(tagOrMessage: string, message?: string): void {
-        this._log(LogLevel.Warning, tagOrMessage, message);
+    public trace(obj: unknown, ...objs: unknown[]): void;
+    public trace(msg: string, ...subst: unknown[]): void;
+    public trace(...parameters: unknown[]): void {
+        this.handleLog(LogLevel.Trace, parameters);
     }
 
-    error(message: string): void;
-    error(tag: string, message: string): void;
-    error(tagOrMessage: string, message?: string): void {
-        this._log(LogLevel.Error, tagOrMessage, message);
+    public info(obj: unknown, ...objs: unknown[]): void;
+    public info(msg: string, ...subst: unknown[]): void;
+    public info(...parameters: unknown[]): void {
+        this.handleLog(LogLevel.Info, parameters);
     }
 
-    fatal(message: string): void;
-    fatal(tag: string, message: string): void;
-    fatal(tagOrMessage: string, message?: string): void {
-        this._log(LogLevel.Fatal, tagOrMessage, message);
+    public fatal(obj: unknown, ...objs: unknown[]): void;
+    public fatal(msg: string, ...subst: unknown[]): void;
+    public fatal(...parameters: unknown[]): void {
+        this.handleLog(LogLevel.Fatal, parameters);
     }
 }

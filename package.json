@@ -26,8 +26,9 @@
         "lint": "lerna run lint",
         "format": "prettier --write .",
         "validate": "npm run lint && npm test",
-        "publish": "npm run build && lerna publish --contents dist --force-publish",
-        "test": "jest",
+        "prepublish": "npm run build",
+        "publish": "lerna publish --force-publish --no-private",
+        "test": "jest --silent",
         "test:watch": "jest --watch",
         "prepare": "husky install",
         "setup": "npm ci && npm run bootstrap && npm run build"
