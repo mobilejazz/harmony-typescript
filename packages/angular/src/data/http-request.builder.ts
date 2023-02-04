@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
 export interface RequestOptions {
-    headers: HttpHeaders;
+    headers: Record<string, string | string[]>;
     observe: 'response';
     responseType: 'json';
 }
@@ -23,10 +23,10 @@ export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilde
     }
 
     private createRequestOptions(): RequestOptions {
-        const headers = new HttpHeaders({
+        const headers = {
             ...this.defaultHeaders,
             ...this.authService.getAuthHeaders(),
-        });
+        };
 
         return {
             observe: 'response',

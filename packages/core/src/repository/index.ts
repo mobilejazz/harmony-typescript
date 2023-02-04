@@ -9,6 +9,7 @@ export * from './errors';
 export * from './mapper/mapper';
 export * from './operation/operation';
 export * from './query/query';
+export * from './query/network.query';
 export * from './repository';
 export * from './repository-mapper';
 export * from './single-data-source.repository';

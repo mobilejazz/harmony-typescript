@@ -80,3 +80,12 @@ export class ForbiddenError extends Error {
         this.name = ForbiddenErrorName;
     }
 }
+
+export const InvalidHttpMethodErrorName = 'Invalid Http Method';
+export class InvalidHttpMethodError extends Error {
+    constructor(message?: string, public readonly code: number = UnknownErrorCode) {
+        super(message);
+        Object.setPrototypeOf(this, InvalidHttpMethodError.prototype);
+        this.name = InvalidHttpMethodErrorName;
+    }
+}

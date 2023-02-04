@@ -1,37 +1,39 @@
 import { lastValueFrom, Observable } from 'rxjs';
 import { DataSource } from './data-source';
 import { Query } from '../query/query';
-import { MethodNotImplementedError, QueryNotSupportedError } from '../errors';
+import { InvalidHttpMethodError, MethodNotImplementedError, QueryNotSupportedError } from '../errors';
 import { DataSourceMapper } from './data-source-mapper';
-import { ArrayMapper, JsonDeserializerMapper, VoidMapper } from '../mapper/mapper';
+import { ArrayMapper, BlankMapper, JsonDeserializerMapper } from '../mapper/mapper';
 import { Type } from '../../helpers';
-import {
-    DeleteNetworkQuery,
-    GetNetworkQuery,
-    NetworkQuery,
-    PostNetworkQuery,
-    PutNetworkQuery,
-} from '../query/network-query';
 import { ApiRequestService } from './api-request.service';
 import { HttpRequestBuilder } from '../../data';
+import { HttpMethod, NetworkQuery } from '../query/network.query';
 
 export class NetworkDataSource implements DataSource<unknown> {
     constructor(private readonly requestService: ApiRequestService) {}
 
-    public get(query: Query): Promise<unknown> {
-        if (query instanceof GetNetworkQuery) {
-            return lastValueFrom(this.getRequestWithParameters(query).get());
+    public async get(query: Query): Promise<unknown> {
+        if (query instanceof NetworkQuery) {
+            if (query.method === HttpMethod.GET) {
+                return lastValueFrom(this.getRequestWithParameters<unknown>(query).get());
+            }
+            throw new InvalidHttpMethodError(`Only GET method is allowed in a get action, using ${query.method}`);
         }
-
         throw new QueryNotSupportedError();
     }
 
     public put(value: unknown | undefined, query: Query): Promise<unknown> {
         let $request: Observable<unknown>;
-        if (query instanceof PutNetworkQuery) {
-            $request = this.getRequestWithParameters<void>(query).put();
-        } else if (query instanceof PostNetworkQuery) {
-            $request = this.getRequestWithParameters<void>(query).post();
+        if (query instanceof NetworkQuery) {
+            if (query.method === HttpMethod.POST) {
+                $request = this.getRequestWithParameters<unknown>(query).post();
+            } else if (query.method === HttpMethod.PUT) {
+                $request = this.getRequestWithParameters<unknown>(query).put();
+            } else {
+                throw new InvalidHttpMethodError(
+                    `Only POST & PUT methods are allowed in a put action, using ${query.method}`,
+                );
+            }
         } else {
             throw new QueryNotSupportedError();
         }
@@ -40,8 +42,11 @@ export class NetworkDataSource implements DataSource<unknown> {
     }
 
     public delete(query: Query): Promise<void> {
-        if (query instanceof DeleteNetworkQuery) {
-            return lastValueFrom(this.getRequestWithParameters<void>(query).delete());
+        if (query instanceof NetworkQuery) {
+            if (query.method !== HttpMethod.DELETE) {
+                return lastValueFrom(this.getRequestWithParameters<void>(query).delete());
+            }
+            throw new InvalidHttpMethodError(`Only DELETE method is allowed in a delete action, using ${query.method}`);
         }
 
         throw new QueryNotSupportedError();
@@ -52,7 +57,7 @@ export class NetworkDataSource implements DataSource<unknown> {
         value?: unknown | undefined,
     ): HttpRequestBuilder<T> {
         const request = this.requestService
-            .builder<T>(query.endpoint)
+            .builder<T>(query.path)
             .setQueryParameters(query.queryParameters)
             .setUrlParameters(query.urlParameters);
 
@@ -81,7 +86,7 @@ export function provideDefaultNetworkDataSource<T>(requestService: ApiRequestSer
         dataSource,
         dataSource,
         new JsonDeserializerMapper(type),
-        new VoidMapper(),
+        new BlankMapper<T>(),
     );
 }
 
@@ -94,9 +99,7 @@ export function provideDefaultArrayNetworkDataSource<T>(
         dataSource,
         dataSource,
         dataSource,
-        new ArrayMapper(
-            new JsonDeserializerMapper(type),
-        ),
-        new VoidMapper(),
+        new ArrayMapper(new JsonDeserializerMapper(type)),
+        new ArrayMapper(new BlankMapper()),
     );
 }
