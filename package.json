@@ -17,6 +17,7 @@
         "examples/*",
         "packages/*"
     ],
+    "prettier": "@mobilejazz/prettier-config",
     "lint-staged": {
         "*": "prettier --write --ignore-unknown"
     },
