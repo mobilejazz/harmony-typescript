@@ -1,4 +1,4 @@
 {
-    "$schema": "",
-    "type": "angular"
+    "$schema": "./harmony.schema.json",
+    "type": "nest"
 }

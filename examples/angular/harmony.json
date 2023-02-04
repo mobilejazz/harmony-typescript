@@ -1,0 +1,4 @@
+{
+  "$schema": "../../node_modules/@mobilejazz/harmony-cli/harmony.schema.json",
+  "type": "angular"
+}

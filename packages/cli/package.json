@@ -23,17 +23,21 @@
     },
     "scripts": {
         "clean": "rimraf dist/",
-        "build": "npm run clean && tsc && npm run copy-files",
+        "build": "npm run clean && tsc",
+        "postbuild": "npm run copy-files && chmod +x dist/bin/mj.js",
         "copy-files": "copyfiles src/**/*.hbs dist/",
+        "json-schema": "npx ts-json-schema-generator --path 'src/harmony.config.ts' --type 'HarmonyConfig' --no-top-ref --id 'HarmonyConfig' > harmony.schema.json",
         "test": "echo 'alo!'"
     },
     "dependencies": {
         "commander": "^9.4.1",
+        "jsonschema": "^1.4.1",
         "plop": "^3.1.1"
     },
     "devDependencies": {
         "@types/node": "^16.0.0",
         "copyfiles": "^2.4.1",
-        "rimraf": "^3.0.2"
+        "rimraf": "^3.0.2",
+        "ts-json-schema-generator": "^1.2.0"
     }
 }
