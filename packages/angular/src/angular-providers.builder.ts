@@ -1,26 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FactoryProvider, Provider } from '@angular/core';
-import { Type } from '@mobilejazz/harmony-core';
-
-// Anything instanciable, including abstract classes
-type AnyType = abstract new (...args: any[]) => any;
-
-// Map a tuple/array of `AbstractClassType[]` to `InstanceType[]`
-// See: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-1.html#mapped-types-on-tuples-and-arrays
-// See: https://www.reddit.com/r/typescript/comments/us0qe9/how_do_you_write_a_generic_type_that_converts_a/
-type InstanceTypeList<T extends [...AnyType[]]> = {
-    [K in keyof T]: T[K] extends AnyType ? InstanceType<T[K]> : T[K];
-};
+import { AnyType, Type } from '@mobilejazz/harmony-core';
 
 // Function that given `T` returns `U`
-type FactoryFn<T extends AnyType, U, ExtraDeps extends AnyType[]> = (
-    p: InstanceType<T>,
-    ...args: InstanceTypeList<ExtraDeps>
-) => U;
-
-// Dependencies tuple/array
-// This is basically used in `add()` to "transfer" the types to `FactoryFn`
-type Deps<T, U extends AnyType[]> = [T] | [T, ...U];
+type FactoryFn<T extends AnyType, U> = (p: InstanceType<T>, ...args: any[]) => U;
 
 // Angular provider for the Harmony provider
 interface HarmonyFactoryProvider<T extends AnyType> extends FactoryProvider {
@@ -56,10 +39,10 @@ class AngularProvidersBuilder<T extends AnyType> {
      * @param useFactory Factory function that creates the class instance
      * @param deps Extra deps for the provider
      */
-    public add<U, ExtraDeps extends AnyType[]>(
+    public add<U>(
         provide: Type<U>,
-        useFactory: FactoryFn<T, U, ExtraDeps>,
-        deps: Deps<T, ExtraDeps> = [this.provider.provide],
+        useFactory: FactoryFn<T, U>,
+        deps: [T, ...any[]] = [this.provider.provide],
     ): AngularProvidersBuilder<T> {
         this.providers.push({ provide, deps, useFactory });
         return this;
