@@ -1,5 +1,3 @@
-import { ParameterType } from '../../data';
-
 export class Query {}
 
 export class KeyQuery extends Query {

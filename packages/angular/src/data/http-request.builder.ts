@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
-export interface RequestOptions {
+    interface RequestOptions {
     headers: Record<string, string | string[]>;
     observe: 'response';
     responseType: 'json';
@@ -12,7 +12,7 @@ export interface RequestOptions {
 
 export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilder<T> {
     private urlBuilder: UrlBuilder;
-    private body: string | FormData = '';
+    private body: string | FormData | null = null;
 
     constructor(
         protected readonly endpoint: string,
@@ -76,7 +76,8 @@ export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilde
     }
 
     public delete(): Observable<void> {
-        return this.http.delete<T>(this.urlBuilder.getUrl(), this.createRequestOptions()).pipe(
+        return this.http.delete<T>(this.urlBuilder.getUrl(), this.createRequestOptions())
+            .pipe(
             map(() => {
                 return;
             }),

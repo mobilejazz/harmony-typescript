@@ -1,4 +1,5 @@
 import { ParameterType } from '../../data';
+import {KeyQuery} from "./query";
 
 export enum HttpMethod {
     GET = 'GET',
@@ -7,7 +8,11 @@ export enum HttpMethod {
     DELETE = 'DELETE',
 }
 
-export abstract class NetworkQuery {
+export abstract class NetworkQuery extends KeyQuery {
+    constructor(key = '') {
+        super(key);
+    }
+
     abstract get method(): HttpMethod;
 
     get path(): string {

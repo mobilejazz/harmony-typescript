@@ -28,7 +28,7 @@ export class NetworkDataSource implements DataSource<unknown> {
             if (query.method === HttpMethod.POST) {
                 $request = this.getRequestWithParameters<unknown>(query).post();
             } else if (query.method === HttpMethod.PUT) {
-                $request = this.getRequestWithParameters<unknown>(query).put();
+                $request = this.getRequestWithParameters<unknown>(query, value).put();
             } else {
                 throw new InvalidHttpMethodError(
                     `Only POST & PUT methods are allowed in a put action, using ${query.method}`,
@@ -43,7 +43,7 @@ export class NetworkDataSource implements DataSource<unknown> {
 
     public delete(query: Query): Promise<void> {
         if (query instanceof NetworkQuery) {
-            if (query.method !== HttpMethod.DELETE) {
+            if (query.method === HttpMethod.DELETE) {
                 return lastValueFrom(this.getRequestWithParameters<void>(query).delete());
             }
             throw new InvalidHttpMethodError(`Only DELETE method is allowed in a delete action, using ${query.method}`);
