@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { createAngularProviders } from '@mobilejazz/harmony-angular';
+import { angularProvidersBuilder } from '@mobilejazz/harmony-angular';
 
 import { HackerNewsStoryProvider } from './hacker-news-story.provider';
 import { GetHackerNewsLatestAskStoriesInteractor } from './domain/interactors/get-hacker-news-latest-ask-stories.interactor';
@@ -7,17 +7,14 @@ import { GetHackerNewsStoryInteractor } from './domain/interactors/get-hacker-ne
 import { HackerNewsStoryDefaultProvider } from "./hacker-news-story.provider";
 
 @NgModule({
-  providers: createAngularProviders(
-    {
+  providers: angularProvidersBuilder({
       provide: HackerNewsStoryProvider,
       useFactory: () => new HackerNewsStoryDefaultProvider(
         // 'BUGFENDER_APP_KEY'
       ),
-    },
-    [
-      GetHackerNewsLatestAskStoriesInteractor,
-      GetHackerNewsStoryInteractor,
-    ],
-  ),
+    })
+      .add(GetHackerNewsLatestAskStoriesInteractor, (p) => p.provideGetHackerNewsLatestAskStories())
+      .add(GetHackerNewsStoryInteractor, (p) => p.provideGetHackerNewsStory())
+      .build(),
 })
 export class HackerNewsStoryProviderModule {}
