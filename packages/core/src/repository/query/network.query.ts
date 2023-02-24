@@ -1,5 +1,5 @@
 import { ParameterType } from '../../data';
-import {KeyQuery} from "./query";
+import { KeyQuery } from './query';
 
 export enum HttpMethod {
     GET = 'GET',
@@ -9,15 +9,14 @@ export enum HttpMethod {
 }
 
 export abstract class NetworkQuery extends KeyQuery {
-    constructor(key = '') {
+    constructor(
+        public readonly path: string,
+        key = ''
+    ) {
         super(key);
     }
 
     abstract get method(): HttpMethod;
-
-    get path(): string {
-        return '/';
-    }
 
     get body(): unknown | undefined {
         return undefined;
@@ -33,15 +32,11 @@ export abstract class NetworkQuery extends KeyQuery {
 }
 
 export abstract class NetworkOneQuery extends NetworkQuery {
-    constructor(private readonly pathOne: string, private readonly id: string | number) {
-        super();
+    constructor(pathOne: string, private readonly id: string | number) {
+        super(pathOne, id.toString());
     }
 
     abstract get method(): HttpMethod;
-
-    public get path(): string {
-        return this.pathOne;
-    }
 
     public get urlParameters(): Record<string, ParameterType> {
         return {

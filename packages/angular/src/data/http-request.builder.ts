@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
-    interface RequestOptions {
+interface RequestOptions {
     headers: Record<string, string | string[]>;
     observe: 'response';
     responseType: 'json';
@@ -76,8 +76,7 @@ export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilde
     }
 
     public delete(): Observable<void> {
-        return this.http.delete<T>(this.urlBuilder.getUrl(), this.createRequestOptions())
-            .pipe(
+        return this.http.delete<T>(this.urlBuilder.getUrl(), this.createRequestOptions()).pipe(
             map(() => {
                 return;
             }),
