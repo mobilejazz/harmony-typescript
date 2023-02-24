@@ -14,7 +14,7 @@ export class NetworkDataSource implements DataSource<unknown> {
 
     public async get(query: Query): Promise<unknown> {
         if (query instanceof NetworkQuery) {
-            if (query.method === HttpMethod.GET) {
+            if (query.method === HttpMethod.Get) {
                 return lastValueFrom(this.getRequestWithParameters<unknown>(query).get());
             }
             throw new InvalidHttpMethodError(`Only GET method is allowed in a get action, using ${query.method}`);
@@ -25,9 +25,9 @@ export class NetworkDataSource implements DataSource<unknown> {
     public put(value: unknown | undefined, query: Query): Promise<unknown> {
         let $request: Observable<unknown>;
         if (query instanceof NetworkQuery) {
-            if (query.method === HttpMethod.POST) {
+            if (query.method === HttpMethod.Post) {
                 $request = this.getRequestWithParameters<unknown>(query).post();
-            } else if (query.method === HttpMethod.PUT) {
+            } else if (query.method === HttpMethod.Put) {
                 $request = this.getRequestWithParameters<unknown>(query, value).put();
             } else {
                 throw new InvalidHttpMethodError(
@@ -43,7 +43,7 @@ export class NetworkDataSource implements DataSource<unknown> {
 
     public delete(query: Query): Promise<void> {
         if (query instanceof NetworkQuery) {
-            if (query.method === HttpMethod.DELETE) {
+            if (query.method === HttpMethod.Delete) {
                 return lastValueFrom(this.getRequestWithParameters<void>(query).delete());
             }
             throw new InvalidHttpMethodError(`Only DELETE method is allowed in a delete action, using ${query.method}`);

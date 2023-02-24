@@ -47,42 +47,42 @@ export abstract class NetworkOneQuery extends NetworkQuery {
 
 export class GetOneNetworkQuery extends NetworkOneQuery {
     public get method(): HttpMethod {
-        return HttpMethod.GET;
+        return HttpMethod.Get;
     }
 }
 
 export class PutOneNetworkQuery extends NetworkOneQuery {
     public get method(): HttpMethod {
-        return HttpMethod.PUT;
+        return HttpMethod.Put;
     }
 }
 
 export class DeleteOneNetworkQuery extends NetworkOneQuery {
     public get method(): HttpMethod {
-        return HttpMethod.DELETE;
+        return HttpMethod.Delete;
     }
 }
 
 export class GetNetworkQuery extends NetworkQuery {
     public get method(): HttpMethod {
-        return HttpMethod.GET;
+        return HttpMethod.Get;
     }
 }
 
 export class PostNetworkQuery extends NetworkQuery {
     public get method(): HttpMethod {
-        return HttpMethod.POST;
+        return HttpMethod.Post;
     }
 }
 
 export class PutNetworkQuery extends NetworkQuery {
     public get method(): HttpMethod {
-        return HttpMethod.PUT;
+        return HttpMethod.Put;
     }
 }
 
 export class DeleteNetworkQuery extends NetworkQuery {
     public get method(): HttpMethod {
-        return HttpMethod.DELETE;
+        return HttpMethod.Delete;
     }
 }
