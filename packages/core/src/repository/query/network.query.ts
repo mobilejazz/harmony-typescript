@@ -2,10 +2,10 @@ import { ParameterType } from '../../data';
 import { KeyQuery } from './query';
 
 export enum HttpMethod {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    DELETE = 'DELETE',
+    Get = 'GET',
+    Post = 'POST',
+    Put = 'PUT',
+    Delete = 'DELETE',
 }
 
 export abstract class NetworkQuery extends KeyQuery {
