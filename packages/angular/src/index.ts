@@ -1,2 +1,2 @@
 export * from './data';
-export * from './utilities';
+export * from './angular-providers.builder';

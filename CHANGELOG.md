@@ -9,7 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   …
+-   angular: TS-8897 :: Feature :: Deprecate `createAngularProviders` in favor of `angularProvidersBuilder` ([#139])
+    -   `angularProvidersBuilder` added. The old method failed on production builds as it used strings to derive the method name.
+    -   Usage:
+        -   1: Create the builder, pass the Angular provider for the pure TS Harmony provider
+        -   2: In short form, set the class to provide and how to retrieve it from the provider
+        -   3: If custom deps are needed, pass an array as third parameter. Note that the Harmony provider must go in the first position
+        -   4: Build the Angular providers array.
+        ```ts
+        @NgModule({
+            // 1.
+            providers: angularProvidersBuilder({
+                provide: ExampleProvider,
+                useFactory: () => new ExampleDefaultProvider(),
+            })
+                // 2.
+                .add(GetCountriesInteractor, (p) => p.provideGetCountries())
+                // 3.
+                .add(PutCountryInteractor, (p, common) => p.providePutCountry(common.provideStorage()), [
+                    ExampleProvider,
+                    CommonProvider,
+                ])
+                // 4.
+                .build(),
+        })
+        export class ExampleProviderModule {}
+        ```
 
 ### Changed
 
@@ -17,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
--   …
+-   angular: TS-8897 :: Feature :: Deprecate `createAngularProviders` in favor of `angularProvidersBuilder` ([#139])
+    -   `createAngularProviders` is removed in favor of `angularProvidersBuilder`, see **Added** section.
 
 ### Removed
 
@@ -61,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#131]: https://github.com/mobilejazz/harmony-typescript/pull/131
 [#135]: https://github.com/mobilejazz/harmony-typescript/pull/135
 [#136]: https://github.com/mobilejazz/harmony-typescript/pull/136
+[#139]: https://github.com/mobilejazz/harmony-typescript/pull/139
 
 ## [0.12.0] - 2023-01-19
 

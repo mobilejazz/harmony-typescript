@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/** Anything instanciable, including abstract classes */
+export type AnyType = abstract new (...args: any[]) => any;
+
 /**
  * Instanciable `class`, anything you can call with `new` and get a new instance.
  * @see https://stackoverflow.com/a/52183279/379923
  */
 export interface Type<T> extends Function {
     // In this case, it must be `any`. Using `unknown` give compile errors.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     new (...args: any[]): T;
 }
 
