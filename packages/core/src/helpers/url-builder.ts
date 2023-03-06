@@ -1,4 +1,4 @@
-import { ParameterType } from '../data/parameter-type';
+import { HttpParameter } from '../data/parameter-type';
 
 export class UrlBuilder {
     constructor(private url: string) {}
@@ -7,17 +7,17 @@ export class UrlBuilder {
         return this.url;
     }
 
-    public setUrlParameters(urlParameters: Record<string, ParameterType>): UrlBuilder {
+    public setUrlParameters(urlParameters: HttpParameter): UrlBuilder {
         this.url = this.prepareUrlParameters(this.url, urlParameters);
         return this;
     }
 
-    public setQueryParameters(queryParameters: Record<string, ParameterType>): UrlBuilder {
+    public setQueryParameters(queryParameters: HttpParameter): UrlBuilder {
         this.url = this.prepareQueryParameters(this.url, queryParameters);
         return this;
     }
 
-    private prepareUrlParameters(url: string, urlParameters: Record<string, ParameterType>): string {
+    private prepareUrlParameters(url: string, urlParameters: HttpParameter): string {
         for (const property in urlParameters) {
             if (Object.prototype.hasOwnProperty.call(urlParameters, property) && url.indexOf(`:${property}`) > -1) {
                 url = url.replace(`:${property}`, urlParameters[property].toString());
@@ -28,7 +28,7 @@ export class UrlBuilder {
         return url;
     }
 
-    private prepareQueryParameters(url: string, queryParameters: Record<string, ParameterType>): string {
+    private prepareQueryParameters(url: string, queryParameters: HttpParameter): string {
         let firstProperty = true;
 
         for (const property in queryParameters) {

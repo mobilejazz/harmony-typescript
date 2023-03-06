@@ -1,10 +1,10 @@
-import { ParameterType } from './parameter-type';
+import { HttpParameter } from './parameter-type';
 import { Observable } from 'rxjs';
 
 export interface HttpRequestBuilder<T = unknown> {
     setBody(body: unknown): this;
-    setQueryParameters(queryParameters: Record<string, ParameterType>): this;
-    setUrlParameters(urlParameters: Record<string, ParameterType>): this;
+    setQueryParameters(queryParameters: HttpParameter): this;
+    setUrlParameters(urlParameters: HttpParameter): this;
 
     get(): Observable<T | undefined>;
     post(): Observable<T | undefined>;

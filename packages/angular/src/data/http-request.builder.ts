@@ -1,5 +1,5 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ParameterType, UrlBuilder, HttpRequestBuilder } from '@mobilejazz/harmony-core';
+import { HttpClient } from '@angular/common/http';
+import { HttpParameter, UrlBuilder, HttpRequestBuilder } from '@mobilejazz/harmony-core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
@@ -42,12 +42,12 @@ export class AngularHttpRequestBuilder<T = unknown> implements HttpRequestBuilde
         };
     }
 
-    public setUrlParameters(urlParameters: Record<string, ParameterType>): this {
+    public setUrlParameters(urlParameters: HttpParameter): this {
         this.urlBuilder.setUrlParameters(urlParameters);
         return this;
     }
 
-    public setQueryParameters(queryParameters: Record<string, ParameterType>): this {
+    public setQueryParameters(queryParameters: HttpParameter): this {
         this.urlBuilder.setQueryParameters(queryParameters);
         return this;
     }

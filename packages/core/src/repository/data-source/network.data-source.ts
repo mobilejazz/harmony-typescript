@@ -4,13 +4,16 @@ import { Query } from '../query/query';
 import { InvalidHttpMethodError, MethodNotImplementedError, QueryNotSupportedError } from '../errors';
 import { DataSourceMapper } from './data-source-mapper';
 import { ArrayMapper, BlankMapper, JsonDeserializerMapper } from '../mapper/mapper';
-import { Type } from '../../helpers';
+import { DeviceConsoleLogger, Logger, Type } from '../../helpers';
 import { ApiRequestService } from './api-request.service';
 import { HttpRequestBuilder } from '../../data';
 import { HttpMethod, NetworkQuery } from '../query/network.query';
 
 export class NetworkDataSource implements DataSource<unknown> {
-    constructor(private readonly requestService: ApiRequestService) {}
+    constructor(
+        private readonly requestService: ApiRequestService,
+        private readonly logger: Logger = new DeviceConsoleLogger(undefined, 'NetworkDataSource'),
+    ) {}
 
     public async get(query: Query): Promise<unknown> {
         if (query instanceof NetworkQuery) {
@@ -63,6 +66,9 @@ export class NetworkDataSource implements DataSource<unknown> {
 
         if (value) {
             request.setBody(value);
+            if (query.body) {
+                this.logger.warn('Both value and query.body are set, using value');
+            }
         } else {
             request.setBody(query.body);
         }
