@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   …
+-  core: FRONTEND-4243 :: Feature :: Harmony-typescript `NetworkDataSource` ([#131])
 
 ### Changed
 
@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   …
 
+[#131]: https://github.com/mobilejazz/harmony-typescript/pull/131
 [#135]: https://github.com/mobilejazz/harmony-typescript/pull/135
 [#136]: https://github.com/mobilejazz/harmony-typescript/pull/136
 
