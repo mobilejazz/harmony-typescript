@@ -14,9 +14,7 @@ export class InMemoryDataSource<T> implements DataSource<T> {
     private objects: Map<string, T> = new Map();
     private arrays: Map<string, T[]> = new Map();
 
-    constructor(
-        private readonly logger: Logger = new DeviceConsoleLogger(undefined, 'InMemoryDataSource')
-    ) {}
+    constructor(private readonly logger: Logger = new DeviceConsoleLogger(undefined, 'InMemoryDataSource')) {}
 
     public async get(query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
@@ -70,7 +68,7 @@ export class InMemoryDataSource<T> implements DataSource<T> {
 
         if (query instanceof KeyQuery) {
             if (!query.key) {
-                this.logger.warn('InMemoryDataSource: key is empty');
+                this.logger.warn('key is empty');
             }
             this.objects.set(query.key, value);
             return value;
