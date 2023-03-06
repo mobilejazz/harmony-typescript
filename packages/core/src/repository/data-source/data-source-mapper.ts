@@ -1,4 +1,4 @@
-import { Mapper, Query } from '..';
+import { DataSource, Mapper, Query } from '..';
 import { DeleteDataSource, GetDataSource, PutDataSource } from './data-source';
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
@@ -11,7 +11,7 @@ import { DeviceConsoleLogger, Logger } from '../../helpers';
  * @param toOutMapper Mapper to map data source objects to repository objects
  * @param toInMapper Mapper to map repository objects to data source objects
  */
-export class DataSourceMapper<In, Out> implements GetDataSource<Out>, PutDataSource<Out>, DeleteDataSource {
+export class DataSourceMapper<In, Out> implements DataSource<Out> {
     private readonly getMapper: GetDataSourceMapper<In, Out>;
     private readonly putMapper: PutDataSourceMapper<In, Out>;
 

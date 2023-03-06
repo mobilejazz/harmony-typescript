@@ -51,6 +51,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+-   …
+
+### Security
+
+-   …
+
+## [1.0.0]
+
+### Added
+
+-  core: FRONTEND-4243 :: Feature :: Harmony-typescript `NetworkDataSource` ([#131])
+
+### Changed
+
+-   …
+
+### Deprecated
+
+-   …
+
+### Removed
+
+-   …
+
+### Fixed
+
 -   bugfender: FRONTEND-7941 :: Bug :: Remove `@bugfender/common` requirement ([#135])
 -   all: FRONTEND-8163 :: Bug :: Fix invalid `main` field error ([#136])
 
@@ -58,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   …
 
+[#131]: https://github.com/mobilejazz/harmony-typescript/pull/131
 [#135]: https://github.com/mobilejazz/harmony-typescript/pull/135
 [#136]: https://github.com/mobilejazz/harmony-typescript/pull/136
 [#139]: https://github.com/mobilejazz/harmony-typescript/pull/139

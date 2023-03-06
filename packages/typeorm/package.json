@@ -9,7 +9,9 @@
     "bugs": "https://github.com/mobilejazz/harmony-typescript/issues",
     "gitHead": "e2cfa71514880a00232939cac36ae4f6c2bc60d9",
     "main": "dist/index.js",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "publishConfig": {
         "access": "public"
     },
