@@ -26,12 +26,12 @@ export class NetworkDataSource implements DataSource<unknown> {
     }
 
     public put(value: unknown | undefined, query: Query): Promise<unknown> {
-        let $request: Observable<unknown>;
+        let request$: Observable<unknown>;
         if (query instanceof NetworkQuery) {
             if (query.method === HttpMethod.Post) {
-                $request = this.getRequestWithParameters<unknown>(query).post();
+                request$ = this.getRequestWithParameters<unknown>(query).post();
             } else if (query.method === HttpMethod.Put) {
-                $request = this.getRequestWithParameters<unknown>(query, value).put();
+                request$ = this.getRequestWithParameters<unknown>(query, value).put();
             } else {
                 throw new InvalidHttpMethodError(
                     `Only POST & PUT methods are allowed in a put action, using ${query.method}`,
@@ -41,7 +41,7 @@ export class NetworkDataSource implements DataSource<unknown> {
             throw new QueryNotSupportedError();
         }
 
-        return lastValueFrom($request);
+        return lastValueFrom(request$);
     }
 
     public delete(query: Query): Promise<void> {
