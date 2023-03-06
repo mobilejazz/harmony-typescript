@@ -87,7 +87,7 @@ export class NetworkDataSource implements DataSource<unknown> {
 
 export function provideDefaultNetworkDataSource<T>(requestService: ApiRequestService, type: Type<T>): DataSource<T> {
     const dataSource = new NetworkDataSource(requestService);
-    return new DataSourceMapper<unknown, T>(
+    return new DataSourceMapper(
         dataSource,
         dataSource,
         dataSource,
