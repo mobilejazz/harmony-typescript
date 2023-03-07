@@ -57,11 +57,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   …
 
+[#139]: https://github.com/mobilejazz/harmony-typescript/pull/139
+
 ## [1.0.0]
 
 ### Added
 
--  core: FRONTEND-4243 :: Feature :: Harmony-typescript `NetworkDataSource` ([#131])
+-   core: FRONTEND-4243 :: Feature :: Harmony-typescript `NetworkDataSource` ([#131])
 
 ### Changed
 
@@ -79,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   bugfender: FRONTEND-7941 :: Bug :: Remove `@bugfender/common` requirement ([#135])
 -   all: FRONTEND-8163 :: Bug :: Fix invalid `main` field error ([#136])
+-   core: FRONTEND-9706 :: Feature :: Allow void as a return type for NetworkDataSource ([#141])
 
 ### Security
 
@@ -87,7 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#131]: https://github.com/mobilejazz/harmony-typescript/pull/131
 [#135]: https://github.com/mobilejazz/harmony-typescript/pull/135
 [#136]: https://github.com/mobilejazz/harmony-typescript/pull/136
-[#139]: https://github.com/mobilejazz/harmony-typescript/pull/139
+[#141]: https://github.com/mobilejazz/harmony-typescript/pull/141
 
 ## [0.12.0] - 2023-01-19
 
