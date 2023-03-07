@@ -85,13 +85,13 @@ export class NetworkDataSource implements DataSource<unknown> {
     }
 }
 
-export function provideDefaultNetworkDataSource<T>(requestService: ApiRequestService, type: Type<T>): DataSource<T> {
+export function provideDefaultNetworkDataSource<T extends unknown | void>(requestService: ApiRequestService, type?: Type<T>): DataSource<T> {
     const dataSource = new NetworkDataSource(requestService);
     return new DataSourceMapper(
         dataSource,
         dataSource,
         dataSource,
-        new JsonDeserializerMapper(type),
+        type ? new JsonDeserializerMapper(type) : new BlankMapper<T>(),
         new BlankMapper<T>(),
     );
 }
