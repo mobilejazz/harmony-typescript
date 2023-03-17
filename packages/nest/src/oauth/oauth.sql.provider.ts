@@ -41,6 +41,8 @@ import { OAuthUserInfoEntityToRawSqlMapper } from './data/datasource/mappers/oau
 import { OAuthUserInfoEntity } from './data/entity/oauth-user-info.entity';
 import { GetOAuthRefreshTokenInteractor } from './domain/interactors/get-oauth-refresh-token.interactor';
 import {
+    ArrayMapper,
+    ArrayRawSQLDataSource,
     Cached,
     DataSourceMapper,
     DeleteInteractor,
@@ -150,7 +152,8 @@ export class OAuthSQLProvider implements OAuthProvider {
             new OAuthClientRawSqlToEntityMapper(),
             new OAuthClientEntityToRawSqlMapper(),
         );
-        const clientGrantsRawDataSource = new RawSQLDataSource(
+
+        const clientGrantsRawDataSource = new ArrayRawSQLDataSource(
             this.sqlDialect,
             this.sqlInterface,
             OAuthClientGrantTableName,
@@ -160,8 +163,8 @@ export class OAuthSQLProvider implements OAuthProvider {
             clientGrantsRawDataSource,
             clientGrantsRawDataSource,
             clientGrantsRawDataSource,
-            new OAuthClientGrantRawSqlToEntityMapper(),
-            new OAuthClientGrantEntityToRawSqlMapper(),
+            new ArrayMapper(new OAuthClientGrantRawSqlToEntityMapper()),
+            new ArrayMapper(new OAuthClientGrantEntityToRawSqlMapper()),
         );
         return new OAuthClientRepository(
             clientDataSource,
@@ -189,7 +192,7 @@ export class OAuthSQLProvider implements OAuthProvider {
             new OAuthTokenEntityToRawSqlMapper(),
         );
 
-        const tokenScopeRawDataSource = new RawSQLDataSource(
+        const tokenScopeRawDataSource = new ArrayRawSQLDataSource(
             this.sqlDialect,
             this.sqlInterface,
             OAuthTokenScopeTableName,
@@ -199,8 +202,8 @@ export class OAuthSQLProvider implements OAuthProvider {
             tokenScopeRawDataSource,
             tokenScopeRawDataSource,
             tokenScopeRawDataSource,
-            new OAuthTokenScopeRawSqlToEntityMapper(),
-            new OAuthTokenScopeEntityToRawSqlMapper(),
+            new ArrayMapper(new OAuthTokenScopeRawSqlToEntityMapper()),
+            new ArrayMapper(new OAuthTokenScopeEntityToRawSqlMapper()),
         );
 
         return new OAuthTokenRepository(

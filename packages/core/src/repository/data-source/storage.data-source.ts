@@ -62,19 +62,6 @@ export class StorageDataSource implements DataSource<string> {
         }
     }
 
-    /**
-     * @deprecated please use get with an array type instead
-     */
-    public async getAll(query: Query): Promise<string[]> {
-        console.warn('getAll is deprecated. Please use get instead');
-        if (query instanceof KeyQuery || query instanceof KeyListQuery) {
-            const keys = this.getKeys(query);
-            return keys.map((key) => this.getItem(key));
-        } else {
-            throw new QueryNotSupportedError();
-        }
-    }
-
     public async put(value: string | undefined, query: Query): Promise<string> {
         if (typeof value === 'undefined') {
             throw new InvalidArgumentError(`StorageDataSource: value can't be undefined`);
@@ -83,34 +70,6 @@ export class StorageDataSource implements DataSource<string> {
         if (query instanceof KeyQuery) {
             this.setItem(query.key, value);
             return this.getItem(query.key);
-        } else {
-            throw new QueryNotSupportedError();
-        }
-    }
-
-    /**
-     * @deprecated please use put with an array type instead
-     */
-    public async putAll(values: string[] | undefined, query: Query): Promise<string[]> {
-        console.warn('putAll is deprecated. Please use put instead');
-
-        if (typeof values === 'undefined') {
-            throw new InvalidArgumentError(`StorageDataSource: values can't be undefined`);
-        }
-
-        if (query instanceof KeyQuery || query instanceof KeyListQuery) {
-            const keys = this.getKeys(query);
-
-            if (values.length !== keys.length) {
-                throw new InvalidArgumentError(
-                    `Values lengh (${values.length}) and keys length (${keys.length}) don't match.`,
-                );
-            }
-
-            return keys.map((key, index) => {
-                this.setItem(key, values[index]);
-                return this.getItem(key);
-            });
         } else {
             throw new QueryNotSupportedError();
         }

@@ -1,7 +1,7 @@
 import { PaginationOffsetLimitQuery, Query, SQLQueryParamFn } from '../..';
-import { SQLOrderBy, SQLWhere } from './raw-sql.data-source';
 import { BaseColumnCreatedAt } from './sql.constants';
 import { SQLDialect } from '../../../data';
+import { SQLOrderBy, SQLWhere } from './abstract-raw-sql.data-source';
 
 export abstract class SQLOrderByQuery extends Query implements SQLOrderBy {
     public abstract orderBy(param: SQLQueryParamFn, dialect: SQLDialect): string;

@@ -3,7 +3,6 @@ import {
     DeleteRepository,
     GetDataSource,
     GetRepository,
-    MethodNotImplementedError,
     Operation,
     PutDataSource,
     PutRepository,
@@ -24,14 +23,14 @@ export class OAuthClientRepository
         private readonly getClientDataSource: GetDataSource<OAuthClientEntity>,
         private readonly putClientDataSource: PutDataSource<OAuthClientEntity>,
         private readonly deleteClientDataSource: DeleteDataSource,
-        private readonly getClientGrantsDataSource: GetDataSource<OAuthClientGrantEntity>,
-        private readonly putClientGrantsDataSource: PutDataSource<OAuthClientGrantEntity>,
+        private readonly getClientGrantsDataSource: GetDataSource<OAuthClientGrantEntity[]>,
+        private readonly putClientGrantsDataSource: PutDataSource<OAuthClientGrantEntity[]>,
         private readonly deleteClientGrantsDataSource: DeleteDataSource,
     ) {}
 
     public async get(query: Query, _operation: Operation): Promise<OAuthClientModel> {
         const client = await this.getClientDataSource.get(query);
-        const grants = await this.getClientGrantsDataSource.getAll(new OAuthClientIdQuery(client.id as number));
+        const grants = await this.getClientGrantsDataSource.get(new OAuthClientIdQuery(client.id as number));
 
         return new OAuthClientModel(
             client.id,
@@ -39,30 +38,9 @@ export class OAuthClientRepository
             client.updatedAt,
             client.clientId,
             client.clientSecret,
-            grants.map((el) => el.grant),
+            grants.map((el: OAuthClientGrantEntity) => el.grant),
             client.accessTokenLifetime,
             client.refreshTokenLifetime,
-        );
-    }
-
-    public async getAll(query: Query, _operation: Operation): Promise<OAuthClientModel[]> {
-        const clients = await this.getClientDataSource.getAll(query);
-
-        return Promise.all(
-            clients.map(async (client) => {
-                const grants = await this.getClientGrantsDataSource.getAll(new OAuthClientIdQuery(client.id as number));
-
-                return new OAuthClientModel(
-                    client.id,
-                    client.createdAt,
-                    client.updatedAt,
-                    client.clientId,
-                    client.clientSecret,
-                    grants.map((el) => el.grant),
-                    client.accessTokenLifetime,
-                    client.refreshTokenLifetime,
-                );
-            }),
         );
     }
 
@@ -83,14 +61,14 @@ export class OAuthClientRepository
             await this.deleteClientGrantsDataSource.delete(new OAuthClientIdQuery(client.id as number));
 
             // Adding new grants
-            const grantEntities = await this.putClientGrantsDataSource.putAll(
+            const grantEntities = await this.putClientGrantsDataSource.put(
                 value.grants.map(
                     (el) => new OAuthClientGrantEntity(undefined, undefined, undefined, el, client.id as number),
                 ),
                 new VoidQuery(),
             );
 
-            grants = grantEntities.map((el) => el.grant);
+            grants = grantEntities.map((el: OAuthClientGrantEntity) => el.grant);
         }
 
         return new OAuthClientModel(
@@ -103,14 +81,6 @@ export class OAuthClientRepository
             client.accessTokenLifetime,
             client.refreshTokenLifetime,
         );
-    }
-
-    public async putAll(
-        _values: OAuthClientModel[] | undefined,
-        _query: Query,
-        _operation: Operation,
-    ): Promise<OAuthClientModel[]> {
-        throw new MethodNotImplementedError();
     }
 
     public async delete(query: Query, _operation: Operation): Promise<void> {

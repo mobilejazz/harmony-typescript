@@ -1,9 +1,8 @@
 import { GetDataSource } from '../data-source';
 import { SQLDialect, SQLInterface } from '../../../data';
-import { QueryNotSupportedError } from '../../errors';
 import { BaseColumnDeletedAt, Query, SQLQueryParamComposer, SQLWherePaginationQuery } from '../..';
 import { SQLWhereQuery } from './sql.query';
-import { RawSQLData } from './raw-sql.data-source';
+import { RawSQLData } from './abstract-raw-sql.data-source';
 
 export class SQLRowCounterDataSource implements GetDataSource<number> {
     constructor(
@@ -18,7 +17,7 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
         return `select count(*) from ${this.sqlDialect.getTableName(this.tableName)}`;
     }
 
-    async get(query: Query): Promise<number> {
+    public async get(query: Query): Promise<number> {
         if (query instanceof SQLWhereQuery || query instanceof SQLWherePaginationQuery) {
             let sql = `${this.selectSQL()}`;
 
@@ -58,9 +57,5 @@ export class SQLRowCounterDataSource implements GetDataSource<number> {
                     throw this.sqlDialect.mapError(e);
                 });
         }
-    }
-
-    async getAll(_query: Query): Promise<number[]> {
-        throw new QueryNotSupportedError('Use SQLRowCounterDataSource with a get method, not getAll.');
     }
 }

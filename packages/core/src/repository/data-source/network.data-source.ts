@@ -75,17 +75,12 @@ export class NetworkDataSource implements DataSource<unknown> {
 
         return request;
     }
-
-    public async getAll(_query: Query): Promise<unknown[]> {
-        throw new MethodNotImplementedError();
-    }
-
-    public async putAll(_values: unknown[] | undefined, _query: Query): Promise<unknown[]> {
-        throw new MethodNotImplementedError();
-    }
 }
 
-export function provideDefaultNetworkDataSource<T extends unknown | void>(requestService: ApiRequestService, type?: Type<T>): DataSource<T> {
+export function provideDefaultNetworkDataSource<T extends unknown | void>(
+    requestService: ApiRequestService,
+    type?: Type<T>,
+): DataSource<T> {
     const dataSource = new NetworkDataSource(requestService);
     return new DataSourceMapper(
         dataSource,
