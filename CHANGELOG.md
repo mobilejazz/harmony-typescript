@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   …
+
+### Changed
+
+-   …
+
+### Deprecated
+
+-   …
+
+### Removed
+
+-   …
+
+### Fixed
+
+-   …
+
+### Security
+
+-   …
+
+## [1.0.0] - 2023-03-07
+
+### Added
+
+-   core: FRONTEND-4243 :: Feature :: Harmony-typescript `NetworkDataSource` ([#131])
 -   angular: TS-8897 :: Feature :: Deprecate `createAngularProviders` in favor of `angularProvidersBuilder` ([#139])
     -   `angularProvidersBuilder` added. The old method failed on production builds as it used strings to derive the method name.
     -   Usage:
@@ -36,46 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         export class ExampleProviderModule {}
         ```
 
-### Changed
-
--   …
-
 ### Deprecated
 
 -   angular: TS-8897 :: Feature :: Deprecate `createAngularProviders` in favor of `angularProvidersBuilder` ([#139])
     -   `createAngularProviders` is removed in favor of `angularProvidersBuilder`, see **Added** section.
-
-### Removed
-
--   …
-
-### Fixed
-
--   …
-
-### Security
-
--   …
-
-[#139]: https://github.com/mobilejazz/harmony-typescript/pull/139
-
-## [1.0.0]
-
-### Added
-
--   core: FRONTEND-4243 :: Feature :: Harmony-typescript `NetworkDataSource` ([#131])
-
-### Changed
-
--   …
-
-### Deprecated
-
--   …
-
-### Removed
-
--   …
 
 ### Fixed
 
@@ -83,13 +74,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   all: FRONTEND-8163 :: Bug :: Fix invalid `main` field error ([#136])
 -   core: FRONTEND-9706 :: Feature :: Allow void as a return type for NetworkDataSource ([#141])
 
-### Security
-
--   …
-
 [#131]: https://github.com/mobilejazz/harmony-typescript/pull/131
 [#135]: https://github.com/mobilejazz/harmony-typescript/pull/135
 [#136]: https://github.com/mobilejazz/harmony-typescript/pull/136
+[#139]: https://github.com/mobilejazz/harmony-typescript/pull/139
 [#141]: https://github.com/mobilejazz/harmony-typescript/pull/141
 
 ## [0.12.0] - 2023-01-19
@@ -309,7 +297,8 @@ First release! 🥳
 -   core: Fix cache repository.
 -   core: Fix cache issue on `getAll`.
 
-[unreleased]: https://github.com/mobilejazz/harmony-typescript/compare/v0.12.0...HEAD
+[unreleased]: https://github.com/mobilejazz/harmony-typescript/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.12.0...v1.0.0
 [0.12.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.11.2...v0.12.0
 [0.11.0-0.11.2]: https://github.com/mobilejazz/harmony-typescript/compare/v0.10.0...v0.11.2
 [0.10.0]: https://github.com/mobilejazz/harmony-typescript/compare/v0.9.0...v0.10.0
