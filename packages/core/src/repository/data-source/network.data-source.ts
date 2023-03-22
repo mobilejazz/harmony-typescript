@@ -84,28 +84,3 @@ export class NetworkDataSource implements DataSource<unknown> {
         throw new MethodNotImplementedError();
     }
 }
-
-export function provideDefaultNetworkDataSource<T extends unknown | void>(requestService: ApiRequestService, type?: Type<T>): DataSource<T> {
-    const dataSource = new NetworkDataSource(requestService);
-    return new DataSourceMapper(
-        dataSource,
-        dataSource,
-        dataSource,
-        type ? new JsonDeserializerMapper(type) : new BlankMapper<T>(),
-        new BlankMapper<T>(),
-    );
-}
-
-export function provideDefaultArrayNetworkDataSource<T>(
-    requestService: ApiRequestService,
-    type: Type<T>,
-): DataSource<T[]> {
-    const dataSource = new NetworkDataSource(requestService);
-    return new DataSourceMapper(
-        dataSource,
-        dataSource,
-        dataSource,
-        new ArrayMapper(new JsonDeserializerMapper(type)),
-        new ArrayMapper(new BlankMapper()),
-    );
-}
