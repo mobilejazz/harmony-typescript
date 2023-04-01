@@ -15,19 +15,19 @@ export class CacheSyncOperation implements Operation {
 }
 
 export interface ObjectValidator {
-    isObjectValid<T>(object: T): boolean;
+    isValid<T>(object: T): boolean;
 }
 
 export class ArrayValidator implements ObjectValidator {
     constructor(private readonly validator: ObjectValidator) {}
 
-    public isObjectValid<T>(array: T): boolean {
+    public isValid<T>(array: T): boolean {
         if (Array.isArray(array)) {
             if (array.length === 0) {
                 return false;
             }
             for (const element of array) {
-                if (!this.validator.isObjectValid(element)) {
+                if (!this.validator.isValid(element)) {
                     return false;
                 }
             }
@@ -38,7 +38,7 @@ export class ArrayValidator implements ObjectValidator {
 }
 
 export class DefaultObjectValidator implements ObjectValidator {
-    isObjectValid<T>(_object: T): boolean {
+    isValid<T>(_object: T): boolean {
         return true;
     }
 }
@@ -68,7 +68,7 @@ export class CacheRepository<T> implements Repository<T> {
                         if (value == null) {
                             throw new NotFoundError();
                         }
-                        if (!this.validator.isObjectValid(value)) {
+                        if (!this.validator.isValid(value)) {
                             throw new NotValidError();
                         }
                         return value;
@@ -92,7 +92,7 @@ export class CacheRepository<T> implements Repository<T> {
                         if (value == null) {
                             throw new NotFoundError();
                         }
-                        if (!this.validator.isObjectValid(value)) {
+                        if (!this.validator.isValid(value)) {
                             throw new NotValidError();
                         }
                         return value;

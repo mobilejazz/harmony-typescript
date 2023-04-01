@@ -11,15 +11,15 @@ import {
 import { DeviceConsoleLogger, Logger } from '../../helpers';
 
 export class InMemoryDataSource<T> implements DataSource<T> {
-    private objects: Map<string, T> = new Map();
+    private cache: Map<string, T> = new Map();
 
     constructor(private readonly logger: Logger = new DeviceConsoleLogger(undefined, 'InMemoryDataSource')) {}
 
     public async get(query: Query): Promise<T> {
         if (query instanceof KeyQuery) {
-            if (this.objects.has(query.key)) {
+            if (this.cache.has(query.key)) {
                 // SAFETY `as T`: we've just checked that `key` exists, so it's not `undefined`
-                return this.objects.get(query.key) as T;
+                return this.cache.get(query.key) as T;
             }
 
             throw new NotFoundError();
@@ -37,7 +37,7 @@ export class InMemoryDataSource<T> implements DataSource<T> {
             if (!query.key) {
                 this.logger.warn('key is empty');
             }
-            this.objects.set(query.key, value);
+            this.cache.set(query.key, value);
             return value;
         } else {
             throw new QueryNotSupportedError();
@@ -47,12 +47,12 @@ export class InMemoryDataSource<T> implements DataSource<T> {
     public async delete(query: Query): Promise<void> {
         if (query instanceof IdsQuery) {
             for (const key of query.keys) {
-                this.objects.delete(key);
+                this.cache.delete(key);
             }
         } else if (query instanceof KeyQuery) {
-            this.objects.delete(query.key);
+            this.cache.delete(query.key);
         } else if (query instanceof AllObjectsQuery) {
-            this.objects.clear();
+            this.cache.clear();
         } else {
             throw new QueryNotSupportedError();
         }
