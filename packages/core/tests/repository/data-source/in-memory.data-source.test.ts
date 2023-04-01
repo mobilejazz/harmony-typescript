@@ -47,68 +47,6 @@ describe('InMemoryDataSource', () => {
         });
     });
 
-    describe('getAll', () => {
-        it(`should handle 'IdsQuery'`, async () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-            await dataSource.put(myObject1, new IdQuery(myObject1.id));
-            await dataSource.put(myObject2, new IdQuery(myObject2.id));
-
-            const result = await dataSource.getAll(new IdsQuery([myObject1.id, myObject2.id]));
-
-            expect(result.length).toBe(2);
-            expect(result[0]).toBe(myObject1);
-            expect(result[1]).toBe(myObject2);
-        });
-
-        it(`should error if 'IdsQuery' is not found`, () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>(); // EMPTY
-
-            const result = dataSource.getAll(new IdsQuery([myObject1.id, myObject2.id]));
-
-            expect(result).rejects.toThrow(NotFoundError);
-        });
-
-        it(`should handle 'KeyQuery'`, async () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-            await dataSource.putAll([myObject1, myObject2], keyQuery);
-
-            const result = await dataSource.getAll(keyQuery);
-
-            expect(result.length).toBe(2);
-            expect(result[0]).toBe(myObject1);
-            expect(result[1]).toBe(myObject2);
-        });
-
-        it(`should error if 'KeyQuery' is not found`, () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>(); // EMPTY
-
-            const result = dataSource.getAll(keyQuery);
-
-            expect(result).rejects.toThrow(NotFoundError);
-        });
-
-        it(`should handle 'AllObjectsQuery'`, async () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-            await dataSource.put(myObject1, keyQuery);
-            await dataSource.putAll([myObject1, myObject2], keyQuery);
-
-            const result = await dataSource.getAll(new AllObjectsQuery());
-
-            expect(result.length).toBe(3);
-            expect(result[0]).toBe(myObject1);
-            expect(result[1]).toBe(myObject1);
-            expect(result[2]).toBe(myObject2);
-        });
-
-        it(`should error when the Query is not supported`, async () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-
-            const result = dataSource.getAll(new VoidQuery());
-
-            expect(result).rejects.toThrow(QueryNotSupportedError);
-        });
-    });
-
     describe('put', () => {
         it(`should handle 'KeyQuery'`, async () => {
             const dataSource = new InMemoryDataSource<SimplestClass>();
@@ -136,64 +74,15 @@ describe('InMemoryDataSource', () => {
         });
     });
 
-    describe('putAll', () => {
-        it(`should throw an error if 'values' is 'undefined'`, () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-
-            const result = dataSource.putAll(undefined, keyQuery);
-
-            expect(result).rejects.toThrow(InvalidArgumentError);
-        });
-
-        it(`should throw an error if there is a values and 'IdsQuery' length mismatch`, () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-
-            const result = dataSource.putAll([], new IdsQuery([10]));
-
-            expect(result).rejects.toThrow(InvalidArgumentError);
-        });
-
-        it(`should handle 'IdsQuery'`, async () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-            const query = new IdsQuery([myObject1.id]);
-
-            await dataSource.putAll([myObject1], query);
-
-            const result = await dataSource.getAll(query);
-            expect(result.length).toBe(1);
-            expect(result[0]).toBe(myObject1);
-        });
-
-        it(`should handle 'KeyQuery'`, async () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-
-            await dataSource.putAll([myObject1], keyQuery);
-
-            const result = await dataSource.getAll(keyQuery);
-            expect(result.length).toBe(1);
-            expect(result[0]).toBe(myObject1);
-        });
-
-        it(`should error when the Query is not supported`, () => {
-            const dataSource = new InMemoryDataSource<SimplestClass>();
-
-            const result = dataSource.putAll([], new VoidQuery());
-
-            expect(result).rejects.toThrow(QueryNotSupportedError);
-        });
-    });
-
     describe('delete', () => {
         it(`should handle 'IdsQuery'`, async () => {
             const dataSource = new InMemoryDataSource<SimplestClass>();
             await dataSource.put(myObject1, new IdQuery(myObject1.id));
-            await dataSource.putAll([myObject1], keyQuery);
 
             await dataSource.delete(new IdsQuery([myObject1.id]));
             await dataSource.delete(new IdsQuery([keyQuery.key]));
 
             await expect(dataSource.get(new IdQuery(myObject1.id))).rejects.toThrow(NotFoundError);
-            await expect(dataSource.getAll(keyQuery)).rejects.toThrow(NotFoundError);
         });
 
         it(`should delete the value associated to the given 'KeyQuery'`, async () => {

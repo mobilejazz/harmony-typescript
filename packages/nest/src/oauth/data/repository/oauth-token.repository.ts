@@ -5,7 +5,6 @@ import {
     GetRepository,
     IdQuery,
     InvalidArgumentError,
-    MethodNotImplementedError,
     Operation,
     PutDataSource,
     PutRepository,
@@ -30,8 +29,8 @@ export class OAuthTokenRepository
         private readonly getTokenDataSource: GetDataSource<OAuthTokenEntity>,
         private readonly putTokenDataSource: PutDataSource<OAuthTokenEntity>,
         private readonly deleteTokenDataSource: DeleteDataSource,
-        private readonly getTokenScopeDataSource: GetDataSource<OAuthTokenScopeEntity>,
-        private readonly putTokenScopeDataSource: PutDataSource<OAuthTokenScopeEntity>,
+        private readonly getTokenScopeDataSource: GetDataSource<OAuthTokenScopeEntity[]>,
+        private readonly putTokenScopeDataSource: PutDataSource<OAuthTokenScopeEntity[]>,
         private readonly deleteTokenScopeDataSource: DeleteDataSource,
     ) {}
 
@@ -58,14 +57,10 @@ export class OAuthTokenRepository
         const token = await this.getTokenDataSource.get(query);
         const [client, scope] = await Promise.all([
             this.getClientRepository.get(new IdQuery(token.clientId), operation),
-            this.getTokenScopeDataSource.getAll(new OAuthTokenIdQuery(token.id as number)),
+            this.getTokenScopeDataSource.get(new OAuthTokenIdQuery(token.id as number)),
         ]);
 
         return this.tokenEntityToModel(token, client, scope);
-    }
-
-    public async getAll(_query: Query, _operation: Operation): Promise<OAuthTokenModel[]> {
-        throw new MethodNotImplementedError();
     }
 
     public async put(
@@ -100,7 +95,7 @@ export class OAuthTokenRepository
                 await this.deleteTokenScopeDataSource.delete(new OAuthTokenIdQuery(token.id as number));
 
                 // Add new grants
-                scope = await this.putTokenScopeDataSource.putAll(
+                scope = await this.putTokenScopeDataSource.put(
                     (query.scope as string[]).map(
                         (s) => new OAuthTokenScopeEntity(undefined, undefined, undefined, s, token.id as number),
                     ),
@@ -112,14 +107,6 @@ export class OAuthTokenRepository
         }
 
         throw new QueryNotSupportedError();
-    }
-
-    public async putAll(
-        _values: OAuthTokenModel[] | undefined,
-        _query: Query,
-        _operation: Operation,
-    ): Promise<OAuthTokenModel[]> {
-        throw new MethodNotImplementedError();
     }
 
     public async delete(query: Query, _operation: Operation): Promise<void> {

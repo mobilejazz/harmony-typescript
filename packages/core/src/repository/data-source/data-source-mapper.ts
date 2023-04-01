@@ -31,24 +31,8 @@ export class DataSourceMapper<In, Out> implements DataSource<Out> {
         return this.getMapper.get(query);
     }
 
-    /**
-     * @deprecated please use get with an array type instead
-     */
-    public getAll(query: Query): Promise<Out[]> {
-        console.warn('getAll is deprecated. Please use get instead');
-        return this.getMapper.getAll(query);
-    }
-
     public put(value: Out | undefined, query: Query): Promise<Out> {
         return this.putMapper.put(value, query);
-    }
-
-    /**
-     * @deprecated please use put with an array type instead
-     */
-    public putAll(values: Out[] | undefined, query: Query): Promise<Out[]> {
-        console.warn('putAll is deprecated. Please use put instead');
-        return this.putMapper.putAll(values, query);
     }
 
     public delete(query: Query): Promise<void> {
@@ -68,11 +52,6 @@ export class GetDataSourceMapper<In, Out> implements GetDataSource<Out> {
     public async get(query: Query): Promise<Out> {
         const result: In = await this.getDataSource.get(query);
         return this.toOutMapper.map(result);
-    }
-
-    public async getAll(query: Query): Promise<Out[]> {
-        const results: In[] = await this.getDataSource.getAll(query);
-        return results.map((r: In) => this.toOutMapper.map(r));
     }
 }
 
@@ -94,11 +73,5 @@ export class PutDataSourceMapper<In, Out> implements PutDataSource<Out> {
         const mapped: In | undefined = value ? this.toInMapper.map(value) : undefined;
         const result: In = await this.putDataSource.put(mapped, query);
         return this.toOutMapper.map(result);
-    }
-
-    public async putAll(values: Out[] | undefined, query: Query): Promise<Out[]> {
-        const mapped: In[] | undefined = values ? values.map((v) => this.toInMapper.map(v)) : undefined;
-        const results: In[] = await this.putDataSource.putAll(mapped, query);
-        return results.map((r: In) => this.toOutMapper.map(r));
     }
 }
