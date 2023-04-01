@@ -8,7 +8,7 @@ export class FormValidators {
      * an id as an input so multiple patterns can be used and identified.
      * It also allows a string pattern or a RegExp.
      */
-    private static pattern(pattern: RegExp | string, id = 'pattern'): ValidatorFn {
+    public static pattern(pattern: RegExp | string, id = 'pattern'): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             return FormValidators.isPatternFound(control, pattern)
                 ? null
@@ -22,7 +22,7 @@ export class FormValidators {
      * Unlike "pattern" validator, "errorPattern" uses the pattern
      * to identify the errors in the FormControl value.
      */
-    private static errorPattern(pattern: RegExp | string, id = 'errorPattern'): ValidatorFn {
+    public static errorPattern(pattern: RegExp | string, id = 'errorPattern'): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             return FormValidators.isPatternFound(control, pattern)
                 ? {
